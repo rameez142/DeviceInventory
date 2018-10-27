@@ -4,6 +4,7 @@
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "types": [ "node" ],
+    "sourceMap": false,
     "paths": {
       "jszip": [
         "node_modules/jszip/dist/jszip.min.js"

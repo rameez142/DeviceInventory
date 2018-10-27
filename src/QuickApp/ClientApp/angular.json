@@ -22,15 +22,15 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "progress": true,
-            "extractCss": true,
+            "progress": false,
+            "extractCss": false,
             "showCircularDependencies": false,
             "assets": [
               "src/assets"
             ],
             "styles": [
               "./node_modules/font-awesome/css/font-awesome.css",
-              "./node_modules/ionicons/css/ionicons.css", 
+              "./node_modules/ionicons/css/ionicons.css",
               "./node_modules/prismjs/themes/prism-tomorrow.css",
               "./node_modules/adminlte-rtl/dist/css/AdminLTE.min.css",
               "./node_modules/adminlte-rtl/dist/css/skins/_all-skins.css",
@@ -39,11 +39,7 @@
               "./node_modules/adminlte-rtl/dist/css/rtl.css",
               "src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/app/assets/styles/modal-popup.less",
-              "src/assets/styles-external.css",
-              "src/assets/mapbox-gl.css",
-              "src/assets/devextreme/dx.common.css",
-              "src/assets/devextreme/dx.light.css"
+              "src/app/assets/styles/modal-popup.less"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -63,15 +59,15 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
+              "optimization": false,
+              "outputHashing": "bundles",
               "sourceMap": false,
-              "extractCss": true,
+              "extractCss": false,
               "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
+              "aot": false,
+              "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": false
             }
           }
         },
