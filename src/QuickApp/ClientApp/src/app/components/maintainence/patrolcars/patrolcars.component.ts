@@ -207,6 +207,7 @@ this.vinnumber = '';
   this.rentalchk = 0;
   this.defectchk = 0;
   this.patrolid = 0;
+  this.seltypelist ='xx';
 }
 RowAdd(e)
 {
@@ -216,7 +217,7 @@ RowAdd(e)
   this.patrolcarobj.barcode =  'PAT' + this.pltnumber;
   this.patrolcarobj.defective =  this.defectchk;
   this.patrolcarobj.platenumber =  this.pltnumber;
-  this.patrolcarobj.typecode =  '01';
+  this.patrolcarobj.typecode =  this.seltypelist;
   this.patrolcarobj.model =  this.model;
   this.patrolcarobj.rental = this.rentalchk;
 this.patrolcarobj.vinnumber = this.vinnumber;
@@ -231,7 +232,8 @@ this.patrolcarobj.vinnumber = this.vinnumber;
 
     this.cleardata();
     this.cleardefaultvalues();
-    this.modalService.close('custom-modal-1');
+   // this.modalService.close('custom-modal-1');
+   this.popupVisible = false;
   notify(' Record Added SuccessFully', 'success', 600);
 }
 
@@ -277,7 +279,7 @@ RowUpdate(e)
   this.patrolcarobj.barcode =  'PAT' + this.pltnumber;
   this.patrolcarobj.defective =  this.defectchk;
   this.patrolcarobj.platenumber =  this.pltnumber;
-  this.patrolcarobj.typecode =  '01';
+  this.patrolcarobj.typecode =  this.seltypelist;
   this.patrolcarobj.model =  this.model;
   this.patrolcarobj.rental = this.rentalchk;
 this.patrolcarobj.vinnumber = this.vinnumber;
@@ -290,7 +292,8 @@ this.patrolcarobj.patrolid = this.patrolid;
     });
     this.cleardata();
     this.cleardefaultvalues();
-    this.modalService.close('custom-modal-1');
+   // this.modalService.close('custom-modal-1');
+   this.popupVisible = false;
   notify(' Record Updated  SuccessFully', 'success', 600);
 
 }
@@ -318,7 +321,8 @@ ShowAddPopup() {
 
   this.modaltitle = 'Add Patrol Car';
   this.cleardefaultvalues();
- this.modalService.open('custom-modal-1');
+ //this.modalService.open('custom-modal-1');
+ this.popupVisible = true;
 
 
 }
@@ -333,9 +337,10 @@ this.rentalchk = dt.rental;
 this.defectchk = dt.defective;
 this.vinnumber = dt.vinnumber;
 this.patrolid = dt.patrolid;
+this.seltypelist = dt.typecode;
   this.modaltitle = 'Update Patrol Car';
-
- this.modalService.open('custom-modal-1');
+this.popupVisible = true;
+ //this.modalService.open('custom-modal-1');
  //this.cd.detectChanges();
 
  //this.cd.detectChanges();
@@ -349,7 +354,8 @@ DelRecord(e , rindex) {
 }
 
 ClosePopup() {
- this.modalService.close('custom-modal-1');
+  this.popupVisible = false;
+ //this.modalService.close('custom-modal-1');
 }
 
 }
