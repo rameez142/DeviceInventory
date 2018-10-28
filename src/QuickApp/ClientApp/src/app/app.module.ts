@@ -77,7 +77,7 @@ import {MapComponent} from './components/maps/map.component'
 import { CommonService } from './services/common.service';
 import { SharedMapServiceService } from './services/shared-map-service.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { LoadingPageModule, MaterialBarModule } from 'angular-loading-page';
+import { LoadingPageModule } from 'angular-loading-page';
 import { LayoutModule,BoxModule  } from '../../node_modules/angular-admin-lte';
 import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
@@ -105,7 +105,7 @@ import { adminLteConf } from './admin-lte.conf';
    DxTreeViewModule,
     FormsModule,DxSelectBoxModule,DxContextMenuModule,DxMenuModule,
     DxPopupModule,DxDataGridModule,DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,DxCheckBoxModule,
-    LayoutModule,LoadingPageModule, MaterialBarModule,NgbModule,CoreModule,BoxModule ,
+    LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,
     LayoutModule.forRoot(adminLteConf)
   ],
   declarations: [
