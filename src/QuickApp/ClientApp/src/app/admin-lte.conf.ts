@@ -16,5 +16,7 @@ export const adminLteConf = {
       ]},
     {label: 'Map Viewer', route: 'map', iconClasses:'fa fa-globe'},
     {label: 'Settings', route: 'settings', iconClasses: 'fa fa-gear'}
+
+    
   ]
 };

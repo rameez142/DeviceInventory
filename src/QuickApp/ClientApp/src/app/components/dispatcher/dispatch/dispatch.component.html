@@ -1,0 +1,116 @@
+<div class="container">
+  <form method="post" enctype="multipart/form-data">
+
+<header class="pageHeader">
+  <h3><i class="fa fa-handshake-o fa-lg page-caption" aria-hidden="true"></i> الأحوال</h3>
+</header>
+
+                <dx-data-grid 
+                id="gridContainer"
+                [dataSource]="dataSource"
+                [showBorders]="true" 
+                [rtlEnabled]="true"
+                [hoverStateEnabled]="true"
+                [selectedRowKeys]="[]"
+                (onToolbarPreparing)="onToolbarPreparing($event)"
+                (onRowPrepared)="onRowPrepared($event)"
+                (onContextMenuPreparing)= "ContextMenuprepare($event)"
+              >    
+                <dxo-paging [pageSize]="80"></dxo-paging>
+                <dxo-pager 
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[80, 50, 10]"
+                [showInfo]="true">
+            </dxo-pager>
+               
+            
+            <dxo-export [enabled]="true" fileName="Vehicle"></dxo-export>
+            
+            <dxo-header-filter 
+            [visible]="true"></dxo-header-filter>
+            <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
+            
+            <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+            <dx-load-panel
+                #loadPanel
+                shadingColor="rgba(0,0,0,0.4)"
+                [position]="{ of: '#gridContainer' }"
+                [(visible)]="loadingVisible"
+                [showIndicator]="true"
+                [showPane]="true"
+                [shading]="true"
+                [closeOnOutsideClick]="false"
+                (onShown)="onShown()">
+            </dx-load-panel>
+        
+            <dxi-column dataField="sectordesc" [groupIndex]="1" caption="القطاع"></dxi-column>
+            <dxi-column dataField="milnumber" caption="الرقم العسكري"></dxi-column>
+            <dxi-column dataField="rankdesc" [groupIndex]="2" caption="الرتبه"></dxi-column>
+            <dxi-column dataField="personname" caption="الاسم"></dxi-column>
+            <dxi-column dataField="callerid" caption="النداء"></dxi-column>
+            <dxi-column dataField="platenumber"  caption="الدورية"></dxi-column>
+            <dxi-column dataField="sunrisetimestamp" caption="شروق"></dxi-column>
+            <dxi-column dataField="sunsettimestamp" caption="غروب"></dxi-column>
+            <dxi-column dataField="personmobile" caption="الجوال"></dxi-column>
+            <dxi-column dataField="laststatechangetimestamp" caption="وقت الحالة"></dxi-column>
+            <dxi-column dataField="personstate" caption="الحالة"></dxi-column>
+            <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
+            <div *dxTemplate="let data of 'maptemplate'">
+                <!-- <img (onClick)="popupVisible = true" src="../../../../assets/images/haritayikaydir_r_glow.png"  /> -->
+               <a  routerLink="/map" > <img src="../../../../assets/images/haritayikaydir_r_glow.png"  /></a>
+                </div>
+               
+              </dx-data-grid>
+
+              <dx-popup  [(visible)]="mappopupVisible">
+                      <iframe src="../maps/main.main.component.html" ></iframe>
+              </dx-popup>
+              <dx-popup
+              class="popup"
+              [width]="600"
+              [height]="500"
+              [showTitle]="false"
+              title=""
+              [showCloseButton]= "true"
+              [dragEnabled]="false"
+              [closeOnOutsideClick]="true"
+              [(visible)]="popupVisible">
+              <div *dxTemplate="let data of 'content'">
+                  <table>
+                      <tr>
+                          <td>  <label>Add Person to Sector</label>
+                          </td>
+                         
+                      </tr>
+                  </table>
+                  <p>
+                      الاسم:<input type="text"/>
+                   
+                  </p>
+                  <p>
+                      القطاع:<input type="text"/>
+                     
+                  </p>
+                  <p>
+                      النداء:<input type="text"/>
+                      
+                  </p>
+                  <p>
+                     
+                      <dx-button
+                      text="Add Person"
+                     >
+                  </dx-button>
+                  <dx-button
+    text="Cancel"
+    (onClick)="popupVisible = false">
+</dx-button>
+                  </p>
+                
+              </div>
+          </dx-popup>
+          </form>
+</div>
