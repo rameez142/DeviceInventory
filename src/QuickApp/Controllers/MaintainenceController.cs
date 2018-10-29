@@ -152,10 +152,16 @@ namespace PatrolWebApp.Controllers
 
        
 
-        [HttpPost("devicesinventory")]
-        public DataTable PostDevicesInventoryList()
+        [HttpGet("patrolcarsinventory")]
+        public DataTable PostPatrolCarsInventoryList(int ahwalid, int userid)
         {
 
+            string subqry = "";
+
+            if(ahwalid !=-1)
+            {
+                subqry = subqry + " and Ahwal.AhwalID = " + ahwalid;
+            }
 
             NpgsqlConnection cont = new NpgsqlConnection();
             cont.ConnectionString = constr;
@@ -175,6 +181,8 @@ namespace PatrolWebApp.Controllers
             Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND patrolCheckInOut.PersonID = Persons.PersonID INNER JOIN";
 
             Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID";
+            Qry = Qry + " where Ahwal.AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ";
+            Qry = Qry + subqry;
             Qry = Qry + "  ORDER BY patrolCheckInOut.timestamp";
 
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
@@ -234,7 +242,7 @@ Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars whe
             cont.ConnectionString = constr;
             cont.Open();
             DataTable dt = new DataTable();
-            String Qry = "SELECT ahwalid as value, name as text FROM Ahwal where ahwalid in (select ahwalid from usersrolesmap where userid = " + userid +")";
+            String Qry = "select '-1'  as value,'' as text  union all SELECT ahwalid as value, name as text FROM Ahwal where ahwalid in (select ahwalid from usersrolesmap where userid = " + userid +")";
 
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
             da.Fill(dt);
@@ -338,10 +346,14 @@ Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars whe
 
 
 
-        [HttpPost("handheldlist")]
-        public DataTable PostHandHeldList()
+        [HttpGet("handheldlist")]
+        public DataTable GetHandHeldList(int ahwalid,int userid)
         {
-
+            string subqry = "";
+            if (ahwalid != -1)
+            {
+                subqry = " and d.AhwalID = " + ahwalid;
+            }
 
             NpgsqlConnection cont = new NpgsqlConnection();
             cont.ConnectionString = constr;
@@ -349,7 +361,8 @@ Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars whe
             DataTable dt = new DataTable();
             //            NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,t.name as type,d.Defective,d.Rental,d.BarCode,a.Name from Devices d INNER JOIN Ahwal a ON a.AhwalID = d.AhwalID inner join devicetypes t on t.devicetypeid = d.devicetypeid ", cont);
             //NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,(select dt.name from devicetypes dt where dt.devicetypeid = d.devicetypeid)  as type,d.Defective,d.Rental,d.BarCode,'jjjj' as Name from Devices d", cont);
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.handheldid,d.serial,d.Defective,d.BarCode from handhelds d", cont);
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.handheldid,d.serial,d.Defective,d.BarCode,d.AhwalID,(select a.name from ahwal a where a.ahwalid = d.ahwalid ) ahwalname from handhelds d where d.serial is not null AND AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid +" ) ", cont);
+            
             // NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,'1'  as type,d.Defective,d.Rental,d.BarCode,'jjjj' as Name from Devices d", cont);
             da.Fill(dt);
             cont.Close();
@@ -525,30 +538,32 @@ Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars whe
         #endregion
 
         #region Hand Held Invenory
-        [HttpPost("handheldinventory")]
-        public DataTable PostHandHeldInventoryList()
+        [HttpGet("handheldinventory")]
+        public DataTable PostHandHeldInventoryList(int ahwalid, int userid)
         {
-
+            string subqry = "";
+            if (ahwalid != -1)
+            {
+                subqry = " and d.AhwalID = " + ahwalid;
+            }
 
             NpgsqlConnection cont = new NpgsqlConnection();
             cont.ConnectionString = constr;
             cont.Open();
             DataTable dt = new DataTable();
-            string Qry = "SELECT        patrolcheckinoutid, CheckInOutStates.Name AS StateName, Ahwal.AhwalID, Ahwal.Name AS AhwalName, patrolcars.platenumber, patrolcars.Model,'' as Type, Persons.MilNumber, ";
-            Qry = Qry + " Ranks.Name AS PersonRank, Persons.Name AS PersonName, patrolCheckInOut.timestamp, CheckInOutStates.CheckInOutStateID";
+            string Qry = "SELECT        HandHeldsCheckInOut.HandHeldCheckInOutID,HandHeldsCheckInOut.TimeStamp, CheckInOutStates.CheckInOutStateID,CheckInOutStates.Name AS StateName, HandHelds.AhwalID, HandHelds.Serial, Ranks.Name as PersonRank, Persons.MilNumber, Persons.Name AS PersonName ";
 
-            Qry = Qry + "  FROM Ahwal INNER JOIN";
+            Qry = Qry + " ,Ahwal.Name as ahwalname FROM Ahwal INNER JOIN";
 
-            Qry = Qry + " patrolcars  ON Ahwal.AhwalID = patrolcars.AhwalID INNER JOIN";
+            Qry = Qry + " HandHelds  ON Ahwal.AhwalID = HandHelds.AhwalID INNER JOIN";
 
-            Qry = Qry + " patrolCheckInOut ON patrolcars.patrolID = patrolCheckInOut.patrolID INNER JOIN";
+            Qry = Qry + " HandHeldsCheckInOut ON HandHelds.HandHeldID = HandHeldsCheckInOut.HandHeldID INNER JOIN";
 
-            Qry = Qry + " CheckInOutStates ON patrolCheckInOut.CheckInOutStateID = CheckInOutStates.CheckInOutStateID INNER JOIN";
+            Qry = Qry + " CheckInOutStates ON HandHeldsCheckInOut.CheckInOutStateID = CheckInOutStates.CheckInOutStateID INNER JOIN";
+            Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND HandHeldsCheckInOut.PersonID = Persons.PersonID INNER JOIN";
+            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID where  Ahwal.AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ";
 
-            Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND patrolCheckInOut.PersonID = Persons.PersonID INNER JOIN";
-
-            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID";
-            Qry = Qry + "  ORDER BY patrolCheckInOut.timestamp";
+            Qry = Qry + "  ORDER BY HandHeldsCheckInOut.timestamp";
 
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
             dt.Columns.Add("patrolcheckinoutid");
@@ -557,8 +572,6 @@ Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars whe
             dt.Columns.Add("ahwalname");
             dt.Columns.Add("platenumber");
             dt.Columns.Add("model");
-
-            dt.Columns.Add("type");
             dt.Columns.Add("milnumber");
             dt.Columns.Add("personrank");
             dt.Columns.Add("personname");

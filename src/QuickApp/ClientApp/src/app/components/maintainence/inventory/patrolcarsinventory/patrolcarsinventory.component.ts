@@ -1,7 +1,6 @@
 import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular';
-import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-deviceinventory',
@@ -14,6 +13,8 @@ export class PatrolCarsinventoryComponent implements OnInit {
   loadingVisible = false;
   orgs:any;
   dataSource: any;
+  selahwalid: number = -1;
+
   constructor(private svc:CommonService) {
     this.showLoadPanel();
    }
@@ -30,13 +31,13 @@ export class PatrolCarsinventoryComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.LoadData();
   }
 
 LoadData()
 {
-  this.svc.GetDevicesInventoryList().subscribe(resp =>
+  let userid:string = window.localStorage.getItem('UserID');
+  this.svc.GetpatrolcarsInventoryList(this.selahwalid,parseInt(userid)).subscribe(resp =>
     {
 
        this.dataSource = JSON.parse(resp);
@@ -48,11 +49,19 @@ LoadData()
     error => {
 
     });
+}
 
-
+CellPrepared(e) {
+ 
+  if (e.rowType == "header") {
+    console.log(e);
+    //  e.cellElement.addClass("hdrcls"); 
+  }
 }
 
 onToolbarPreparing(e) {
+  let AhwalLst :any=[];
+  AhwalLst =JSON.parse(window.localStorage.getItem('Orgs'));
 
   e.toolbarOptions.items.unshift({
       location: 'before',
@@ -62,10 +71,10 @@ onToolbarPreparing(e) {
           widget: 'dxSelectBox',
           options: {
               width: 200,
-              items: JSON.parse(window.localStorage.getItem("Orgs")),
+              items: AhwalLst,
               displayExpr: 'text',
               valueExpr: 'value',
-              value: '1',
+              value:1,
               onValueChanged: this.groupChanged.bind(this)
           }
       }, {
@@ -79,15 +88,15 @@ onToolbarPreparing(e) {
 }
 
 groupChanged(e) {
-this.dataGrid.instance.clearGrouping();
-
-  this.dataGrid.instance.columnOption(e.value, 'groupIndex', 0);
+  console.log(e.value);
+  this.selahwalid = e.value;
+ this.LoadData();
 }
 
 
 
 refreshDataGrid() {
-  this.dataGrid.instance.refresh();
+  this.LoadData();
 }
 
 }

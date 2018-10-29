@@ -2,6 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from "devextreme-angular"
 import notify from 'devextreme/ui/notify';
+import { ModalService } from '../../../services/modalservice';
 
 @Component({
   selector: 'app-dispatch',
@@ -12,8 +13,9 @@ export class DispatchComponent implements OnInit {
 
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
   loadingVisible = false;
+  selahwalid:number = -1;
 
-  constructor(private svc:CommonService) {
+  constructor(private svc:CommonService, private modalService: ModalService) {
     this.showLoadPanel();
    }
    onShown() {
@@ -49,6 +51,8 @@ LoadData()
 }
 
 onToolbarPreparing(e) {
+    let strt :any=[];
+strt =JSON.parse(window.localStorage.getItem("Orgs"));
   e.toolbarOptions.items.unshift({
       location: 'before',
       template: 'الأحوال'
@@ -57,23 +61,11 @@ onToolbarPreparing(e) {
           widget: 'dxSelectBox',
           options: {
               width: 200,
-              items: [{
-                  value: '1',
-                  text: ' الصناعية'
-              }, {
-                  value: '2',
-                  text: ' شمال'
-              }
-              ,
-              {
-                  value: '3',
-                  text: ''
-              }
-            ],
+              items: strt,
               displayExpr: 'text',
               valueExpr: 'value',
               value: '1',
-              onValueChanged: this.groupChanged.bind(this)
+              onValueChanged: this.ahwalChanged.bind(this)
           }
       },{
         location: 'before',
@@ -116,6 +108,11 @@ onToolbarPreparing(e) {
           }
       });
 }
+ahwalChanged(e) {
+    this.selahwalid = e.value;
+ this.LoadData();
+  
+}
 
 groupChanged(e) {
     if (e.value === '3')
@@ -126,10 +123,7 @@ groupChanged(e) {
     }
     else
     {
-        //this.dataGrid.instance.clearGrouping();
-        //this.dataGrid.instance.columnOption(e.value, 'groupIndex',1);
-       // this.dataGrid.instance.columnOption('sectordesc', 'groupIndex', 1);
-      //  this.dataGrid.instance.columnOption('rankdesc', 'groupIndex', 2);
+        
     }
   
 }
@@ -210,6 +204,10 @@ showInfo() {
 mappopupVisible:any = false;
 showmapInfo() {
   
-  this.mappopupVisible = true;
+  //this.mappopupVisible = true;
+  this.modalService.open('custom-modal-1');
+
 }
+
+
 }

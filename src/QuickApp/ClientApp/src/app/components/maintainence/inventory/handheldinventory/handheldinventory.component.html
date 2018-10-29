@@ -13,24 +13,25 @@
                   [hoverStateEnabled]="true"
                   [selectedRowKeys]="[]"
                   (onToolbarPreparing)="onToolbarPreparing($event)"
+                  keyexpr="HandHeldCheckInOutID"
                 >
-                  <dxo-paging [pageSize]="5"></dxo-paging>
-                  <dxo-pager
-                  [showPageSizeSelector]="true"
-                  [allowedPageSizes]="[5, 10, 20]"
-                  [showInfo]="true">
-              </dxo-pager>
+                <dxo-paging [pageSize]="50"></dxo-paging>
+                <dxo-pager
+                [showPageSizeSelector]="false"
+                [allowedPageSizes]="[50, 100, 200]"
+                [showInfo]="false">
+            </dxo-pager>
 
 
-              <dxo-export [enabled]="true" fileName="Vehicle"></dxo-export>
+              <dxo-export [enabled]="true" fileName="تقارير الاستلام والتسليم الدوريات"></dxo-export>
 
-              <dxo-header-filter
+              <!-- <dxo-header-filter
               [visible]="true"></dxo-header-filter>
-              <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
-             
-              <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+              <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser> -->
+
+              <!-- <dxo-grouping [autoExpandAll]="true"></dxo-grouping> -->
               <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <!-- <dxo-header-filter [visible]="true"></dxo-header-filter> -->
 
               <dx-load-panel
                   #loadPanel
@@ -43,15 +44,13 @@
                   [closeOnOutsideClick]="false"
                   (onShown)="onShown()">
               </dx-load-panel>
-
-              <dxi-column dataField="ahwalname" [groupIndex]="0"></dxi-column>
-              <dxi-column dataField="devicenumber"></dxi-column>
-              <dxi-column dataField="statename"></dxi-column>
-              <dxi-column dataField="model"></dxi-column>
-              <dxi-column dataField="type" ></dxi-column>
-              <dxi-column dataField="milnumber"></dxi-column>
-              <dxi-column dataField="personrank"></dxi-column>
-              <dxi-column dataField="personname"></dxi-column>
+              <dxi-column dataField="timestamp" caption="الوقت والتاريخ" width="180" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }" ></dxi-column>
+              <dxi-column dataField="statename" caption="الحالة" width="150"></dxi-column>
+              <dxi-column dataField="ahwalname" caption="الأحوال" width="150"></dxi-column>
+              <dxi-column dataField="serial" caption="رقم الجهاز" width="150"></dxi-column>
+              <dxi-column dataField="milnumber" caption="الرقم العسكري" width="150"></dxi-column>
+              <dxi-column dataField="personrank" caption="الرتبه" width="150"></dxi-column>
+              <dxi-column dataField="personname" caption="الاسم" width="300"></dxi-column>
                 </dx-data-grid>
             </form>
   </div>

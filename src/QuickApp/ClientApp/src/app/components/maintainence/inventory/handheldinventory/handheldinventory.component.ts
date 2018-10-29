@@ -1,7 +1,6 @@
 import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular'
-import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-handheldinventory',
@@ -12,6 +11,8 @@ export class HandheldinventoryComponent implements OnInit {
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
   loadingVisible = false;
   orgs:any;
+  dataSource: any;
+  selahwalid: number = -1;
 
   constructor(private svc:CommonService) {
     this.showLoadPanel();
@@ -26,7 +27,6 @@ export class HandheldinventoryComponent implements OnInit {
   showLoadPanel() {
     this.loadingVisible = true;
   }
-  dataSource: any;
 
   ngOnInit() {
 
@@ -35,7 +35,9 @@ export class HandheldinventoryComponent implements OnInit {
 
 LoadData()
 {
-  this.svc.GetHandHeldsInventoryList().subscribe(resp =>
+  let userid:string = window.localStorage.getItem('UserID');
+
+  this.svc.GetHandHeldsInventoryList(this.selahwalid,parseInt(userid)).subscribe(resp =>
     {
 
        this.dataSource = JSON.parse(resp);
@@ -52,19 +54,21 @@ LoadData()
 }
 
 onToolbarPreparing(e) {
-  //let orgs2: any = " [{    value: 'Org1',    text: 'Grouping by Org3'}, {    value: 'Org2',    text: 'Grouping by Org4'}]";
+  let AhwalLst :any=[];
+  AhwalLst =JSON.parse(window.localStorage.getItem('Orgs'));
+
   e.toolbarOptions.items.unshift({
       location: 'before',
-      template: 'Organization'
+      template: 'الأحوال'
   }, {
           location: 'before',
           widget: 'dxSelectBox',
           options: {
               width: 200,
-              items: JSON.parse(window.localStorage.getItem("Orgs")),
+              items: AhwalLst,
               displayExpr: 'text',
               valueExpr: 'value',
-              value: 'الصناعية',
+              value: -1,
               onValueChanged: this.groupChanged.bind(this)
           }
       }, {
@@ -78,9 +82,8 @@ onToolbarPreparing(e) {
 }
 
 groupChanged(e) {
-this.dataGrid.instance.clearGrouping();
-//console.log('ddd' + e.value);
-  this.dataGrid.instance.columnOption(e.value, 'groupIndex', 0);
+  this.selahwalid = e.value;
+  this.LoadData();
 }
 
 

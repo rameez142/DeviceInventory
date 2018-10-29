@@ -59,15 +59,28 @@
             <dxi-column dataField="personstate" caption="الحالة"></dxi-column>
             <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
             <div *dxTemplate="let data of 'maptemplate'">
-                <!-- <img (onClick)="popupVisible = true" src="../../../../assets/images/haritayikaydir_r_glow.png"  /> -->
-               <a  routerLink="/map" > <img src="../../../../assets/images/haritayikaydir_r_glow.png"  /></a>
+                 <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"  /> 
+               <!-- <a  routerLink="/map" > <img src="../../../../assets/images/haritayikaydir_r_glow.png"  /></a> -->
                 </div>
                
               </dx-data-grid>
 
-              <dx-popup  [(visible)]="mappopupVisible">
-                      <iframe src="../maps/main.main.component.html" ></iframe>
-              </dx-popup>
+              <div class="modal-sample" >
+                <modal id="custom-modal-1"   >
+                    <div class="modal-popup" >
+
+                    <div class="modal-body"  >
+                        <MOI-Map></MOI-Map>
+                    </div>
+                  </div>
+                    
+                    <div class="modal-background"></div>
+                </modal>
+              </div>
+              <!-- <dx-popup  [(visible)]="mappopupVisible">
+                    
+              </dx-popup> -->
+
               <dx-popup
               class="popup"
               [width]="600"
@@ -112,5 +125,6 @@
                 
               </div>
           </dx-popup>
+
           </form>
 </div>

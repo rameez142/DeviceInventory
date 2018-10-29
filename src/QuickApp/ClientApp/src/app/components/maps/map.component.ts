@@ -79,8 +79,8 @@ export class MapComponent implements OnInit {
   </table>
   `;
 
-  style = 'mapbox://styles/mapbox/' + this.layerId + '-v9';
-
+//  style = 'mapbox://styles/mapbox/' + this.layerId + '-v9';
+style='http://10.2.124.37:8080/styles/osm-bright/style.json';
   lat = 51.51503213033115;
   lng = 25.303961620211695;
 
@@ -154,7 +154,7 @@ export class MapComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    //this.subscription.unsubscribe();
   }
 
   private initializeMap() {
@@ -275,7 +275,16 @@ export class MapComponent implements OnInit {
 
   chngstyle(e) {
     console.log(e);
-    this.style = 'mapbox://styles/mapbox/' + e.target.value + '-v9';
+    if(e.target.value ==='basic')
+    {
+      this.style='http://10.2.124.37:8080/styles/osm-bright/style.json';
+    }
+    else
+    {
+      this.style = 'mapbox://styles/mapbox/' + e.target.value + '-v9';
+    }
+
+
     window.clearInterval(this.Sim_Route_timer)
     window.clearInterval(this.Sim_timer)
     this.removealllayers();

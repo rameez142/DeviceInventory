@@ -19,7 +19,7 @@ export class PatrolcarsComponent implements OnInit {
   data: any;
 
   loadingVisible = false;
-  selahwalid: number = 1;
+  selahwalid: number = -1;
   rentalchk: number = 0;
   defectchk: number = 0;
   typesrc:any;

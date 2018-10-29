@@ -108,12 +108,13 @@ public Addpersons(frm:personcls){
             return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
             }
 
-    public GetDevicesInventoryList(){
-      return this.http.post(this.api_url + '/api/maintainence/devicesinventory', null, { responseType: 'text' })
+    public GetpatrolcarsInventoryList(ahwalid:number,userid:number){
+      //console.log(ahwalid);
+      return this.http.get(this.api_url + '/api/maintainence/patrolcarsinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
       }
 
-      public GetHandHeldsInventoryList(){
-        return this.http.post(this.api_url + '/api/maintainence/handheldsinventory', null, { responseType: 'text' })
+      public GetHandHeldsInventoryList(ahwalid:number,userid:number){
+        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
         }
 
         public GetAccessoryInventoryList(){
