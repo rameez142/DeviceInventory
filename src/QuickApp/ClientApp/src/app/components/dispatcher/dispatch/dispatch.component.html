@@ -97,6 +97,23 @@
                       <tr>
                           <td><label>الفرد</label></td>
                           <!-- <td><dx-TextBox ></dx-TextBox></td> -->
+                          <dx-lookup
+    [dataSource]="lookupDataSource"
+    valueExpr="id"
+    displayExpr="country"
+    placeholder="Select employee"
+    [showPopupTitle]="false"
+    [width]="400"
+    [rtlEnabled]="true"
+    searchEnabled="true"
+searchMode="contains"
+searchPlaceholder="Search"
+[showCancelButton]="false"
+[showClearButton]="false"
+[closeOnOutsideClick]="true"
+
+    >
+</dx-lookup>
                           </tr>
                           <tr>
 

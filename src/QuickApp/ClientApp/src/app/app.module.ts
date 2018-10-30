@@ -57,7 +57,7 @@ import { ProgramSettingComponent } from "./components/controls/program-setting.c
 import { RoleEditorComponent } from "./components/controls/role-editor.component";
 import { DxTreeViewModule } from "../../node_modules/devextreme-angular";
 
-import { DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
+import {DxLookupModule, DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
   DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,DxCheckBoxModule } from "devextreme-angular";
 
 
@@ -106,7 +106,7 @@ import { adminLteConf } from './admin-lte.conf';
    DxTreeViewModule,
     FormsModule,DxSelectBoxModule,DxContextMenuModule,DxMenuModule,
     DxPopupModule,DxDataGridModule,DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,DxCheckBoxModule,
-    LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,
+    LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
   ],
   declarations: [

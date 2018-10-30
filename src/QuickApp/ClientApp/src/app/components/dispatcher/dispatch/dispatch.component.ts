@@ -9,11 +9,20 @@ import { ModalService } from '../../../services/modalservice';
   templateUrl: './dispatch.component.html',
   styleUrls: ['./dispatch.component.css']
 })
+
+
+
 export class DispatchComponent implements OnInit {
 
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
   loadingVisible = false;
   selahwalid:number = -1;
+  lookupDataSource:any =  [
+    { id: 1, country: "Afghanistan"  },
+    { id: 2, country: "Albania" },
+
+];
+
 
   constructor(private svc:CommonService, private modalService: ModalService) {
     this.showLoadPanel();
