@@ -92,37 +92,48 @@
               [closeOnOutsideClick]="true"
               [(visible)]="popupVisible">
               <div *dxTemplate="let data of 'content'">
+               
                   <table>
                       <tr>
-                          <td>  <label>Add Person to Sector</label>
-                          </td>
+                          <td><label>الفرد</label></td>
+                          <!-- <td><dx-TextBox ></dx-TextBox></td> -->
+                          </tr>
+                          <tr>
+
                          
+                          <td><label>المسؤولية</label></td>
+                          <!-- <td><dx-TextBox ></dx-TextBox></td> -->
+                        </tr>
+                        <tr>
+                          <td><label>المسؤولية</label></td>
+                          <!-- <td><dx-drop-down-box>
+
+                          </dx-drop-down-box></td> -->
                       </tr>
-                  </table>
-                  <p>
-                      الاسم:<input type="text"/>
-                   
-                  </p>
-                  <p>
-                      القطاع:<input type="text"/>
-                     
-                  </p>
-                  <p>
-                      النداء:<input type="text"/>
-                      
-                  </p>
-                  <p>
-                     
-                      <dx-button
-                      text="Add Person"
-                     >
-                  </dx-button>
-                  <dx-button
-    text="Cancel"
-    (onClick)="popupVisible = false">
-</dx-button>
-                  </p>
-                
+                 <tr>
+                     <td><label>الشفت</label></td>
+                     </tr>
+                     <tr>
+                     <td><label>القطاع</label></td>
+                    </tr>
+                    <tr>
+                     <td><label>المنطقة</label></td>
+                 </tr>
+                 <tr>
+                     <td><label>مرافق ل</label></td>
+                 </tr>
+                     <tr>
+                         <td><dx-button
+                            text="Add Person"
+                           >
+                        </dx-button></td>
+                         <td> <dx-button
+                            text="Cancel"
+                            (onClick)="popupVisible = false">
+                        </dx-button></td>
+                     </tr>
+              
+                </table>
               </div>
           </dx-popup>
 
