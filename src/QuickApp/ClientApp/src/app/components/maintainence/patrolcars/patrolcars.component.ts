@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild,ChangeDetectorRef} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
-import {patrolcarscls} from './patrolcarscls';
+import {patrolcarscls} from '../../../models/patrolcarscls';
 import SelectBox from 'devextreme/ui/select_box';
 import { ModalService } from '../../../services/modalservice';
 
