@@ -42,9 +42,11 @@ _gridSelectedRowKeys2: number[] = [3];
 selectedRole:number = null;
 selectedShift:number = null;
 AhwalMapping_Add_status_label:string ='';
-popup_selperson_mno:number =null;
+selectPerson_Mno:number =null;
 AhwalMappingAddMethod:string ='';
 selahwalmappingid:number=null;
+selectedSector:number=null;
+selectedAssociate:number=null;
   constructor(private svc:CommonService, private modalService: ModalService) {
      
       this.userid = parseInt(window.localStorage.getItem('UserID'));
@@ -367,14 +369,12 @@ refreshDataGrid() {
 popupVisible:any = false;
 showInfo() {
     this.AhwalMappingAddMethod ="ADD";
-  this.popupVisible = true;
+    this.popupVisible = true;
 }
+
 mappopupVisible:any = false;
 showmapInfo() {
-  
-  //this.mappopupVisible = true;
   this.modalService.open('custom-modal-1');
-
 }
 
 shiftSelection(e)
@@ -390,15 +390,15 @@ AhwalMapping_Add_SubmitButton_Click()
     this.AhwalMapping_Add_status_label  = 'يرجى اختيار المسؤولية';
     return;
    }
-   this.popup_selperson_mno = 1105;
-if(this.popup_selperson_mno === null){
+   this.selectPerson_Mno = 1105;
+  if(this.selectPerson_Mno === null){
     this.AhwalMapping_Add_status_label  = 'يرجى اختيار الفرد';
     return;
 }
 
 let personobj:personcls = null;
 
-  this.svc.GetPersonForUserForRole(this.popup_selperson_mno,this.userid).subscribe(resp => 
+  this.svc.GetPersonForUserForRole(this.selectPerson_Mno,this.userid).subscribe(resp => 
     {
       
         if (JSON.parse(resp) !== [])
@@ -447,11 +447,55 @@ if(this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  t
         ahwalmappingobj.patrolroleid = this.selectedRole;
         if(this.AhwalMappingAddMethod =="UPDATE"){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
-           // this.svc.UpDateAhwalMapping(ahwalmappingobj);
+            this.svc.UpDateAhwalMapping(ahwalmappingobj);
         }
         else{
-           // this.svc.AddAhwalMapping(ahwalmappingobj);
+            this.svc.AddAhwalMapping(ahwalmappingobj);
         }
+}
+else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector ||  this.selectedRole === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+{
+    if(this.selectedShift === null)
+    {
+        this.AhwalMapping_Add_status_label  = 'يرجى اختيار الشفت';
+        return;
+    }
+
+    if(this.selectedSector === null)
+    {
+        this.AhwalMapping_Add_status_label  = 'يرجى اختيار القطاع';
+        return;
+    }
+    ahwalmappingobj.ahwalid = personobj[0].ahwalid;
+    ahwalmappingobj.personid = personobj[0].personid;
+    ahwalmappingobj.sectorid = this.selectedSector;
+    let citygroupsobj:citygroups = new citygroups();
+    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorid).subscribe(resp => 
+        {
+         
+            if (JSON.parse(resp) !== [])
+            {
+                citygroupsobj = JSON.parse(resp);
+            }
+            
+      },
+        error => { 
+        });
+        ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
+        ahwalmappingobj.shiftid = this.selectedShift;
+        ahwalmappingobj.patrolroleid = this.selectedRole;
+        ahwalmappingobj.personid = personobj[0].personid;
+        if(this.AhwalMappingAddMethod =="UPDATE"){
+            ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+            this.svc.UpDateAhwalMapping(ahwalmappingobj);
+        }
+        else{
+            this.svc.AddAhwalMapping(ahwalmappingobj);
+        }
+}
+else if(this.selectedRole = Handler_AhwalMapping.PatrolRole_Associate)
+{
+
 }
 
 this.clearpersonpopupvalues();
@@ -461,7 +505,10 @@ this.clearpersonpopupvalues();
 clearpersonpopupvalues()
 {
     this.selectedRole = null;
-    this.popup_selperson_mno = null;
+    this.selectPerson_Mno = null;
+    this.selectedShift = null;
+    this.selectedRole = null;
+
 }
 
 }

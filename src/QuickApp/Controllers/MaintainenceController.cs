@@ -62,6 +62,19 @@ namespace PatrolWebApp.Controllers
 
         public string barcode { get; set; }
     }
+
+    public class ahwalmapping
+    {
+        public int ahwalid { get; set; }
+        public int sectorid { get; set; }
+        public int citygroupid { get; set; }
+        public int shiftid { get; set; }
+        public int patrolroleid { get; set; }
+        public int personid { get; set; }
+        public int ahwalmappingid { get; set; }
+
+    }
+
     [Route("api/[controller]")]
     public class MaintainenceController : Controller
     {
@@ -768,5 +781,36 @@ namespace PatrolWebApp.Controllers
             return dt;
         }
         #endregion
+        [HttpPost("AddAhwalMapping")]
+        public int PostAddAhwalMapping([FromBody]ahwalmapping frm)
+        {
+            int ret = 0;
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = cont;
+            cmd.CommandText = "insert into ahwalmapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalid + "," + frm.sectorid + "," + frm.citygroupid + "," + frm.shiftid + "," + frm.patrolroleid + "," + frm.personid + ")";
+            ret = cmd.ExecuteNonQuery();
+            cont.Close();
+            cont.Dispose();
+            return ret;
+        }
+
+        [HttpPost("UpDateAhwalMapping")]
+        public int PostUpDateAhwalMapping([FromBody]ahwalmapping frm)
+        {
+            int ret = 0;
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = cont;
+            cmd.CommandText = "update ahwalmapping set ahwalid = " + frm.ahwalid + ",sectorid=" + frm.sectorid + ",citygroupid=" + frm.citygroupid + ",shiftid=" + frm.shiftid + ",patrolroleid=" + frm.patrolroleid + ",personid=" + frm.personid + " where ahwalmappingid = " + frm.ahwalmappingid;
+            ret = cmd.ExecuteNonQuery();
+            cont.Close();
+            cont.Dispose();
+            return ret;
+        }
     }
 }

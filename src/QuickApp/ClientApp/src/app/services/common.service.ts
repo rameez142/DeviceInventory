@@ -8,6 +8,7 @@ import {handheldcls} from '../models/handheldcls';
 import {accessorycls} from '../models/accessorycls';
 import {personcls} from '../models/personcls';
 import {citygroups} from '../models/citygroups.model';
+import { ahwalmapping } from '../models/ahwalmapping.model';
 @Injectable()
 
 
@@ -171,9 +172,21 @@ public Addpersons(frm:personcls){
 
         }
 
-        public GetCityGroupForAhwal(ahwalid:number)
+        public GetCityGroupForAhwal(ahwalid:number,sectorid?:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/citygroupforahwal?ahwalid=' + ahwalid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/maintainence/citygroupforahwal?ahwalid=' + ahwalid + '&sectorid=' + sectorid, { responseType: 'text' })
 
         }
+
+        public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
+        {
+          return this.http.post(this.api_url + '/api/maintainence/AddAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+
+        }
+
+        public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
+        {
+          return this.http.post(this.api_url + '/api/maintainence/UpDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+        }
+
 }
