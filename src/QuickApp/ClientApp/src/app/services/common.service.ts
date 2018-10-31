@@ -188,5 +188,9 @@ public Addpersons(frm:personcls){
         {
           return this.http.post(this.api_url + '/api/maintainence/UpDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
         }
+        public GetAhwalMapForAssociate(AssociateMapId:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'text' })
 
+        }
 }

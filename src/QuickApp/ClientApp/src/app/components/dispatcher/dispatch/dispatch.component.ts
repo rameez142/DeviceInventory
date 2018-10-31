@@ -46,7 +46,7 @@ selectPerson_Mno:number =null;
 AhwalMappingAddMethod:string ='';
 selahwalmappingid:number=null;
 selectedSector:number=null;
-selectedAssociate:number=null;
+selectedAssociateMapId:number=null;
   constructor(private svc:CommonService, private modalService: ModalService) {
      
       this.userid = parseInt(window.localStorage.getItem('UserID'));
@@ -478,9 +478,7 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
                 citygroupsobj = JSON.parse(resp);
             }
             
-      },
-        error => { 
-        });
+      });
         ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
         ahwalmappingobj.shiftid = this.selectedShift;
         ahwalmappingobj.patrolroleid = this.selectedRole;
@@ -495,6 +493,35 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
 }
 else if(this.selectedRole = Handler_AhwalMapping.PatrolRole_Associate)
 {
+
+if(this.selectedAssociateMapId === null){
+    this.AhwalMapping_Add_status_label  = 'يرجى اختيار الشفت';
+    return;
+}
+let ahwalMappingForAssociateobj:personcls=new personcls();
+this.svc.GetAhwalMapForAssociate(this.selectedAssociateMapId,this.userid).subscribe(resp => 
+    {
+      
+        if (JSON.parse(resp) !== [])
+        {
+            ahwalMappingForAssociateobj = JSON.parse(resp);
+        }
+        
+  });
+
+if(ahwalMappingForAssociateobj !== null)
+{
+if(personobj[0].personid === ahwalMappingForAssociateobj.personid ){
+    this.AhwalMapping_Add_status_label = "المرافق نفس الفرد، ماهذا ؟؟؟؟";
+    return;
+}
+ahwalmappingobj.ahwalid = ahwalMappingForAssociateobj[0].ahwalid;
+ahwalmappingobj.personid = ahwalMappingForAssociateobj[0].personid;
+ahwalmappingobj.sectorid = ahwalMappingForAssociateobj[0].sectorid;
+ahwalmappingobj.citygroupid = ahwalMappingForAssociateobj[0].citygroupid;
+ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
+ahwalmappingobj.patrolroleid = this.selectedRole;
+}
 
 }
 
