@@ -47,6 +47,7 @@ AhwalMappingAddMethod:string ='';
 selahwalmappingid:number=null;
 selectedSector:number=null;
 selectedAssociateMapId:number=null;
+selectedCity:number=null;
   constructor(private svc:CommonService, private modalService: ModalService) {
      
       this.userid = parseInt(window.localStorage.getItem('UserID'));
@@ -521,6 +522,46 @@ ahwalmappingobj.sectorid = ahwalMappingForAssociateobj[0].sectorid;
 ahwalmappingobj.citygroupid = ahwalMappingForAssociateobj[0].citygroupid;
 ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
 ahwalmappingobj.patrolroleid = this.selectedRole;
+if(this.AhwalMappingAddMethod =="UPDATE"){
+    ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+    this.svc.UpDateAhwalMapping(ahwalmappingobj);
+}
+else{
+    this.svc.AddAhwalMapping(ahwalmappingobj);
+}
+
+}
+else
+{
+    if(this.selectedShift === null)
+    {
+        this.AhwalMapping_Add_status_label = "يرجى اختيار الشفت";
+        return;
+    }
+    ahwalmappingobj.ahwalid=personobj[0].ahwalid;
+    if(this.selectedSector === null)
+    {
+        this.AhwalMapping_Add_status_label = "يرجى اختيار القطاع";
+        return;
+    }
+
+    if(this.selectedCity === null)
+    {
+        this.AhwalMapping_Add_status_label ="يرجى اختيار المنطقة";
+        return;
+    }
+    ahwalmappingobj.sectorid = this.selectedSector;
+    ahwalmappingobj.shiftid = this.selectedShift;
+    ahwalmappingobj.citygroupid = this.selectedCity;
+    ahwalmappingobj.patrolroleid = this.selectedRole;
+    ahwalmappingobj.personid =  personobj[0].personid;
+    if(this.AhwalMappingAddMethod =="UPDATE"){
+        ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+        this.svc.UpDateAhwalMapping(ahwalmappingobj);
+    }
+    else{
+        this.svc.AddAhwalMapping(ahwalmappingobj);
+    }
 }
 
 }
