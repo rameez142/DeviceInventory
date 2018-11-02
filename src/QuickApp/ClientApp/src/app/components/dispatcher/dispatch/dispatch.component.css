@@ -28,3 +28,8 @@
     text-align: left;
     vertical-align: middle;
   }
+
+  .errormsg {
+    color:red;
+    font-weight: bold;
+    }

@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
-import {personcls} from '..//employees/personcls';
+import {patrolcarscls} from '../../../models/patrolcarscls';
 
 @Component({
   selector: 'app-employees',
@@ -20,7 +20,7 @@ export class EmployeesComponent implements OnInit {
   typesrc:any;
   dataSource: any;
   devicetypesrc:any;
-  public deviceobj:personcls = new personcls();
+  public deviceobj:patrolcarscls = new patrolcarscls();
 
 
   constructor(private svc:CommonService) {
@@ -124,11 +124,11 @@ cleardata()
   this.deviceobj.ahwalid =  -1;
   this.deviceobj.barcode = '';
   this.deviceobj.defective =  -1;
-  this.deviceobj.devicenumber =  '';
-  this.deviceobj.devicetypeid =  -1;
+  this.deviceobj.platenumber =  '';
+  this.deviceobj.patrolid =  -1;
   this.deviceobj.model =  '';
   this.deviceobj.rental = -1;
-  this.deviceobj.deviceid =  -1;
+  
 }
 
 PopupInitialize(e)
@@ -149,19 +149,19 @@ RowAdd(e)
   this.deviceobj.ahwalid =  this.selahwalid;
   this.deviceobj.barcode =  e.data.barcode;
   this.deviceobj.defective =  e.data.defective;
-  this.deviceobj.devicenumber =  e.data.devicenumber;
-  this.deviceobj.devicetypeid =  1;
+  this.deviceobj.platenumber =  e.data.devicenumber;
+  this.deviceobj.type =  "01";
   this.deviceobj.model =  e.data.model;
   this.deviceobj.rental = this.rentalchk;
 
-  this.svc.Addpersons(this.deviceobj).subscribe(resp =>
+  /* this.svc.Addpersons(this.deviceobj).subscribe(resp =>
     {
       console.log('resp' + resp);
      this.LoadData();
   },
     error => {
 
-    });
+    }); */
     this.cleardata();
     this.cleardefaultvalues();
 
@@ -183,7 +183,7 @@ checkBoxToggled(e)
 RowUpdate(e)
 {
 
-  this.svc.Updatepersons(this.deviceobj).subscribe(resp =>
+ /*  this.svc.Updatepersons(this.deviceobj).subscribe(resp =>
     {
 
       console.log('resp' + resp);
@@ -191,7 +191,7 @@ RowUpdate(e)
   },
     error => {
 
-    });
+    }); */
 }
 
 RowDelete(e)
@@ -200,12 +200,12 @@ RowDelete(e)
   this.deviceobj.ahwalid =  this.selahwalid;
   this.deviceobj.barcode =  e.data.barcode;
   this.deviceobj.defective =  e.data.defective;
-  this.deviceobj.devicenumber =  e.data.devicenumber;
+  this.deviceobj.platenumber =  e.data.devicenumber;
   this.deviceobj.model =  e.data.model;
   this.deviceobj.rental = e.data.rental;
-  this.deviceobj.deviceid =  e.data.deviceid;
+  this.deviceobj.patrolid =  e.data.deviceid;
   console.log(e);
-  this.svc.Deletepersons(this.deviceobj).subscribe(resp =>
+  /* this.svc.Deletepersons(this.deviceobj).subscribe(resp =>
     {
 
       console.log('resp' + resp);
@@ -213,7 +213,7 @@ RowDelete(e)
   },
     error => {
 
-    });
+    }); */
 }
 
 }

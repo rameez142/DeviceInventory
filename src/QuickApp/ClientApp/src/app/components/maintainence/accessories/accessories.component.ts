@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-import {accessorycls} from './accessorycls';
+import {accessorycls} from '../../../models/accessorycls';
 
 
 @Component({

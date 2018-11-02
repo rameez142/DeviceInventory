@@ -3,10 +3,12 @@ import { Injectable , Output,EventEmitter} from '@angular/core';
 import {HttpClient,HttpHeaders,HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, retry, map, tap } from 'rxjs/operators';
-import {patrolcarscls} from '../components/maintainence/patrolcars/patrolcarscls';
-import {handheldcls} from '../components/maintainence/handhelds/handheldcls';
-import {accessorycls} from '../components/maintainence/accessories/accessorycls';
-import {personcls} from '../components/dispatcher/employees/personcls';
+import {patrolcarscls} from '../models/patrolcarscls';
+import {handheldcls} from '../models/handheldcls';
+import {accessorycls} from '../models/accessorycls';
+import {personcls} from '../models/personcls';
+import {citygroups} from '../models/citygroups.model';
+import { ahwalmapping } from '../models/ahwalmapping.model';
 @Injectable()
 
 
@@ -125,5 +127,70 @@ public Addpersons(frm:personcls){
         return this.http.post(this.api_url + '/api/maintainence/dispatchlist', null, { responseType: 'text' })
         }
 
+        public GetPersonList(userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/personslist?userid=' + userid, { responseType: 'text' })
 
+        }
+
+        public GetShiftsList()
+        {
+          return this.http.get(this.api_url + '/api/maintainence/shiftslist', { responseType: 'text' })
+
+        }
+
+
+
+        public GetResponsibiltyList()
+        {
+          return this.http.get(this.api_url + '/api/maintainence/roleslist', { responseType: 'text' })
+
+        }
+
+        
+        public GetSectorsList(userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/sectorslist?userid=' + userid , { responseType: 'text' })
+
+        }
+
+        public GetCityList(userid:number,sectorid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/citylist?userid=' + userid + '?sectorid=' + sectorid, { responseType: 'text' })
+
+        }
+
+        public GetAssociateList(userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/associatelist?userid=' + userid , { responseType: 'text' })
+
+        }
+
+        public GetPersonForUserForRole(mno:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?mno=' + mno + '&userid=' + userid , { responseType: 'text' })
+
+        }
+
+        public GetCityGroupForAhwal(ahwalid:number,sectorid?:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/citygroupforahwal?ahwalid=' + ahwalid + '&sectorid=' + sectorid, { responseType: 'text' })
+
+        }
+
+        public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
+        {
+          return this.http.post(this.api_url + '/api/maintainence/AddAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+
+        }
+
+        public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
+        {
+          return this.http.post(this.api_url + '/api/maintainence/UpDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+        }
+        public GetAhwalMapForAssociate(AssociateMapId:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'text' })
+
+        }
 }

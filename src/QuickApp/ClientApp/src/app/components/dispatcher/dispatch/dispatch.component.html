@@ -96,60 +96,143 @@
                   <table>
                       <tr>
                           <td><label>الفرد</label></td>
-                          <!-- <td><dx-TextBox ></dx-TextBox></td> -->
-                          <dx-lookup
-    [dataSource]="lookupDataSource"
-    valueExpr="id"
-    displayExpr="country"
-    placeholder="Select employee"
-    [showPopupTitle]="false"
-    [width]="400"
-    [rtlEnabled]="true"
-    searchEnabled="true"
-searchMode="contains"
-searchPlaceholder="Search"
-[showCancelButton]="false"
-[showClearButton]="false"
-[closeOnOutsideClick]="true"
-
-    >
-</dx-lookup>
+                          <td>
+                                <dx-drop-down-box
+                                [(value)]="personMilNumber"
+                                valueExpr="milnumber"
+                                [deferRendering]="false"
+                                [displayExpr]="name"
+                                placeholder="Select a value..."
+                                [showClearButton]="true"
+                                [dataSource]="personsrc"
+                                
+                        >
+            
+                            <div *dxTemplate="let data of 'content'">
+                                <dx-data-grid
+                                        [dataSource]="personsrc"
+                                        [columns]="[{caption:'الرقم العسكري',dataField:'milnumber'},{caption:'الاسم',dataField:'name'}]"
+                                        [selection]="{ mode: 'single' }"
+                                        [hoverStateEnabled]="true"
+                                        [paging]="{ enabled: true, pageSize: 5 }"
+                                        [filterRow]="{ visible: true }"
+                                        [(selectedRowKeys)]="_gridSelectedRowKeys2"
+                                        [rtlEnabled]= "true"
+                                        [keyExpr] ="personid"
+                                        [focusStateEnabled]="true"
+                                >
+                                </dx-data-grid>
+                                </div>
+                            </dx-drop-down-box>
+                          </td>
+                          
                           </tr>
                           <tr>
 
                          
                           <td><label>المسؤولية</label></td>
-                          <!-- <td><dx-TextBox ></dx-TextBox></td> -->
+                          <td>
+                            <dx-select-box
+                            [dataSource]="responsibilitysrc"
+                            displayExpr="name"
+                            valueExpr="patrolroleid"
+                            [searchEnabled]="true"
+                            (onValueChanged)="roleSelection($event)"
+                            >
+                        </dx-select-box>
+                        </td>
+                          
                         </tr>
-                        <tr>
-                          <td><label>المسؤولية</label></td>
-                          <!-- <td><dx-drop-down-box>
-
-                          </dx-drop-down-box></td> -->
-                      </tr>
+                        
                  <tr>
-                     <td><label>الشفت</label></td>
+                     <td><label >الشفت</label></td>
+                     <td>
+                            <dx-select-box
+                            [dataSource]="shiftssrc"
+                            displayExpr="name"
+                            valueExpr="shiftid"
+                            [visible]="shiftvisibile"
+                            (onValueChanged)="shiftSelection($event)"
+                            [searchEnabled]="true">
+                        </dx-select-box>
+                     </td>
+                     <td></td>
                      </tr>
                      <tr>
                      <td><label>القطاع</label></td>
+                     <td>  <dx-select-box
+                        [dataSource]="sectorssrc"
+                        displayExpr="shortname"
+                        valueExpr="sectorid"
+                        [visible]="sectorvisibile"
+                        [searchEnabled]="true">
+                    </dx-select-box></td>
                     </tr>
                     <tr>
                      <td><label>المنطقة</label></td>
+                     <td>
+                            <dx-select-box
+                            [dataSource]="citysrc"
+                            displayExpr="shortname"
+                            valueExpr="citygroupid"
+                            [visible]="cityvisibile"
+                            [searchEnabled]="true">
+                        </dx-select-box>
+                     </td>
                  </tr>
                  <tr>
                      <td><label>مرافق ل</label></td>
+                     <td>
+                            <dx-drop-down-box
+                            [(value)]="gridBoxValue"
+                            valueExpr="personid"
+                            [deferRendering]="false"
+                            [displayExpr]="gridBox_displayExpr"
+                            placeholder="Select a value..."
+                            [showClearButton]="true"
+                            [dataSource]="associatesrc"
+                            [visible]="associatevisibile"
+                    >
+        
+                        <div *dxTemplate="let data of 'content'">
+                            <dx-data-grid
+                                    [dataSource]="associatesrc"
+                                    [columns]="[{caption:'الرقم العسكري',dataField:'milnumber'},{caption:'الاسم',dataField:'name'}]"
+                                    [selection]="{ mode: 'single' }"
+                                    [hoverStateEnabled]="true"
+                                    [paging]="{ enabled: true, pageSize: 5 }"
+                                    [filterRow]="{ visible: true }"
+                                    [(selectedRowKeys)]="gridSelectedRowKeys"
+                                    [rtlEnabled]= "true"
+                                    [keyExpr] ="ahwalmappingid"
+                                    [focusStateEnabled]="true"
+                            >
+                            </dx-data-grid>
+                        </div>
+                    </dx-drop-down-box>
+                     </td>
                  </tr>
                      <tr>
                          <td><dx-button
-                            text="Add Person"
+                            text="أضافه"
+                            (onClick)="AhwalMapping_Add_SubmitButton_Click()"
+                            class="btn btn-default"
+                            
                            >
                         </dx-button></td>
                          <td> <dx-button
-                            text="Cancel"
-                            (onClick)="popupVisible = false">
+                            text="إلغاء"
+                            (onClick)="popupVisible = false"
+                            class="btn btn-primary"
+                            >
                         </dx-button></td>
+
                      </tr>
-              
+              <tr>
+                  <td colspan="2">
+                       <div class="errormsg"> {{AhwalMapping_Add_status_label}} </div> 
+                  </td>
+              </tr>
                 </table>
               </div>
           </dx-popup>
