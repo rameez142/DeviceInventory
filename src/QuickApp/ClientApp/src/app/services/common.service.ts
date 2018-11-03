@@ -193,4 +193,22 @@ public Addpersons(frm:personcls){
           return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'text' })
 
         }
+
+        public GetPatrolCarByPlateNumberForUserForRole(CheckInOutPatrol:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/PatrolCarByPlateNumberForUserForRole?CheckInOutPatrol=' + CheckInOutPatrol + '&userid=' + userid , { responseType: 'text' })
+
+        }
+
+        public GetHandHeldBySerialForUserForRole(CheckInOutHandHeld:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/HandHeldBySerialForUserForRole?CheckInOutHandHeld=' + CheckInOutHandHeld + '&userid=' + userid , { responseType: 'text' })
+
+        }
+
+        public GetMappingByPersonID(CheckInOutPerson:number,userid:number)
+        {
+          return this.http.get(this.api_url + '/api/maintainence/MappingByPersonID?CheckInOutPerson=' + CheckInOutPerson + '&userid=' + userid , { responseType: 'text' })
+
+        }
 }

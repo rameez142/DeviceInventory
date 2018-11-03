@@ -79,8 +79,8 @@ export class MapComponent implements OnInit {
   </table>
   `;
 
-//  style = 'mapbox://styles/mapbox/' + this.layerId + '-v9';
-style='http://10.2.124.37:8080/styles/osm-bright/style.json';
+  style = 'mapbox://styles/mapbox/' + this.layerId + '-v9';
+//style='http://10.2.124.37:8080/styles/osm-bright/style.json';
   lat = 51.51503213033115;
   lng = 25.303961620211695;
 

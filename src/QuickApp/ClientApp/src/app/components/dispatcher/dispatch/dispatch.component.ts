@@ -1,12 +1,14 @@
 import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
-import { DxDataGridComponent } from "devextreme-angular"
+import { DxDataGridComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
 import { ModalService } from '../../../services/modalservice';
 import { Handler_AhwalMapping } from '../../../../environments/AhwalMapping';
 import {ahwalmapping} from '../../../models/ahwalmapping.model';
 import {citygroups} from '../../../models/citygroups.model';
 import {personcls} from '../../../models/personcls';
+import { patrolcarscls } from '../../../models/patrolcarscls';
+import { handheldcls } from '../../../models/handheldcls';
 @Component({
   selector: 'app-dispatch',
   templateUrl: './dispatch.component.html',
@@ -21,6 +23,7 @@ export class DispatchComponent implements OnInit {
   loadingVisible = false;
   selahwalid:number = -1;
 
+AhwalMapping_CheckInOut_StatusLabel:any;
 responsibilitysrc:any;
 shiftssrc:any;
 sectorssrc:any;
@@ -48,8 +51,10 @@ selahwalmappingid:number=null;
 selectedSector:number=null;
 selectedAssociateMapId:number=null;
 selectedCity:number=null;
+CheckInOutPopupVisible:any=false;
+
   constructor(private svc:CommonService, private modalService: ModalService) {
-     
+
       this.userid = parseInt(window.localStorage.getItem('UserID'));
       console.log(this.userid);
     this.showLoadPanel();
@@ -59,13 +64,13 @@ selectedCity:number=null;
         this.loadingVisible = false;
     }, 3000);
   }
-  
+
 
   showLoadPanel() {
     this.loadingVisible = true;
   }
   dataSource: any;
- 
+
   ngOnInit() {
    this.LoadDataSources();
     this.LoadData();
@@ -101,7 +106,7 @@ else
     this.shiftvisibile = true;
     this.sectorvisibile = true;
     this.cityvisibile = true;
-    this.associatevisibile = false; 
+    this.associatevisibile = false;
 }
 
   }
@@ -109,52 +114,52 @@ else
   LoadDataSources()
   {
 
-    this.svc.GetShiftsList().subscribe(resp => 
+    this.svc.GetShiftsList().subscribe(resp =>
         {
            // console.log(resp);
            this.shiftssrc = JSON.parse(resp);
       },
-        error => { 
+        error => {
         });
 
-    this.svc.GetResponsibiltyList().subscribe(resp => 
+    this.svc.GetResponsibiltyList().subscribe(resp =>
         {
-               
+
                this.responsibilitysrc = JSON.parse(resp);
         },
-        error => { 
+        error => {
         });
 
-    this.svc.GetSectorsList(this.userid).subscribe(resp => 
+    this.svc.GetSectorsList(this.userid).subscribe(resp =>
         {
            // console.log(resp);
                    this.sectorssrc = JSON.parse(resp);
          },
-                error => { 
+                error => {
                 });
 
-                this.svc.GetCityList(this.userid,this.sectorid).subscribe(resp => 
+                this.svc.GetCityList(this.userid,this.sectorid).subscribe(resp =>
                     {
-                       
+
                        this.citysrc = JSON.parse(resp);
                   },
-                    error => { 
+                    error => {
                     });
 
-                    this.svc.GetAssociateList(this.userid).subscribe(resp => 
+                    this.svc.GetAssociateList(this.userid).subscribe(resp =>
                         {
                             console.log(resp);
                            this.associatesrc = JSON.parse(resp);
                       },
-                        error => { 
+                        error => {
                         });
 
-                        this.svc.GetPersonList(this.userid).subscribe(resp => 
+                        this.svc.GetPersonList(this.userid).subscribe(resp =>
                             {
                                 console.log(resp);
                                this.personsrc = JSON.parse(resp);
                           },
-                            error => { 
+                            error => {
                             });
 
   }
@@ -207,9 +212,9 @@ gridBox_displayExpr2(item){
 
 LoadData()
 {
-  this.svc.GetDispatchList().subscribe(resp => 
+  this.svc.GetDispatchList().subscribe(resp =>
     {
-       
+
        this.dataSource = JSON.parse(resp);
      // console.log('resp' + resp);
       this.dataGrid.dataSource = this.dataSource;
@@ -217,13 +222,13 @@ LoadData()
 
   },
     error => {
-       
+
     });
 }
 
 onToolbarPreparing(e) {
     let strt :any=[];
-strt =JSON.parse(window.localStorage.getItem("Orgs"));
+strt =JSON.parse(window.localStorage.getItem('Orgs'));
   e.toolbarOptions.items.unshift({
       location: 'before',
       template: 'الأحوال'
@@ -282,7 +287,7 @@ strt =JSON.parse(window.localStorage.getItem("Orgs"));
 ahwalChanged(e) {
     this.selahwalid = e.value;
  this.LoadData();
-  
+
 }
 
 groupChanged(e) {
@@ -294,68 +299,68 @@ groupChanged(e) {
     }
     else
     {
-        
+
     }
-  
+
 }
 
 onRowPrepared(e)
 {
     //if(e.RowType)
-    
+
     if(e.rowType ==='data')
     {
      //  console.log(e);
-        //let personState:Number = e.GetValue("PatrolPersonStateID");
+        //let personState:Number = e.GetValue('PatrolPersonStateID');
         if(e.key.patrolpersonstateid === 20 || e.key.patrolpersonstateid === 30 || e.key.patrolpersonstateid === 40 || e.key.patrolpersonstateid === 74)
         {
             e.rowElement.bgColor='#a0d89e';
-            
+
         }
         if(e.key.patrolpersonstateid === 70 )
         {
             e.rowElement.bgColor='#bfbeaa';
-            
+
         }
         if(e.key.patrolpersonstateid === 60 )
         {
             e.rowElement.bgColor='#edeb9e';
-            
+
         }
         if(e.key.patrolpersonstateid === 100 || e.key.patrolpersonstateid === 80 || e.key.patrolpersonstateid === 90 )
         {
             e.rowElement.bgColor='#ea88c8';
-            
+
         }
         if(e.key.patrolpersonstateid === 72  )
         {
             e.rowElement.bgColor='#ea88c8';
-            
+
         }
         if(e.key.patrolpersonstateid === 70  )
         {
             e.rowElement.bgColor='sandybrown';
-            
+
         }
-       
+
     }
 }
 
 ContextMenuprepare(e)
 {
-   if (e.row.rowType === "data") {
+   if (e.row.rowType === 'data') {
     e.items = [{
-      text: "غياب",
+      text: 'غياب',
       value:e.row.rowIndex
-     
+
   },
   {
-      text: "مرضيه",
+      text: 'مرضيه',
       value:e.row.rowIndex
   }
   ,
   {
-      text: "اجازه",
+      text: 'اجازه',
       value:e.row.rowIndex
   }
 ];
@@ -369,7 +374,7 @@ refreshDataGrid() {
 
 popupVisible:any = false;
 showInfo() {
-    this.AhwalMappingAddMethod ="ADD";
+    this.AhwalMappingAddMethod ='ADD';
     this.popupVisible = true;
 }
 
@@ -385,7 +390,7 @@ this.selectedShift = e.value;
 
 AhwalMapping_Add_SubmitButton_Click()
 {
-   
+
    if(this.selectedRole === null)
    {
     this.AhwalMapping_Add_status_label  = 'يرجى اختيار المسؤولية';
@@ -399,21 +404,21 @@ AhwalMapping_Add_SubmitButton_Click()
 
 let personobj:personcls = null;
 
-  this.svc.GetPersonForUserForRole(this.selectPerson_Mno,this.userid).subscribe(resp => 
+  this.svc.GetPersonForUserForRole(this.selectPerson_Mno,this.userid).subscribe(resp =>
     {
-      
+
         if (JSON.parse(resp) !== [])
         {
             personobj = JSON.parse(resp);
         }
-        
+
   },
-    error => { 
+    error => {
     });
 
     if (personobj === null)
     {
-        this.AhwalMapping_Add_status_label = "لم يتم العثور على الفرد";
+        this.AhwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
         return;
     }
 
@@ -427,26 +432,26 @@ if(this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  t
         this.AhwalMapping_Add_status_label  = 'يرجى اختيار الشفت';
         return;
     }
-  
+
     ahwalmappingobj.ahwalid = personobj[0].ahwalid;
     ahwalmappingobj.personid = personobj[0].personid;
     ahwalmappingobj.sectorid = Handler_AhwalMapping.Sector_Public;
     let citygroupsobj:citygroups = new citygroups();
-    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid).subscribe(resp => 
+    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid).subscribe(resp =>
         {
-         
+
             if (JSON.parse(resp) !== [])
             {
                 citygroupsobj = JSON.parse(resp);
             }
-            
+
       },
-        error => { 
+        error => {
         });
         ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
         ahwalmappingobj.shiftid = this.selectedShift;
         ahwalmappingobj.patrolroleid = this.selectedRole;
-        if(this.AhwalMappingAddMethod =="UPDATE"){
+        if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
             this.svc.UpDateAhwalMapping(ahwalmappingobj);
         }
@@ -471,20 +476,20 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
     ahwalmappingobj.personid = personobj[0].personid;
     ahwalmappingobj.sectorid = this.selectedSector;
     let citygroupsobj:citygroups = new citygroups();
-    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorid).subscribe(resp => 
+    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorid).subscribe(resp =>
         {
-         
+
             if (JSON.parse(resp) !== [])
             {
                 citygroupsobj = JSON.parse(resp);
             }
-            
+
       });
         ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
         ahwalmappingobj.shiftid = this.selectedShift;
         ahwalmappingobj.patrolroleid = this.selectedRole;
         ahwalmappingobj.personid = personobj[0].personid;
-        if(this.AhwalMappingAddMethod =="UPDATE"){
+        if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
             this.svc.UpDateAhwalMapping(ahwalmappingobj);
         }
@@ -500,20 +505,20 @@ if(this.selectedAssociateMapId === null){
     return;
 }
 let ahwalMappingForAssociateobj:personcls=new personcls();
-this.svc.GetAhwalMapForAssociate(this.selectedAssociateMapId,this.userid).subscribe(resp => 
+this.svc.GetAhwalMapForAssociate(this.selectedAssociateMapId,this.userid).subscribe(resp =>
     {
-      
+
         if (JSON.parse(resp) !== [])
         {
             ahwalMappingForAssociateobj = JSON.parse(resp);
         }
-        
+
   });
 
 if(ahwalMappingForAssociateobj !== null)
 {
 if(personobj[0].personid === ahwalMappingForAssociateobj.personid ){
-    this.AhwalMapping_Add_status_label = "المرافق نفس الفرد، ماهذا ؟؟؟؟";
+    this.AhwalMapping_Add_status_label = 'المرافق نفس الفرد، ماهذا ؟؟؟؟';
     return;
 }
 ahwalmappingobj.ahwalid = ahwalMappingForAssociateobj[0].ahwalid;
@@ -522,7 +527,7 @@ ahwalmappingobj.sectorid = ahwalMappingForAssociateobj[0].sectorid;
 ahwalmappingobj.citygroupid = ahwalMappingForAssociateobj[0].citygroupid;
 ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
 ahwalmappingobj.patrolroleid = this.selectedRole;
-if(this.AhwalMappingAddMethod =="UPDATE"){
+if(this.AhwalMappingAddMethod =='UPDATE'){
     ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
     this.svc.UpDateAhwalMapping(ahwalmappingobj);
 }
@@ -535,19 +540,19 @@ else
 {
     if(this.selectedShift === null)
     {
-        this.AhwalMapping_Add_status_label = "يرجى اختيار الشفت";
+        this.AhwalMapping_Add_status_label = 'يرجى اختيار الشفت';
         return;
     }
     ahwalmappingobj.ahwalid=personobj[0].ahwalid;
     if(this.selectedSector === null)
     {
-        this.AhwalMapping_Add_status_label = "يرجى اختيار القطاع";
+        this.AhwalMapping_Add_status_label = 'يرجى اختيار القطاع';
         return;
     }
 
     if(this.selectedCity === null)
     {
-        this.AhwalMapping_Add_status_label ="يرجى اختيار المنطقة";
+        this.AhwalMapping_Add_status_label ='يرجى اختيار المنطقة';
         return;
     }
     ahwalmappingobj.sectorid = this.selectedSector;
@@ -555,7 +560,7 @@ else
     ahwalmappingobj.citygroupid = this.selectedCity;
     ahwalmappingobj.patrolroleid = this.selectedRole;
     ahwalmappingobj.personid =  personobj[0].personid;
-    if(this.AhwalMappingAddMethod =="UPDATE"){
+    if(this.AhwalMappingAddMethod =='UPDATE'){
         ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
         this.svc.UpDateAhwalMapping(ahwalmappingobj);
     }
@@ -579,4 +584,101 @@ clearpersonpopupvalues()
 
 }
 
+AhwalMapping_CheckInOut_ID:any;
+AhwalMapping_CheckInOut_Method:any;
+selectedCheckInOutPerson: number =null;
+selectedCheckInOutPatrol:number = null;
+selectedCheckInOutHandHeld:number = null;
+
+Rwclick(e)
+{
+this.CheckInOutPopupVisible=true;
+this.AhwalMapping_CheckInOut_ID = 1165;
+
+this.ShowCheckInOutPopdtls();
+}
+
+ShowCheckInOutPopdtls()
+{
+
+if(this.selectedCheckInOutPerson === null)
+{
+this.AhwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
+}
+let personobj:personcls = new personcls();
+
+
+  this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+    {
+
+        if (JSON.parse(resp) !== [])
+        {
+            personobj = JSON.parse(resp);
+        }
+
+  });
+
+    if (personobj === null)
+    {
+        this.AhwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
+        return;
+
+      }
+
+if(this.selectedCheckInOutPatrol === null)
+{
+this.AhwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
+}
+
+let patrolobj:patrolcarscls = new patrolcarscls();
+this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
+  {
+
+      if (JSON.parse(resp) !== [])
+      {
+        patrolobj = JSON.parse(resp);
+      }
+});
+
+if (patrolobj === null)
+{
+    this.AhwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
+    return;
+
+  }
+if(this.selectedCheckInOutHandHeld == null)
+{
+  this.AhwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
+  return;
+}
+  let handheldobj:handheldcls = new handheldcls();
+  this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
+    {
+
+        if (JSON.parse(resp) !== [])
+        {
+          handheldobj = JSON.parse(resp);
+        }
+  });
+  let personMapping ;
+  this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+    {
+
+        if (JSON.parse(resp) !== [])
+        {
+          handheldobj = JSON.parse(resp);
+        }
+  });
+            if (personMapping == null)
+            {
+                this.AhwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
+                return;
+            }
+
+}
+
+CloseCheckInoutPopup(){
+  this.CheckInOutPopupVisible = false;
+
+}
 }
