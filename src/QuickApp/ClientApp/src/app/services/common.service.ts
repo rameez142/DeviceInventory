@@ -156,7 +156,7 @@ public Addpersons(frm:personcls){
 
         public GetCityList(userid:number,sectorid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/citylist?userid=' + userid + '?sectorid=' + sectorid, { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/maintainence/citylist?userid=' + userid + '&sectorid=' + sectorid, { responseType: 'text' })
 
         }
 

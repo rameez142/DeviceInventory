@@ -15,6 +15,7 @@
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
                 (onContextMenuPreparing)= "ContextMenuprepare($event)"
+                (onRowClick)="Rwclick($event)"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
                 <dxo-pager
@@ -84,30 +85,28 @@
               <dx-popup
               class="popup"
               [width]="600"
-              [height]="500"
-              [showTitle]="false"
+              [height]="350"
+              [showTitle]="true"
               title=""
               [showCloseButton]= "true"
-              [dragEnabled]="false"
+              [dragEnabled]="true"
               [closeOnOutsideClick]="true"
               [(visible)]="popupVisible">
               <div *dxTemplate="let data of 'content'">
 
-                  <table>
+                  <table class="greyGridTable">
                       <tr>
                           <td><label>الفرد</label></td>
                           <td>
                                 <dx-drop-down-box
-                                [(value)]="personMilNumber"
+                                [(value)]="selectPerson_Mno"
                                 valueExpr="milnumber"
                                 [deferRendering]="false"
-                                [displayExpr]="name"
+                                [displayExpr]="person_displayExpr"
                                 placeholder="Select a value..."
                                 [showClearButton]="true"
                                 [dataSource]="personsrc"
-
                         >
-
                             <div *dxTemplate="let data of 'content'">
                                 <dx-data-grid
                                         [dataSource]="personsrc"
@@ -116,10 +115,10 @@
                                         [hoverStateEnabled]="true"
                                         [paging]="{ enabled: true, pageSize: 5 }"
                                         [filterRow]="{ visible: true }"
-                                        [(selectedRowKeys)]="_gridSelectedRowKeys2"
                                         [rtlEnabled]= "true"
                                         [keyExpr] ="personid"
                                         [focusStateEnabled]="true"
+                                        (onRowClick)="RwPopupClick($event)"
                                 >
                                 </dx-data-grid>
                                 </div>
@@ -152,7 +151,6 @@
                             displayExpr="name"
                             valueExpr="shiftid"
                             [visible]="shiftvisibile"
-                            (onValueChanged)="shiftSelection($event)"
                             [searchEnabled]="true">
                         </dx-select-box>
                      </td>
@@ -165,6 +163,7 @@
                         displayExpr="shortname"
                         valueExpr="sectorid"
                         [visible]="sectorvisibile"
+                        (onValueChanged)="sectorSelection($event)"
                         [searchEnabled]="true">
                     </dx-select-box></td>
                     </tr>
@@ -176,7 +175,9 @@
                             displayExpr="shortname"
                             valueExpr="citygroupid"
                             [visible]="cityvisibile"
-                            [searchEnabled]="true">
+                            [searchEnabled]="true"
+                            (onValueChanged)="citySelection($event)"
+                            >
                         </dx-select-box>
                      </td>
                  </tr>
@@ -184,14 +185,13 @@
                      <td><label>مرافق ل</label></td>
                      <td>
                             <dx-drop-down-box
-                            [(value)]="gridBoxValue"
-                            valueExpr="personid"
-                            [deferRendering]="false"
-                            [displayExpr]="gridBox_displayExpr"
-                            placeholder="Select a value..."
-                            [showClearButton]="true"
+                            [(value)]="AssociatePersonMno"
                             [dataSource]="associatesrc"
-                            [visible]="associatevisibile"
+                            [deferRendering]="false"
+                            [displayExpr]="AssociateExpr"
+                            placeholder="Select a value..."
+                            [showClearButton]="true" 
+                            valueExpr="milnumber" 
                     >
 
                         <div *dxTemplate="let data of 'content'">
@@ -199,13 +199,14 @@
                                     [dataSource]="associatesrc"
                                     [columns]="[{caption:'الرقم العسكري',dataField:'milnumber'},{caption:'الاسم',dataField:'name'}]"
                                     [selection]="{ mode: 'single' }"
-                                    [hoverStateEnabled]="true"
-                                    [paging]="{ enabled: true, pageSize: 5 }"
-                                    [filterRow]="{ visible: true }"
-                                    [(selectedRowKeys)]="gridSelectedRowKeys"
-                                    [rtlEnabled]= "true"
-                                    [keyExpr] ="ahwalmappingid"
-                                    [focusStateEnabled]="true"
+                                        [hoverStateEnabled]="true"
+                                        [paging]="{ enabled: true, pageSize: 5 }"
+                                        [filterRow]="{ visible: true }"
+                                        [rtlEnabled]= "true"
+                                        [keyExpr] ="personid"
+                                        [focusStateEnabled]="true"
+                                        (onRowClick)="RwAssociatePopupClick($event)"
+
                             >
                             </dx-data-grid>
                         </div>
@@ -216,16 +217,13 @@
                          <td><dx-button
                             text="أضافه"
                             (onClick)="AhwalMapping_Add_SubmitButton_Click()"
-                            class="btn btn-default"
-
                            >
                         </dx-button></td>
-                         <td> <dx-button
+                         <!-- <td> <dx-button
                             text="إلغاء"
                             (onClick)="popupVisible = false"
-                            class="btn btn-primary"
                             >
-                        </dx-button></td>
+                        </dx-button></td> -->
 
                      </tr>
               <tr>
