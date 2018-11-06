@@ -1,6 +1,6 @@
-import { Component, OnInit ,ViewChild} from '@angular/core';
+import { ElementRef,Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
-import { DxDataGridComponent } from 'devextreme-angular'
+import { DxDataGridComponent, DxSelectBoxComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
 import { ModalService } from '../../../services/modalservice';
 import { Handler_AhwalMapping } from '../../../../environments/AhwalMapping';
@@ -20,6 +20,9 @@ import { handheldcls } from '../../../models/handheldcls';
 export class DispatchComponent implements OnInit {
 
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  
+
+
   loadingVisible = false;
   selahwalid:number = -1;
 
@@ -36,21 +39,22 @@ sectorvisibile:boolean=false;
 cityvisibile:boolean=false;
 associatevisibile:boolean=false;
 userid:number = null;
-selectedRole:number = -1;
-selectedShift:number = -1;
+selectedRole:string = null;
+selectedShift:string = null;
 AhwalMapping_Add_status_label:string ='';
-selectPerson_Mno:number =null;
+selectPerson_Mno:string =null;
 AhwalMappingAddMethod:string ='';
 selahwalmappingid:number=null;
-selectedSector:number=-1;
-selectedAssociateMapId:number=-1;
-selectedCity:number=-1;
+selectedSector:string=null;
+selectedAssociateMapId:string=null;
+selectedCity:string=null;
 CheckInOutPopupVisible:any=false;
 personname:string='';
 AssociatePersonMno:number = null;
 
   constructor(private svc:CommonService, private modalService: ModalService) {
-
+// console.log(this.thing);
+//this.clearpersonpopupvalues();
       this.userid = parseInt(window.localStorage.getItem('UserID'));
       console.log(this.userid);
     this.showLoadPanel();
@@ -75,13 +79,14 @@ AssociatePersonMno:number = null;
   roleSelection(e)
   {
 //console.log(this.selectedRole);
-this.selectedRole = parseInt(e.value);
+this.selectedRole = (e.value);
 console.log('selrole' + this.selectedRole);
 if(parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors || parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainShift)
 {
   this.shiftvisibile = true;
   this.sectorvisibile = false;
   this.cityvisibile = false;
+ // this.searchInput.nativeElement.visible = false;
   this.associatevisibile = false;
 }
 else if(parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainSector || parseInt(e.value) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
@@ -89,6 +94,7 @@ else if(parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainSector || p
   this.shiftvisibile = true;
   this.sectorvisibile = true;
   this.cityvisibile = false;
+  //this.searchInput.nativeElement.visible = false;
   this.associatevisibile = false;
 }
 else if( parseInt(e.value) === Handler_AhwalMapping.PatrolRole_Associate)
@@ -96,6 +102,7 @@ else if( parseInt(e.value) === Handler_AhwalMapping.PatrolRole_Associate)
   this.shiftvisibile = false;
   this.sectorvisibile = false;
   this.cityvisibile = false;
+ // this.searchInput.nativeElement.visible = false;
   this.associatevisibile = true;
 }
 else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
@@ -103,6 +110,7 @@ else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
     this.shiftvisibile = true;
     this.sectorvisibile = true;
     this.cityvisibile = true;
+   // this.searchInput.nativeElement.visible = true;
     this.associatevisibile = false;
 }
 
@@ -159,7 +167,7 @@ sectorSelection(e)
 {
    // console.log(e);
     this.selectedSector = e.value; 
-    this.svc.GetCityList(this.userid,this.selectedSector).subscribe(resp =>
+    this.svc.GetCityList(this.userid,parseInt(this.selectedSector)).subscribe(resp =>
         {
                    this.citysrc = JSON.parse(resp);
          });
@@ -342,10 +350,10 @@ refreshDataGrid() {
 
 popupVisible:any = false;
 showInfo() {
-   
+    this.clearpersonpopupvalues();
     this.AhwalMappingAddMethod ='ADD';
     this.popupVisible = true;
-    this.clearpersonpopupvalues();
+   
 }
 
 mappopupVisible:any = false;
@@ -358,7 +366,7 @@ citySelection(e)
 this.selectedCity = e.value;
 }
 
-AhwalMapping_Add_SubmitButton_Click()
+async AhwalMapping_Add_SubmitButton_Click(e)
 {
 
    if(this.selectedRole === null)
@@ -373,26 +381,31 @@ AhwalMapping_Add_SubmitButton_Click()
 }
 
 let personobj:personcls = null;
-
-  this.svc.GetPersonForUserForRole(this.selectPerson_Mno,this.userid).subscribe(resp =>
+  //let myAdd = async function() {
+     await this.svc.GetPersonForUserForRole(parseInt(this.selectPerson_Mno),
+   this.userid).toPromise().then(resp =>
     {
-
-        if (JSON.parse(resp) !== [])
+        if (JSON.parse(resp) !== JSON.parse("[]"))
         {
             personobj = JSON.parse(resp);
+            console.log(personobj);  
         }
-
   });
+//};
 
-    if (personobj === null)
-    {
-        this.AhwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
-        return;
-    }
+console.log(personobj);
+
+  if (personobj === null)
+  {
+      console.log(personobj);
+      this.AhwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
+      return;
+  }
+
 
 console.log(personobj);
 let ahwalmappingobj:ahwalmapping = new ahwalmapping();
-if(this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainShift)
+if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainShift)
 {
 
     if(this.selectedShift === null)
@@ -417,8 +430,8 @@ if(this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  t
         error => {
         });
         ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
-        ahwalmappingobj.shiftid = this.selectedShift;
-        ahwalmappingobj.patrolroleid = this.selectedRole;
+        ahwalmappingobj.shiftid = parseInt(this.selectedShift);
+        ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
         if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
             this.svc.UpDateAhwalMapping(ahwalmappingobj);
@@ -427,7 +440,7 @@ if(this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||  t
             this.svc.AddAhwalMapping(ahwalmappingobj);
         }
 }
-else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector ||  this.selectedRole === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainSector ||  parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
 {
     if(this.selectedShift === null)
     {
@@ -442,7 +455,7 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
     }
     ahwalmappingobj.ahwalid = personobj[0].ahwalid;
     ahwalmappingobj.personid = personobj[0].personid;
-    ahwalmappingobj.sectorid = this.selectedSector;
+    ahwalmappingobj.sectorid = parseInt(this.selectedSector);
     let citygroupsobj:citygroups = new citygroups();
     this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorid).subscribe(resp =>
         {
@@ -454,8 +467,8 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
 
       });
         ahwalmappingobj.citygroupid = citygroupsobj.citygroupid;
-        ahwalmappingobj.shiftid = this.selectedShift;
-        ahwalmappingobj.patrolroleid = this.selectedRole;
+        ahwalmappingobj.shiftid = parseInt(this.selectedShift);
+        ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
         ahwalmappingobj.personid = personobj[0].personid;
         if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
@@ -465,7 +478,7 @@ else if (this.selectedRole === Handler_AhwalMapping.PatrolRole_CaptainSector || 
             this.svc.AddAhwalMapping(ahwalmappingobj);
         }
 }
-else if(this.selectedRole = Handler_AhwalMapping.PatrolRole_Associate)
+else if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Associate)
 {
 
 if(this.selectedAssociateMapId === null){
@@ -473,7 +486,7 @@ if(this.selectedAssociateMapId === null){
     return;
 }
 let ahwalMappingForAssociateobj:personcls=new personcls();
-this.svc.GetAhwalMapForAssociate(this.selectedAssociateMapId,this.userid).subscribe(resp =>
+this.svc.GetAhwalMapForAssociate(parseInt(this.selectedAssociateMapId),this.userid).subscribe(resp =>
     {
 
         if (JSON.parse(resp) !== [])
@@ -494,7 +507,7 @@ ahwalmappingobj.personid = ahwalMappingForAssociateobj[0].personid;
 ahwalmappingobj.sectorid = ahwalMappingForAssociateobj[0].sectorid;
 ahwalmappingobj.citygroupid = ahwalMappingForAssociateobj[0].citygroupid;
 ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
-ahwalmappingobj.patrolroleid = this.selectedRole;
+ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
 if(this.AhwalMappingAddMethod =='UPDATE'){
     ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
     this.svc.UpDateAhwalMapping(ahwalmappingobj);
@@ -504,8 +517,10 @@ else{
 }
 
 }
+}
 else
 {
+    console.log('else');
     if(this.selectedShift === null)
     {
         this.AhwalMapping_Add_status_label = 'يرجى اختيار الشفت';
@@ -523,24 +538,31 @@ else
         this.AhwalMapping_Add_status_label ='يرجى اختيار المنطقة';
         return;
     }
-    ahwalmappingobj.sectorid = this.selectedSector;
-    ahwalmappingobj.shiftid = this.selectedShift;
-    ahwalmappingobj.citygroupid = this.selectedCity;
-    ahwalmappingobj.patrolroleid = this.selectedRole;
+    ahwalmappingobj.sectorid = parseInt(this.selectedSector);
+    ahwalmappingobj.shiftid = parseInt(this.selectedShift);
+    ahwalmappingobj.citygroupid = parseInt(this.selectedCity);
+    ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
     ahwalmappingobj.personid =  personobj[0].personid;
+    console.log(this.AhwalMappingAddMethod );
     if(this.AhwalMappingAddMethod =='UPDATE'){
         ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
         this.svc.UpDateAhwalMapping(ahwalmappingobj);
     }
     else{
-        this.svc.AddAhwalMapping(ahwalmappingobj);
+        console.log('insert');
+        console.log(ahwalmappingobj );
+        this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+            {
+                this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+             this.LoadData();
+          });
     }
 }
+//this.searchInput.nativeElement.visible = false;
 
-}
-
+//this.showInfo();
 this.clearpersonpopupvalues();
-
+//this.clearpersonpopupvalues();
 }
 
 clearpersonpopupvalues()
@@ -557,8 +579,10 @@ clearpersonpopupvalues()
 
     this.shiftvisibile = false;
     this.sectorvisibile = false;
-    this.cityvisibile = false;
+   this.cityvisibile = false;
     this.associatevisibile = false;
+    //this.searchInput.nativeElement.visible = false;
+    //console.log('searchinput ' + this.searchInput);
 }
 
 AhwalMapping_CheckInOut_ID:any;
@@ -578,7 +602,6 @@ if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
 }
 else {
    this.selectPerson_Mno = e.values[0];
-   
 }
 
 }

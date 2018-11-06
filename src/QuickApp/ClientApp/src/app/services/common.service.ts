@@ -29,6 +29,7 @@ export class CommonService {
     }
 
     public AddPatrolCar(frm:patrolcarscls){
+      //console.log('add' + frm);
       return this.http.post(this.api_url + '/api/maintainence/addpatrolcar', frm, { responseType: 'text' })
       }
 
@@ -180,6 +181,7 @@ public Addpersons(frm:personcls){
 
         public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
+          console.log('ahwalmappingobj' + ahwalmappingobj);
           return this.http.post(this.api_url + '/api/maintainence/AddAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
 
         }

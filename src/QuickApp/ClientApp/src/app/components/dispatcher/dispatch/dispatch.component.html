@@ -137,6 +137,7 @@
                             valueExpr="patrolroleid"
                             [searchEnabled]="true"
                             (onValueChanged)="roleSelection($event)"
+                            [value]="selectedRole"
                             >
                         </dx-select-box>
                         </td>
@@ -151,32 +152,37 @@
                             displayExpr="name"
                             valueExpr="shiftid"
                             [visible]="shiftvisibile"
-                            [searchEnabled]="true">
+                            [searchEnabled]="true"
+                            [(value)]="selectedShift"
+                            >
                         </dx-select-box>
                      </td>
                      <td></td>
                      </tr>
                      <tr>
                      <td><label>القطاع</label></td>
-                     <td>  <dx-select-box
+                     <td>  <dx-select-box #thing
                         [dataSource]="sectorssrc"
                         displayExpr="shortname"
                         valueExpr="sectorid"
                         [visible]="sectorvisibile"
                         (onValueChanged)="sectorSelection($event)"
-                        [searchEnabled]="true">
+                        [searchEnabled]="true"
+                        [value]="selectedSector"
+                        >
                     </dx-select-box></td>
                     </tr>
                     <tr>
                      <td><label>المنطقة</label></td>
                      <td>
-                            <dx-select-box
+                            <dx-select-box 
                             [dataSource]="citysrc"
                             displayExpr="shortname"
                             valueExpr="citygroupid"
                             [visible]="cityvisibile"
                             [searchEnabled]="true"
                             (onValueChanged)="citySelection($event)"
+                            [value]="selectedCity"
                             >
                         </dx-select-box>
                      </td>
@@ -214,11 +220,10 @@
                      </td>
                  </tr>
                      <tr>
-                         <td><dx-button
-                            text="أضافه"
-                            (onClick)="AhwalMapping_Add_SubmitButton_Click()"
-                           >
-                        </dx-button></td>
+                         <td>
+                        <button type="submit" (click)="AhwalMapping_Add_SubmitButton_Click($event)" data-dismiss="modal" class="btn btn-primary">أضافه</button>
+                    
+                    </td>
                          <!-- <td> <dx-button
                             text="إلغاء"
                             (onClick)="popupVisible = false"
