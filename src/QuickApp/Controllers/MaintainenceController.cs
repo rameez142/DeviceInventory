@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Web;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +75,17 @@ namespace PatrolWebApp.Controllers
 
     }
 
-  
+    public class personcls
+    {
+        public int personid { get; set; }
+        public int ahwalid { get; set; }
+        public int milnumber { get; set; }
+        public int rankid { get; set; }
+        public string name { get; set; }
+        public string mobile { get; set; }
+        public int fixedcallerid { get; set; }
+    }
+   
 
     [Route("api/[controller]")]
     public class MaintainenceController : Controller
@@ -779,13 +789,27 @@ namespace PatrolWebApp.Controllers
         }
         #endregion
         [HttpPost("AddAhwalMapping")]
-        public int PostAddAhwalMapping([FromBody]ahwalmapping frm)
+        public string PostAddAhwalMapping([FromBody]ahwalmapping frm)
         {
-            int ret = 0;
+           //  GetPerson = "";
+            string ol_failed = "";
+
+            //we have to check first that this person doesn't exists before in mapping
+            String CheckPersonQry = "";
+            CheckPersonQry = "select * from persons where personid=" + frm.personid;
+            personcls GetPerson = GetList<personcls>(CheckPersonQry)[0];
+            if (GetPerson == null)
+            {
+                 ol_failed = "لم يتم العثور على الفرد: " + frm.personid; //todo, change it actual person name
+
+                return ol_failed;
+            }
+
             string InsQry = "";
             InsQry = "insert into ahwalmapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalid + "," + frm.sectorid + "," + frm.citygroupid + "," + frm.shiftid + "," + frm.patrolroleid + "," + frm.personid + ")";
-            ret = PostGre_ExNonQry(InsQry);
-            return ret;
+            int ret = PostGre_ExNonQry(InsQry);
+            ol_failed = "Saved ";
+            return ol_failed;
         }
 
         [HttpPost("UpDateAhwalMapping")]
@@ -796,6 +820,19 @@ namespace PatrolWebApp.Controllers
             UpdateQry = "update ahwalmapping set ahwalid = " + frm.ahwalid + ",sectorid=" + frm.sectorid + ",citygroupid=" + frm.citygroupid + ",shiftid=" + frm.shiftid + ",patrolroleid=" + frm.patrolroleid + ",personid=" + frm.personid + " where ahwalmappingid = " + frm.ahwalmappingid;
             ret = PostGre_ExNonQry(UpdateQry);
             return ret;
+        }
+
+        public string PostGre_ExScalar(string Qry)
+        {
+            string rcdstr = "";
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = cont;
+            cmd.CommandText = Qry;
+            rcdstr = cmd.ExecuteScalar().ToString();
+            return rcdstr;
         }
 
         public int PostGre_ExNonQry(string Qry)
@@ -826,7 +863,65 @@ namespace PatrolWebApp.Controllers
             cont.Dispose();
             return DT;
         }
+        // function that creates a list of an object from the given data table
+        public  List<T> GetList<T>(string Qry) where T : new()
+        {
+            DataTable tbl = new DataTable();
+
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
+            da.Fill(tbl);
+            cont.Close();
+            cont.Dispose();
+
+            // define return list
+            List<T> lst = new List<T>();
+
+            // go through each row
+            foreach (DataRow r in tbl.Rows)
+            {
+                // add to the list
+                lst.Add(CreateItemFromRow<T>(r));
+            }
+
+            // return the list
+            return lst;
+        }
+
+        // function that creates an object from the given data row
+        public static T CreateItemFromRow<T>(DataRow row) where T : new()
+        {
+            // create a new object
+            T item = new T();
+
+            // set the item
+            SetItemFromRow(item, row);
+
+            // return 
+            return item;
+        }
+
+        public static void SetItemFromRow<T>(T item, DataRow row) where T : new()
+        {
+            // go through each column
+            foreach (DataColumn c in row.Table.Columns)
+            {
+                // find the property for the column
+                PropertyInfo p = item.GetType().GetProperty(c.ColumnName);
+
+                // if exists, set the value
+                if (p != null && row[c] != DBNull.Value)
+                {
+                    p.SetValue(item, row[c], null);
+                }
+            }
+        }
+
     }
 
-   
+
+
+
 }
