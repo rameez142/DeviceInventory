@@ -589,19 +589,14 @@ namespace PatrolWebApp.Controllers
         public int PostAddpersons([FromBody]devicecls frm)
         {
             int ret = 0;
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd.Connection = cont;
-            cmd.CommandText = "insert into devices(AhwalID,devicenumber,model,devicetypeid,defective,rental,barcode) values (" + frm.ahwalid + ",'" + frm.devicenumber + "'," + frm.model + "," + frm.devicetypeid + "," + frm.defective + "," + frm.rental + ",'" + frm.barcode + "')";
-            ret = cmd.ExecuteNonQuery();
-            cont.Close();
-            cont.Dispose();
-
-
+            string InsQry = "";
+            //we have to check first that this person doesn't exists before in mapping
+            InsQry = "insert into devices(AhwalID,devicenumber,model,devicetypeid,defective,rental,barcode) values (" + frm.ahwalid + ",'" + frm.devicenumber + "'," + frm.model + "," + frm.devicetypeid + "," + frm.defective + "," + frm.rental + ",'" + frm.barcode + "')";
+            ret = PostGre_ExNonQry(InsQry);
             return ret;
         }
+
+       
 
         [HttpPost("updatepersons")]
         public int PostUpdatepersons([FromBody] devicecls frm)
@@ -787,15 +782,9 @@ namespace PatrolWebApp.Controllers
         public int PostAddAhwalMapping([FromBody]ahwalmapping frm)
         {
             int ret = 0;
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd.Connection = cont;
-            cmd.CommandText = "insert into ahwalmapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalid + "," + frm.sectorid + "," + frm.citygroupid + "," + frm.shiftid + "," + frm.patrolroleid + "," + frm.personid + ")";
-            ret = cmd.ExecuteNonQuery();
-            cont.Close();
-            cont.Dispose();
+            string InsQry = "";
+            InsQry = "insert into ahwalmapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalid + "," + frm.sectorid + "," + frm.citygroupid + "," + frm.shiftid + "," + frm.patrolroleid + "," + frm.personid + ")";
+            ret = PostGre_ExNonQry(InsQry);
             return ret;
         }
 
@@ -803,16 +792,41 @@ namespace PatrolWebApp.Controllers
         public int PostUpDateAhwalMapping([FromBody]ahwalmapping frm)
         {
             int ret = 0;
+            string UpdateQry = "";
+            UpdateQry = "update ahwalmapping set ahwalid = " + frm.ahwalid + ",sectorid=" + frm.sectorid + ",citygroupid=" + frm.citygroupid + ",shiftid=" + frm.shiftid + ",patrolroleid=" + frm.patrolroleid + ",personid=" + frm.personid + " where ahwalmappingid = " + frm.ahwalmappingid;
+            ret = PostGre_ExNonQry(UpdateQry);
+            return ret;
+        }
+
+        public int PostGre_ExNonQry(string Qry)
+        {
+            int rcdcnt = 0;
             NpgsqlConnection cont = new NpgsqlConnection();
             cont.ConnectionString = constr;
             cont.Open();
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = cont;
-            cmd.CommandText = "update ahwalmapping set ahwalid = " + frm.ahwalid + ",sectorid=" + frm.sectorid + ",citygroupid=" + frm.citygroupid + ",shiftid=" + frm.shiftid + ",patrolroleid=" + frm.patrolroleid + ",personid=" + frm.personid + " where ahwalmappingid = " + frm.ahwalmappingid;
-            ret = cmd.ExecuteNonQuery();
+            cmd.CommandText = Qry;
+            rcdcnt = cmd.ExecuteNonQuery();
             cont.Close();
             cont.Dispose();
-            return ret;
+            return rcdcnt;
+        }
+
+        public DataTable PostGre_GetData(string Qry)
+        {
+            DataTable DT = new DataTable();
+
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
+            da.Fill(DT);
+            cont.Close();
+            cont.Dispose();
+            return DT;
         }
     }
+
+   
 }
