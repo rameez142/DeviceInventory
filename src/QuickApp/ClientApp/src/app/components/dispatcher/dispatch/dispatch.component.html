@@ -161,7 +161,7 @@
                      </tr>
                      <tr>
                      <td><label>القطاع</label></td>
-                     <td>  <dx-select-box #thing
+                     <td>  <dx-select-box 
                         [dataSource]="sectorssrc"
                         displayExpr="shortname"
                         valueExpr="sectorid"
@@ -181,8 +181,7 @@
                             valueExpr="citygroupid"
                             [visible]="cityvisibile"
                             [searchEnabled]="true"
-                            (onValueChanged)="citySelection($event)"
-                            [value]="selectedCity"
+                            [(value)]="selectedCity"
                             >
                         </dx-select-box>
                      </td>

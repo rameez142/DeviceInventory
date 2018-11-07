@@ -81,6 +81,8 @@ AssociatePersonMno:number = null;
 //console.log(this.selectedRole);
 this.selectedRole = (e.value);
 console.log('selrole' + this.selectedRole);
+if(e.value !== null)
+{
 if(parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors || parseInt(e.value) === Handler_AhwalMapping.PatrolRole_CaptainShift)
 {
   this.shiftvisibile = true;
@@ -112,6 +114,7 @@ else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
     this.cityvisibile = true;
    // this.searchInput.nativeElement.visible = true;
     this.associatevisibile = false;
+}
 }
 
   }
@@ -165,13 +168,19 @@ else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
 
 sectorSelection(e)
 {
-   // console.log(e);
+   console.log('sector' + e);
+   if(e.value !== null)
+   {
     this.selectedSector = e.value; 
     this.svc.GetCityList(this.userid,parseInt(this.selectedSector)).subscribe(resp =>
         {
                    this.citysrc = JSON.parse(resp);
          });
-   
+        }
+        else
+    {
+        this.citysrc =null;
+    }
 }
 
 
@@ -353,7 +362,7 @@ showInfo() {
     this.clearpersonpopupvalues();
     this.AhwalMappingAddMethod ='ADD';
     this.popupVisible = true;
-   
+   //this.modalService.open('custom-modal-2');
 }
 
 mappopupVisible:any = false;
@@ -434,10 +443,20 @@ if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainAllSec
         ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
         if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
-            this.svc.UpDateAhwalMapping(ahwalmappingobj);
+            this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
+                {
+                    this.clearpersonpopupvalues();
+                    this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+                 this.LoadData();
+              });
         }
         else{
-            this.svc.AddAhwalMapping(ahwalmappingobj);
+            this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+                {
+                    this.clearpersonpopupvalues();
+                    this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+                 this.LoadData();
+              });
         }
 }
 else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainSector ||  parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
@@ -472,10 +491,20 @@ else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Captain
         ahwalmappingobj.personid = personobj[0].personid;
         if(this.AhwalMappingAddMethod =='UPDATE'){
             ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
-            this.svc.UpDateAhwalMapping(ahwalmappingobj);
+            this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
+                {
+                    this.clearpersonpopupvalues();
+                    this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+                 this.LoadData();
+              });
         }
         else{
-            this.svc.AddAhwalMapping(ahwalmappingobj);
+            this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+                {
+                    this.clearpersonpopupvalues();
+                    this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+                 this.LoadData();
+              });
         }
 }
 else if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Associate)
@@ -510,10 +539,20 @@ ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
 ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
 if(this.AhwalMappingAddMethod =='UPDATE'){
     ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
-    this.svc.UpDateAhwalMapping(ahwalmappingobj);
+    this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
+        {
+            this.clearpersonpopupvalues();
+            this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+         this.LoadData();
+      });
 }
 else{
-    this.svc.AddAhwalMapping(ahwalmappingobj);
+    this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+        {
+            this.clearpersonpopupvalues();
+            this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+         this.LoadData();
+      });
 }
 
 }
@@ -546,13 +585,19 @@ else
     console.log(this.AhwalMappingAddMethod );
     if(this.AhwalMappingAddMethod =='UPDATE'){
         ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
-        this.svc.UpDateAhwalMapping(ahwalmappingobj);
+        this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
+            {
+                this.clearpersonpopupvalues();
+                this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
+             this.LoadData();
+          });
     }
     else{
         console.log('insert');
         console.log(ahwalmappingobj );
         this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
             {
+                this.clearpersonpopupvalues();
                 this.AhwalMapping_Add_status_label = 'Saved SuccessFully';
              this.LoadData();
           });
@@ -561,26 +606,29 @@ else
 //this.searchInput.nativeElement.visible = false;
 
 //this.showInfo();
-this.clearpersonpopupvalues();
+
 //this.clearpersonpopupvalues();
 }
 
 clearpersonpopupvalues()
 {
-    this.selectedRole = null;
+    
     this.selectPerson_Mno = null;
     this.selectedShift = null;
     
-    this.AssociatePersonMno = null;
+   this.AssociatePersonMno = null;
     this.selectedCity = null;
     this.selectedAssociateMapId = null;
-    this.selectedSector = null;
+   /*  */
     this.AhwalMapping_Add_status_label = '';
 
     this.shiftvisibile = false;
     this.sectorvisibile = false;
    this.cityvisibile = false;
     this.associatevisibile = false;
+
+    this.selectedSector = null;
+   this.selectedRole = null;
     //this.searchInput.nativeElement.visible = false;
     //console.log('searchinput ' + this.searchInput);
 }
