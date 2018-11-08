@@ -165,7 +165,7 @@ namespace MOI.Patrol.Controllers
             frm.patrolPersonStateID = Handler_AhwalMapping.PatrolPersonState_None;
 
             string InsQry = "";
-            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,patrolPersonStateID,hasFixedCallerID,callerID) values (" + frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID + "," + frm.personID + ")";
+            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID + "," + frm.personID + ")";
             int ret = DAL.PostGre_ExNonQry(InsQry);
             ol_failed = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
 
