@@ -54,7 +54,7 @@ namespace MOI.Patrol.Controllers
         [HttpGet("cityList")]
         public List<CityGroups> GetCityList(int userid, int sectorid)
         {
-            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled  FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
+            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
             return DAL.PostGre_GetData<CityGroups>(Qry);
         }
 
@@ -135,7 +135,7 @@ namespace MOI.Patrol.Controllers
             return ol_failed;
         }
 
-        [HttpPost("upDateAhwalMapping")]
+        [HttpPost("updateAhwalMapping")]
         public int PostUpDateAhwalMapping([FromBody]AhwalMapping frm)
         {
             int ret = 0;

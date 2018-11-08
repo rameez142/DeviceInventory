@@ -1,6 +1,6 @@
 export class associates {
     ahwalMappingID:number;
     personID:number;
-    milNumber:number;
+    milnumber:number;
     name:string;
 }

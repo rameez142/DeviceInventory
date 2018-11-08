@@ -8,9 +8,9 @@ namespace MOI.Patrol.Models
     public class CityGroups
     {
 
-        public int cityGroupid { get; set; }
-        public int ahwalId { get; set; }
-        public int sectorId { get; set; }
+        public int cityGroupID { get; set; }
+        public int ahwalID { get; set; }
+        public int sectorID { get; set; }
         public string shortName { get; set; }
         public string callerPrefix { get; set; }
         public string text { get; set; }

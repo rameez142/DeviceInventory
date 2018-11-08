@@ -135,7 +135,7 @@
                             <dx-select-box
                             [dataSource]="responsibilitysrc"
                             displayExpr="name"
-                            valueExpr="patrolroleid"
+                            valueExpr="patrolRoleID"
                             [searchEnabled]="true"
                             (onValueChanged)="roleSelection($event)"
                             [value]="selectedRole"
@@ -151,7 +151,7 @@
                             <dx-select-box
                             [dataSource]="shiftssrc"
                             displayExpr="name"
-                            valueExpr="shiftid"
+                            valueExpr="shiftID"
                             [visible]="shiftvisibile"
                             [searchEnabled]="true"
                             [(value)]="selectedShift"
@@ -164,8 +164,8 @@
                      <td><label>القطاع</label></td>
                      <td>  <dx-select-box 
                         [dataSource]="sectorssrc"
-                        displayExpr="shortname"
-                        valueExpr="sectorid"
+                        displayExpr="shortName"
+                        valueExpr="sectorID"
                         [visible]="sectorvisibile"
                         (onValueChanged)="sectorSelection($event)"
                         [searchEnabled]="true"
@@ -178,8 +178,8 @@
                      <td>
                             <dx-select-box 
                             [dataSource]="citysrc"
-                            displayExpr="shortname"
-                            valueExpr="citygroupid"
+                            displayExpr="shortName"
+                            valueExpr="cityGroupID"
                             [visible]="cityvisibile"
                             [searchEnabled]="true"
                             [(value)]="selectedCity"

@@ -1,7 +1,7 @@
 export class citygroups {
-    cityGroupid:number;
-    ahwalId:number;
-    sectorId:number;
+    cityGroupID:number;
+    ahwalID:number;
+    sectorID:number;
     shortName:string;
     callerPrefix:string;
     text:string;

@@ -81,7 +81,7 @@ associatePersonMno:number = null;
 
   roleSelection(e)
   {
-
+    console.log(e);
 this.selectedRole = (e.value);
 
 if(e.value !== null)
@@ -122,10 +122,10 @@ else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
 
   }
 
-  async loadDataSources()
+   loadDataSources()
   {
 
-   await  this.svc.GetShiftsList().toPromise().then(resp =>
+     this.svc.GetShiftsList().toPromise().then(resp =>
         {
            // console.log(resp);
            this.shiftssrc = <shifts>resp;
@@ -133,27 +133,30 @@ else if (parseInt(e.value) != -1 && parseInt(e.value) != null)
         error => {
         });
 
-        await this.svc.GetResponsibiltyList().toPromise().then(resp =>
+         this.svc.GetResponsibiltyList().toPromise().then(resp =>
         {
-
+            console.log(resp);
                this.responsibilitysrc = <patrolroles>resp;
+               console.log(this.responsibilitysrc);
         },
         error => {
         });
 
-        await this.svc.GetSectorsList(this.userid).toPromise().then(resp =>
+         this.svc.GetSectorsList(this.userid).toPromise().then(resp =>
         {
+            console.log(resp);
                    this.sectorssrc = <sectors>resp;
+                   console.log(this.sectorssrc);
          });
 
             
 
-         await this.svc.GetAssociateList(this.userid).toPromise().then(resp =>
+          this.svc.GetAssociateList(this.userid).toPromise().then(resp =>
          {
          this.associatesrc = <associates>resp;
           });
 
-          await this.svc.GetPersonList(this.userid).toPromise().then(resp =>
+           this.svc.GetPersonList(this.userid).toPromise().then(resp =>
            {
               
             this.personsrc =<persons> resp;
@@ -437,7 +440,7 @@ if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainAllSec
       },
         error => {
         });
-        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupid;
+        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupID;
         ahwalmappingobj.shiftid = parseInt(this.selectedShift);
         ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
         if(this.ahwalMappingAddMethod =='UPDATE'){
@@ -484,7 +487,7 @@ else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Captain
             }
 
       });
-        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupid;
+        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupID;
         ahwalmappingobj.shiftid = parseInt(this.selectedShift);
         ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
         ahwalmappingobj.personid = personobj[0].personid;

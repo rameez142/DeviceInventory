@@ -173,7 +173,7 @@ public Addpersons(frm:persons){
 
         public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
-          return this.http.post(this.api_url + '/api/dispatch/upDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+          return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
         }
         public GetAhwalMapForAssociate(AssociateMapId:number,userid:number)
         {

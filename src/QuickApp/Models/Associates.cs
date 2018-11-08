@@ -9,7 +9,7 @@ namespace MOI.Patrol.Models
     {
         public int ahwalMappingID { get; set; }
         public int personID { get; set; }
-        public int milNumber { get; set; }
+        public int milnumber { get; set; }
         public string name { get; set; }
     }
 }

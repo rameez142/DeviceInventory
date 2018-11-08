@@ -2,7 +2,7 @@ export class persons
 {
   personID:number ;
   ahwalID:number ;
-  milNumber: number;
+  milnumber: number;
   rankID:number ;
   name: string ;
   mobile:string ;
