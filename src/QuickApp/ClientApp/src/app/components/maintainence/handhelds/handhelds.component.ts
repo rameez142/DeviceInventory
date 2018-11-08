@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-import {handheldcls} from '../../../models/handheldcls';
+import {handhelds} from '../../../models/handhelds';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class HandheldsComponent implements OnInit {
   devicetypesrc:any;
 
 
-  public handheldobj:handheldcls = new handheldcls();
+  public handheldobj:handhelds = new handhelds();
 
 
   constructor(private svc:CommonService) {
@@ -163,7 +163,7 @@ refreshDataGrid() {
 cleardata()
 {
   this.handheldobj = null;
-  this.handheldobj= new handheldcls();
+  this.handheldobj= new handhelds();
 }
 
 PopupInitialize(e)

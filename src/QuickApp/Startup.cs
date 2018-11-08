@@ -44,6 +44,8 @@ namespace AssetManagement
                 options.UseOpenIddict();
             });
 
+            
+
             // add identity
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

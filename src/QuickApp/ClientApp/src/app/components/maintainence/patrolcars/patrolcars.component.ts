@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild,ChangeDetectorRef} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
-import {patrolcarscls} from '../../../models/patrolcarscls';
+import {patrolcars} from '../../../models/patrolcars';
 import SelectBox from 'devextreme/ui/select_box';
 import { ModalService } from '../../../services/modalservice';
 
@@ -40,7 +40,7 @@ export class PatrolcarsComponent implements OnInit {
   modaltitle:string='';
   hdntrans:string='';
   patrolid: number=0;
-  public patrolcarobj:patrolcarscls = new patrolcarscls();
+  public patrolcarobj:patrolcars = new patrolcars();
 
 
   constructor(private svc:CommonService, private modalService: ModalService,private cd: ChangeDetectorRef) {
@@ -114,7 +114,7 @@ LoadData()
     {
 
        this.dataSource = JSON.parse(resp);
-     // console.log('resp' + resp);
+      console.log('resp' + this.dataSource);
       this.dataGrid.dataSource = this.dataSource;
 
 
@@ -178,7 +178,7 @@ cleardata()
 {
 
   this.patrolcarobj = null;
-  this.patrolcarobj= new patrolcarscls();
+  this.patrolcarobj= new patrolcars();
  /* this.patrolcarobj.ahwalid =  -1;
   this.patrolcarobj.barcode = '';
   this.patrolcarobj.defective =  -1;

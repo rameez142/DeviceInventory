@@ -1,4 +1,4 @@
-export class patrolcarscls
+export class patrolcars
 {
   patrolid:number ;
   platenumber:string;
@@ -8,7 +8,7 @@ export class patrolcarscls
   typecode:string ;
   type:string;
   defective: number ;
- 
+
   rental:number ;
   barcode: string;
 }

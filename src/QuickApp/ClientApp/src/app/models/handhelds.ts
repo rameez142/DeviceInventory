@@ -1,4 +1,4 @@
-export class handheldcls
+export class handhelds
 {
   handheldid:number ;
   serial:string;

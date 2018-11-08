@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
-import {patrolcarscls} from '../../../models/patrolcarscls';
+import {patrolcars} from '../../../models/patrolcars';
 
 @Component({
   selector: 'app-employees',
@@ -20,7 +20,7 @@ export class EmployeesComponent implements OnInit {
   typesrc:any;
   dataSource: any;
   devicetypesrc:any;
-  public deviceobj:patrolcarscls = new patrolcarscls();
+  public deviceobj:patrolcars = new patrolcars();
 
 
   constructor(private svc:CommonService) {

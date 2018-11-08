@@ -26,6 +26,7 @@
     <PackageReference Include="MailKit" Version="2.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="NEST" Version="6.3.1" />
     <PackageReference Include="Npgsql" Version="4.0.3" />
     <PackageReference Include="OpenIddict" Version="2.0.0-rc3-final" />
@@ -49,6 +50,10 @@
   <ItemGroup>
     <EmbeddedResource Remove="Logs\**" />
     <None Remove="Logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Maintainence2Controller.cs" />
   </ItemGroup>
 
   <ItemGroup>

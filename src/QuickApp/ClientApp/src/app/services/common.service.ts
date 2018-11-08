@@ -3,69 +3,70 @@ import { Injectable , Output,EventEmitter} from '@angular/core';
 import {HttpClient,HttpHeaders,HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, retry, map, tap } from 'rxjs/operators';
-import {patrolcarscls} from '../models/patrolcarscls';
-import {handheldcls} from '../models/handheldcls';
+import {patrolcars} from '../models/patrolcars';
+import {handhelds} from '../models/handhelds';
 import {accessorycls} from '../models/accessorycls';
-import {personcls} from '../models/personcls';
-import {citygroups} from '../models/citygroups.model';
+import {persons} from '../models/persons';
+import {citygroups} from '../models/citygroups';
 import { ahwalmapping } from '../models/ahwalmapping.model';
-@Injectable()
 
+@Injectable()
 
 export class CommonService {
   private api_url: any = document.getElementsByTagName('base')[0].href;
 
   constructor(private http: HttpClient) {
-
-    //console.log('sss' + document.getElementsByTagName('base')[0].href);
    }
+//#region "PatrolCars"
   public GetPatrolCarList(ahwal:number,userid:number){
-//let objstr: string = '{""ahwalid"":"""+  ahwal + """,""userid"":""" + userid + """}';
-
-    //let objusr : any =  JSON.parse(objstr);
-    //let objstr: string = ahwal + ';' + userid;
-
     return this.http.post(this.api_url + '/api/maintainence/patrolcarslist',ahwal, { responseType: 'text' })
     }
 
-    public AddPatrolCar(frm:patrolcarscls){
-      //console.log('add' + frm);
-      return this.http.post(this.api_url + '/api/maintainence/addpatrolcar', frm, { responseType: 'text' })
-      }
+  public AddPatrolCar(frm:patrolcars){
+     return this.http.post(this.api_url + '/api/maintainence/addpatrolcar', frm, { responseType: 'text' })
+    }
 
-      public UpdatePatrolCar(frm:patrolcarscls){
+  public UpdatePatrolCar(frm:patrolcars){
         return this.http.post(this.api_url + '/api/maintainence/updatepatrolcar', frm, { responseType: 'text' })
-        }
+    }
 
-        public DeletePatrolCar(frm:patrolcarscls){
+  public DeletePatrolCar(frm:patrolcars){
           //console.log(frm);
           return this.http.post(this.api_url + '/api/maintainence/delpatrolcar', frm, { responseType: 'text' })
-          }
-
-
-
-          public GetPatrolCarTypes(){
+    }
+  
+    public GetPatrolCarTypes(){
             return this.http.post(this.api_url + '/api/maintainence/patrolcartypes', null, { responseType: 'text' })
-            }
+   }
 
-//#region Hand Held
+   public GetpatrolcarsInventoryList(ahwalid:number,userid:number){
+    //console.log(ahwalid);
+    return this.http.get(this.api_url + '/api/maintainence/patrolcarsinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
+    }
+
+//#endregion "PatrolCars"
+//#region "Hand Held"
 public GethandheldsList(){
   return this.http.post(this.api_url + '/api/maintainence/handheldlist', null, { responseType: 'text' })
   }
-public Addhandhelds(frm:handheldcls){
+public Addhandhelds(frm:handhelds){
   return this.http.post(this.api_url + '/api/maintainence/addhandheld', frm, { responseType: 'text' })
   }
 
-  public Updatehandhelds(frm:handheldcls){
+  public Updatehandhelds(frm:handhelds){
     return this.http.post(this.api_url + '/api/maintainence/updatehandheld', frm, { responseType: 'text' })
     }
 
-    public Deletehandhelds(frm:handheldcls){
+    public Deletehandhelds(frm:handhelds){
       console.log(frm);
       return this.http.post(this.api_url + '/api/maintainence/delhandheld', frm, { responseType: 'text' })
       }
+      public GetHandHeldsInventoryList(ahwalid:number,userid:number){
+        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
+        }
+//#endregion "Hand Held"
 
-      //#region Accessory
+//#region "Accessory"
 public GetaccessoryList(){
   return this.http.post(this.api_url + '/api/maintainence/accessorylist', null, { responseType: 'text' })
   }
@@ -75,68 +76,52 @@ public Addaccessory(frm:accessorycls){
 
   public Updateaccessory(frm:accessorycls){
     return this.http.post(this.api_url + '/api/maintainence/updateaccessory', frm, { responseType: 'text' })
-    }
+  }
 
-    public Deleteaccessory(frm:accessorycls){
+public Deleteaccessory(frm:accessorycls){
       console.log(frm);
       return this.http.post(this.api_url + '/api/maintainence/delaccessory', frm, { responseType: 'text' })
-      }
-
-
-         //#region Persons
-public GetpersonList(){
-  return this.http.post(this.api_url + '/api/maintainence/personslist', null, { responseType: 'text' })
   }
-public Addpersons(frm:personcls){
+
+  public GetAccessoryInventoryList(){
+    return this.http.post(this.api_url + '/api/maintainence/accessoryinventory', null, { responseType: 'text' })
+    }
+//#endregion "Accessory"
+
+//#region "Persons"
+public GetpersonList(){
+  return this.http.post(this.api_url + '/api/maintainence/PersonsList', null, { responseType: 'text' })
+  }
+public Addpersons(frm:persons){
   return this.http.post(this.api_url + '/api/maintainence/addpersons', frm, { responseType: 'text' })
   }
 
-  public Updatepersons(frm:personcls){
+  public Updatepersons(frm:persons){
     return this.http.post(this.api_url + '/api/maintainence/updatepersons', frm, { responseType: 'text' })
     }
 
-    public Deletepersons(frm:personcls){
+    public Deletepersons(frm:persons){
       console.log(frm);
       return this.http.post(this.api_url + '/api/maintainence/delpersons', frm, { responseType: 'text' })
       }
 
-
-        public GetDeviceTypesList(){
-
-          return this.http.post(this.api_url + '/api/maintainence/devicetypeslist', null, { responseType: 'text' })
-          }
-
-          public GetOrganizationList( userid:number){
-
-            return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
-            }
-
-    public GetpatrolcarsInventoryList(ahwalid:number,userid:number){
-      //console.log(ahwalid);
-      return this.http.get(this.api_url + '/api/maintainence/patrolcarsinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
-      }
-
-      public GetHandHeldsInventoryList(ahwalid:number,userid:number){
-        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
-        }
-
-        public GetAccessoryInventoryList(){
-          return this.http.post(this.api_url + '/api/maintainence/accessoryinventory', null, { responseType: 'text' })
-          }
-
+//#endregion "Persons"
+          
+ //#region "Dispatch"
+ 
       public GetDispatchList(){
-        return this.http.post(this.api_url + '/api/maintainence/dispatchlist', null, { responseType: 'text' })
+        return this.http.get(this.api_url + '/api/dispatch/dispatchList', { responseType: 'json' })
         }
 
         public GetPersonList(userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/personslist?userid=' + userid, { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/personsList?userid=' + userid, { responseType: 'json' })
 
         }
 
         public GetShiftsList()
         {
-          return this.http.get(this.api_url + '/api/maintainence/shiftslist', { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/shiftsList', { responseType: 'json' })
 
         }
 
@@ -144,73 +129,88 @@ public Addpersons(frm:personcls){
 
         public GetResponsibiltyList()
         {
-          return this.http.get(this.api_url + '/api/maintainence/roleslist', { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/rolesList', { responseType: 'json' })
 
         }
 
         
         public GetSectorsList(userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/sectorslist?userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/sectorsList?userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetCityList(userid:number,sectorid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/citylist?userid=' + userid + '&sectorid=' + sectorid, { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/cityList?userid=' + userid + '&sectorid=' + sectorid, { responseType: 'json' })
 
         }
 
         public GetAssociateList(userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/associatelist?userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/associateList?userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetPersonForUserForRole(mno:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?mno=' + mno + '&userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/personForUserForRole?mno=' + mno + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetCityGroupForAhwal(ahwalid:number,sectorid?:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/citygroupforahwal?ahwalid=' + ahwalid + '&sectorid=' + sectorid, { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/cityGroupforAhwal?ahwalid=' + ahwalid + '&sectorid=' + sectorid, { responseType: 'json' })
 
         }
 
         public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
           console.log('ahwalmappingobj' + ahwalmappingobj);
-          return this.http.post(this.api_url + '/api/maintainence/AddAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+          return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
 
         }
 
         public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
-          return this.http.post(this.api_url + '/api/maintainence/UpDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+          return this.http.post(this.api_url + '/api/dispatch/upDateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
         }
         public GetAhwalMapForAssociate(AssociateMapId:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/PersonForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/personForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetPatrolCarByPlateNumberForUserForRole(CheckInOutPatrol:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/PatrolCarByPlateNumberForUserForRole?CheckInOutPatrol=' + CheckInOutPatrol + '&userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/patrolCarByPlateNumberForUserForRole?CheckInOutPatrol=' + CheckInOutPatrol + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetHandHeldBySerialForUserForRole(CheckInOutHandHeld:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/HandHeldBySerialForUserForRole?CheckInOutHandHeld=' + CheckInOutHandHeld + '&userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/handHeldBySerialForUserForRole?CheckInOutHandHeld=' + CheckInOutHandHeld + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetMappingByPersonID(CheckInOutPerson:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/maintainence/MappingByPersonID?CheckInOutPerson=' + CheckInOutPerson + '&userid=' + userid , { responseType: 'text' })
+          return this.http.get(this.api_url + '/api/dispatch/mappingByPersonID?CheckInOutPerson=' + CheckInOutPerson + '&userid=' + userid , { responseType: 'json' })
 
         }
+        //#endregion "Dispatch"
+      
+public GetDeviceTypesList(){
+
+  return this.http.post(this.api_url + '/api/maintainence/devicetypeslist', null, { responseType: 'text' })
+ }
+
+ public GetOrganizationList( userid:number){
+   return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
+}
+
+   
+
+      
+
 }

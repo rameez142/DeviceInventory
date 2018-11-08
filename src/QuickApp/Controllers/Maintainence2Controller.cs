@@ -14,24 +14,92 @@ using System.Threading;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using PatrolWebApp.Controllers;
 using Npgsql;
 using MOI.Patrol.DataAccessLayer;
 using MOI.Patrol.Models;
 
-namespace MOI.Patrol.Controllers
+namespace PatrolWebApp.Controllers
 {
+    //public class Device
+    //{
+    //    public int deviceid { get; set; }
+    //    public string devicenumber { get; set; }
+
+    //    public int ahwalid { get; set; }
+
+    //    public string model { get; set; }
+    //    public int devicetypeid { get; set; }
+
+    //    public int defective { get; set; }
+
+    //    public int rental { get; set; }
+
+    //    public string barcode { get; set; }
+    //}
+
+    //public class PatrolCars
+    //{
+    //    public int patrolid { get; set; }
+    //    public string platenumber { get; set; }
+    //    public int ahwalid { get; set; }
+    //    public string model { get; set; }
+    //    public string typecode { get; set; }
+    //    public string type { get; set; }
+    //    public int defective { get; set; }
+    //    public int rental { get; set; }
+    //    public string barcode { get; set; }
+    //    public string vinnumber { get; set; }
+    //    public string ahwalname { get; set; }
+    //}
+
+    //public class HandHelds
+    //{
+    //    public int handheldid { get; set; }
+    //    public string serial { get; set; }
+    //    public int ahwalid { get; set; }
+
+    //    public int defective { get; set; }
+
+    //    public string barcode { get; set; }
+    //}
+
+    //public class AhwalMapping
+    //{
+    //    public int ahwalid { get; set; }
+    //    public int sectorid { get; set; }
+    //    public int citygroupid { get; set; }
+    //    public int shiftid { get; set; }
+    //    public int patrolroleid { get; set; }
+    //    public int personid { get; set; }
+    //    public int ahwalmappingid { get; set; }
+
+    //}
+
+    //public class person
+    //{
+    //    public int personid { get; set; }
+    //    public int ahwalid { get; set; }
+    //    public int milnumber { get; set; }
+    //    public int rankid { get; set; }
+    //    public string name { get; set; }
+    //    public string mobile { get; set; }
+    //    public int fixedcallerid { get; set; }
+    //}
+   
+
     [Route("api/[controller]")]
-    [ApiController]
-    public class MaintainenceController : ControllerBase
+    public class Maintainence2Controller : Controller
     {
+
         public String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
-        public DataAccess DAL = new DataAccess();
+        public  DataAccess DAL = new DataAccess();
 
         [HttpPost("addpatrolcar")]
         public int PostAddPatrolCar([FromBody]PatrolCars frm)
         {
             int ret = 0;
-            string Qry = "insert into patrolcars(AhwalID,platenumber,model,typecode,defective,rental,barcode,vinnumber) values (" + frm.ahwalid + ",'" + frm.platenumber + "','" + frm.model + "','" + frm.typecode + "'," + frm.defective + "," + frm.rental + ",'" + frm.barcode + "','" + frm.vinnumber + "')";
+            string Qry ="insert into patrolcars(AhwalID,platenumber,model,typecode,defective,rental,barcode,vinnumber) values (" + frm.ahwalid + ",'" + frm.platenumber + "','" + frm.model + "','" + frm.typecode + "'," + frm.defective + "," + frm.rental + ",'" + frm.barcode + "','" + frm.vinnumber + "')";
             ret = DAL.PostGre_ExNonQry(Qry);
             return ret;
         }
@@ -70,10 +138,10 @@ namespace MOI.Patrol.Controllers
             String Qry = "select (select a.name from ahwal a where  a.ahwalid = d.ahwalid) ahwalname,d.ahwalid, d.patrolid,d.plateNumber,d.Model,(select codedesc from codemaster where code = typecode)  as type,typecode,d.Defective,d.Rental,d.BarCode,vinnumber from patrolcars d where d.delflag is null  " + subqry;
             List<PatrolCars> ptc = DAL.PostGre_GetData<PatrolCars>(Qry);
             return ptc;
+          
+    }
 
-        }
-
-
+       
 
         [HttpGet("patrolcarsinventory")]
         public DataTable PostPatrolCarsInventoryList(int ahwalid, int userid)
@@ -131,7 +199,7 @@ namespace MOI.Patrol.Controllers
         }
 
 
-
+      
 
         [HttpPost("organizationlist")]
         public DataTable PostOrganizationList([FromBody] int userid)
@@ -367,7 +435,7 @@ namespace MOI.Patrol.Controllers
             return ret;
         }
 
-
+       
 
         [HttpPost("updatepersons")]
         public int PostUpdatepersons([FromBody] Devices frm)
@@ -532,9 +600,9 @@ namespace MOI.Patrol.Controllers
 
         #endregion
 
+       
 
-
-
+      
 
 
     }

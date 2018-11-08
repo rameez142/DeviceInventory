@@ -14,7 +14,7 @@
                 [selectedRowKeys]="[]"
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
-                (onContextMenuPreparing)= "ContextMenuprepare($event)"
+                (onContextMenuPreparing)= "onContextMenuprepare($event)"
                 (onRowClick)="Rwclick($event)"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
@@ -120,6 +120,7 @@
                                         [focusStateEnabled]="true"
                                         (onRowClick)="RwPopupClick($event)"
                                 >
+                                
                                 </dx-data-grid>
                                 </div>
                             </dx-drop-down-box>
@@ -190,10 +191,10 @@
                      <td><label>مرافق ل</label></td>
                      <td>
                             <dx-drop-down-box
-                            [(value)]="AssociatePersonMno"
+                            [(value)]="associatePersonMno"
                             [dataSource]="associatesrc"
                             [deferRendering]="false"
-                            [displayExpr]="AssociateExpr"
+                            [displayExpr]="associateExpr"
                             placeholder="Select a value..."
                             [showClearButton]="true" 
                             valueExpr="milnumber" 
@@ -223,16 +224,12 @@
                         <button type="submit" (click)="AhwalMapping_Add_SubmitButton_Click($event)" data-dismiss="modal" class="btn btn-primary">أضافه</button>
                     
                     </td>
-                         <!-- <td> <dx-button
-                            text="إلغاء"
-                            (onClick)="popupVisible = false"
-                            >
-                        </dx-button></td> -->
+                      
 
                      </tr>
               <tr>
                   <td colspan="2">
-                       <div class="errormsg"> {{AhwalMapping_Add_status_label}} </div>
+                       <div class="errormsg"> {{ahwalMapping_Add_status_label}} </div>
                   </td>
               </tr>
                 </table>
@@ -247,7 +244,7 @@
           [showCloseButton]= "true"
           [dragEnabled]="false"
           [closeOnOutsideClick]="true"
-          [(visible)]="CheckInOutPopupVisible">
+          [(visible)]="checkInOutPopupVisible">
           <div *dxTemplate="let data of 'content'">
 <table>
   <tr><td><label>الفرد</label></td>
@@ -268,7 +265,7 @@
   </tr>
   <tr>
     <td colspan="2">
-      <label>{{AhwalMapping_CheckInOut_StatusLabel}}</label>
+      <label>{{ahwalMapping_CheckInOut_StatusLabel}}</label>
     </td>
   </tr>
 <tr>
