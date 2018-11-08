@@ -401,6 +401,7 @@ let personobj:persons = null;
             personobj = <persons>resp;
             console.log(personobj);  
         }
+        console.log(personobj);
   });
 //};
 
@@ -425,11 +426,11 @@ if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainAllSec
         return;
     }
 
-    ahwalmappingobj.ahwalid = personobj[0].ahwalid;
-    ahwalmappingobj.personid = personobj[0].personid;
-    ahwalmappingobj.sectorid = Handler_AhwalMapping.Sector_Public;
+    ahwalmappingobj.ahwalID = personobj[0].ahwalID;
+    ahwalmappingobj.personID = personobj[0].personID;
+    ahwalmappingobj.sectorID = Handler_AhwalMapping.Sector_Public;
     let citygroupsobj:citygroups = new citygroups();
-    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid).subscribe(resp =>
+    this.svc.GetCityGroupForAhwal(personobj[0].ahwalID).subscribe(resp =>
         {
 
             if (resp !== [])
@@ -440,11 +441,11 @@ if(parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_CaptainAllSec
       },
         error => {
         });
-        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupID;
-        ahwalmappingobj.shiftid = parseInt(this.selectedShift);
-        ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
+        ahwalmappingobj.cityGroupID = citygroupsobj.cityGroupID;
+        ahwalmappingobj.shiftID = parseInt(this.selectedShift);
+        ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole);
         if(this.ahwalMappingAddMethod =='UPDATE'){
-            ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+            ahwalmappingobj.ahwalMappingID = this.selahwalmappingid;
             this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
@@ -474,11 +475,11 @@ else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Captain
         this.ahwalMapping_Add_status_label  = 'يرجى اختيار القطاع';
         return;
     }
-    ahwalmappingobj.ahwalid = personobj[0].ahwalid;
-    ahwalmappingobj.personid = personobj[0].personid;
-    ahwalmappingobj.sectorid = parseInt(this.selectedSector);
+    ahwalmappingobj.ahwalID = personobj[0].ahwalID;
+    ahwalmappingobj.personID = personobj[0].personID;
+    ahwalmappingobj.sectorID = parseInt(this.selectedSector);
     let citygroupsobj:citygroups = new citygroups();
-    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorid).subscribe(resp =>
+    this.svc.GetCityGroupForAhwal(personobj[0].ahwalid,ahwalmappingobj.sectorID).subscribe(resp =>
         {
 
             if (resp !== [])
@@ -487,12 +488,11 @@ else if (parseInt(this.selectedRole) === Handler_AhwalMapping.PatrolRole_Captain
             }
 
       });
-        ahwalmappingobj.citygroupid = citygroupsobj.cityGroupID;
-        ahwalmappingobj.shiftid = parseInt(this.selectedShift);
-        ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
-        ahwalmappingobj.personid = personobj[0].personid;
+        ahwalmappingobj.cityGroupID = citygroupsobj.cityGroupID;
+        ahwalmappingobj.shiftID = parseInt(this.selectedShift);
+        ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole);
         if(this.ahwalMappingAddMethod =='UPDATE'){
-            ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+            ahwalmappingobj.ahwalMappingID = this.selahwalmappingid;
             this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
@@ -533,14 +533,14 @@ if(ahwalMappingForAssociateobj !== null)
     this.ahwalMapping_Add_status_label = 'المرافق نفس الفرد، ماهذا ؟؟؟؟';
     return;
 }
-ahwalmappingobj.ahwalid = ahwalMappingForAssociateobj[0].ahwalid;
-ahwalmappingobj.personid = ahwalMappingForAssociateobj[0].personid;
-ahwalmappingobj.sectorid = ahwalMappingForAssociateobj[0].sectorid;
-ahwalmappingobj.citygroupid = ahwalMappingForAssociateobj[0].citygroupid;
-ahwalmappingobj.shiftid = ahwalMappingForAssociateobj[0].shiftid;
-ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
+ahwalmappingobj.ahwalID = ahwalMappingForAssociateobj[0].ahwalID;
+ahwalmappingobj.personID = ahwalMappingForAssociateobj[0].personID;
+ahwalmappingobj.sectorID = ahwalMappingForAssociateobj[0].sectorID;
+ahwalmappingobj.cityGroupID = ahwalMappingForAssociateobj[0].cityGroupID;
+ahwalmappingobj.shiftID = ahwalMappingForAssociateobj[0].shiftID;
+ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole);
 if(this.ahwalMappingAddMethod =='UPDATE'){
-    ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+    ahwalmappingobj.ahwalMappingID = this.selahwalmappingid;
     this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
         {
             this.clearpersonpopupvalues();
@@ -567,7 +567,7 @@ else
         this.ahwalMapping_Add_status_label = 'يرجى اختيار الشفت';
         return;
     }
-    ahwalmappingobj.ahwalid=personobj[0].ahwalid;
+    ahwalmappingobj.ahwalID=personobj[0].ahwalID;
     if(this.selectedSector === null)
     {
         this.ahwalMapping_Add_status_label = 'يرجى اختيار القطاع';
@@ -579,14 +579,14 @@ else
         this.ahwalMapping_Add_status_label ='يرجى اختيار المنطقة';
         return;
     }
-    ahwalmappingobj.sectorid = parseInt(this.selectedSector);
-    ahwalmappingobj.shiftid = parseInt(this.selectedShift);
-    ahwalmappingobj.citygroupid = parseInt(this.selectedCity);
-    ahwalmappingobj.patrolroleid = parseInt(this.selectedRole);
-    ahwalmappingobj.personid =  personobj[0].personid;
+    ahwalmappingobj.sectorID= parseInt(this.selectedSector);
+    ahwalmappingobj.shiftID = parseInt(this.selectedShift);
+    ahwalmappingobj.cityGroupID = parseInt(this.selectedCity);
+    ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole);
+    ahwalmappingobj.personID =  personobj[0].personid;
     console.log(this.ahwalMappingAddMethod );
     if(this.ahwalMappingAddMethod =='UPDATE'){
-        ahwalmappingobj.ahwalmappingid = this.selahwalmappingid;
+        ahwalmappingobj.ahwalMappingID = this.selahwalmappingid;
         this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
             {
                 this.clearpersonpopupvalues();

@@ -1,9 +1,9 @@
 export class ahwalmapping {
-    ahwalid:number;
-    sectorid:number;
-    citygroupid:number;
-    shiftid:number;
-    patrolroleid:number;
-    personid:number;
-    ahwalmappingid:number;
+    ahwalID:number;
+    sectorID:number;
+    cityGroupID:number;
+    shiftID:number;
+    patrolRoleID:number;
+    personID:number;
+    ahwalMappingID:number;
 }
