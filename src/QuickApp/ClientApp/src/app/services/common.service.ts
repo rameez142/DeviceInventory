@@ -34,7 +34,7 @@ export class CommonService {
           //console.log(frm);
           return this.http.post(this.api_url + '/api/maintainence/delpatrolcar', frm, { responseType: 'text' })
     }
-  
+
     public GetPatrolCarTypes(){
             return this.http.post(this.api_url + '/api/maintainence/patrolcartypes', null, { responseType: 'text' })
    }
@@ -106,9 +106,9 @@ public Addpersons(frm:persons){
       }
 
 //#endregion "Persons"
-          
+
  //#region "Dispatch"
- 
+
       public GetDispatchList(){
         return this.http.get(this.api_url + '/api/dispatch/dispatchList', { responseType: 'json' })
         }
@@ -133,7 +133,7 @@ public Addpersons(frm:persons){
 
         }
 
-        
+
         public GetSectorsList(userid:number)
         {
           return this.http.get(this.api_url + '/api/dispatch/sectorsList?userid=' + userid , { responseType: 'json' })
@@ -175,9 +175,10 @@ public Addpersons(frm:persons){
         {
           return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
         }
-        public GetAhwalMapForAssociate(AssociateMapId:number,userid:number)
+        public GetMappingByID(AssociateMapId:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/personForUserForRole?associatemapid=' + AssociateMapId + '&userid=' + userid , { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/mappingByID?associateMapID=' + AssociateMapId
+          + '&userid=' + userid , { responseType: 'json' });
 
         }
 
@@ -199,7 +200,7 @@ public Addpersons(frm:persons){
 
         }
         //#endregion "Dispatch"
-      
+
 public GetDeviceTypesList(){
 
   return this.http.post(this.api_url + '/api/maintainence/devicetypeslist', null, { responseType: 'text' })
@@ -209,8 +210,8 @@ public GetDeviceTypesList(){
    return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
 }
 
-   
 
-      
+
+
 
 }

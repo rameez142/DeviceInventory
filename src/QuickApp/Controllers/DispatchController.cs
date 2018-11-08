@@ -67,15 +67,20 @@ namespace MOI.Patrol.Controllers
 
 
         [HttpGet("personForUserForRole")]
-        public List<Persons> GetPersonForUserForRole(int mno, int userid)
+        public Persons GetPersonForUserForRole(int mno, int userid)
         {
 
             String Qry = "SELECT PersonId, AhwalId, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) and MilNumber = " + mno;
-            return DAL.PostGre_GetData<Persons>(Qry);
+            List <Persons> obj = DAL.PostGre_GetData<Persons>(Qry);
+            
+            if(obj.Count > 0)
+            {
+                return obj[0];
+            }
+                return null;
         }
 
         [HttpGet("personsList")]
-        [Produces("application/json")]
         public List<Persons> GetPersonsList(int userid)
         {
 
@@ -146,21 +151,28 @@ namespace MOI.Patrol.Controllers
         }
       
         [HttpGet("cityGroupforAhwal")]
-        public DataTable GetCityGroupForAhwal(int ahwalid)
+        public List<CityGroups> GetCityGroupForAhwal(int ahwalid)
         {
 
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            DataTable dt = new DataTable();
+            string Qry = "SELECT citygroupid, AhwalID, sectorid, shortname,callerprefix,text,disabled FROM citygroups WHERE AhwalID = " + ahwalid;
+            return DAL.PostGre_GetData<CityGroups>(Qry);
 
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter("SELECT citygroupid, AhwalID, sectorid, shortname,callerprefix,text,disabled FROM citygroups WHERE AhwalID = " + ahwalid, cont);
-            da.Fill(dt);
-            cont.Close();
-            cont.Dispose();
-            return dt;
         }
-      
+
+        [HttpGet("mappingByID")]
+        public AhwalMapping GetMappingByID(int associateMapID, int userid)
+        {
+            string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") and  ahwalmappingid = " + associateMapID; 
+          
+            List<AhwalMapping> obj = DAL.PostGre_GetData<AhwalMapping>(Qry);
+
+            if (obj.Count > 0)
+            {
+                return obj[0];
+            }
+            return null;
+        }
+
         #endregion
 
     }
