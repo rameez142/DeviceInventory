@@ -6,7 +6,7 @@ export class persons
   rankID:number ;
   name: string ;
   mobile:string ;
-  fixedCallerID: number;
+  fixedCallerID: string;
 }
 
 

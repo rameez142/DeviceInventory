@@ -14,6 +14,6 @@ namespace MOI.Patrol.Models
         public int rankID { get; set; }
         public string name { get; set; }
         public string mobile { get; set; }
-        public int fixedCallerID { get; set; }
+        public string fixedCallerID { get; set; }
     }
 }

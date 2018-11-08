@@ -17,7 +17,7 @@ using System.Reflection;
 using Npgsql;
 using MOI.Patrol.DataAccessLayer;
 using MOI.Patrol.Models;
-
+using MOI.Patrol.Core;
 namespace MOI.Patrol.Controllers
 {
     [Route("api/[controller]")]
@@ -79,6 +79,18 @@ namespace MOI.Patrol.Controllers
             }
                 return null;
         }
+        public Persons GetPersonById(int personid = -1)
+        {
+
+            String Qry = "SELECT PersonId, AhwalId, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE  PersonId = " + personid;
+            List<Persons> obj = DAL.PostGre_GetData<Persons>(Qry);
+
+            if (obj.Count > 0)
+            {
+                return obj[0];
+            }
+            return null;
+        }
 
         [HttpGet("personsList")]
         public List<Persons> GetPersonsList(int userid)
@@ -122,10 +134,7 @@ namespace MOI.Patrol.Controllers
             string ol_failed = "";
 
             //we have to check first that this person doesn't exists before in mapping
-            String CheckPersonQry = "";
-            CheckPersonQry = "select * from persons where personid=" + frm.personID;
-
-            Persons GetPerson = DAL.PostGre_GetData<Persons>(CheckPersonQry)[0];
+            Persons GetPerson = GetPersonById(frm.personID);
             if (GetPerson == null)
             {
                 ol_failed = "لم يتم العثور على الفرد: " + frm.personID; //todo, change it actual person name
@@ -133,10 +142,33 @@ namespace MOI.Patrol.Controllers
                 return ol_failed;
             }
 
+            AhwalMapping person_mapping_exists = GetMappingByPersonId(frm.personID);
+            if (person_mapping_exists != null)
+            {
+                ol_failed = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+            }
+            frm.sortIndex = 10000;
+
+            if (GetPerson.fixedCallerID.Trim() != "" && GetPerson.fixedCallerID != null)
+            {
+                frm.hasFixedCallerID = Convert.ToByte(1);
+                frm.callerID = GetPerson.fixedCallerID.Trim();
+            }
+
+            //frm.sunRiseTimeStamp = null;
+            //frm.sunSetTimeStamp = null;
+            //frm.lastLandTimeStamp = null;
+            //frm.incidentID = null;
+            frm.hasDevices = 0;
+            //frm.lastAwayTimeStamp = null;
+            //frm.lastComeBackTimeStamp = null;
+            frm.patrolPersonStateID = Handler_AhwalMapping.PatrolPersonState_None;
+
             string InsQry = "";
-            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID + "," + frm.personID + ")";
+            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,patrolPersonStateID,hasFixedCallerID,callerID) values (" + frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID + "," + frm.personID + ")";
             int ret = DAL.PostGre_ExNonQry(InsQry);
-            ol_failed = "Saved ";
+            ol_failed = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+
             return ol_failed;
         }
 
@@ -164,6 +196,19 @@ namespace MOI.Patrol.Controllers
         {
             string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") and  ahwalmappingid = " + associateMapID; 
           
+            List<AhwalMapping> obj = DAL.PostGre_GetData<AhwalMapping>(Qry);
+
+            if (obj.Count > 0)
+            {
+                return obj[0];
+            }
+            return null;
+        }
+        
+        public AhwalMapping GetMappingByPersonId(int personid)
+        {
+            string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE   personid = " + personid;
+
             List<AhwalMapping> obj = DAL.PostGre_GetData<AhwalMapping>(Qry);
 
             if (obj.Count > 0)

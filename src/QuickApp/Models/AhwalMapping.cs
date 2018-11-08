@@ -17,13 +17,27 @@ namespace MOI.Patrol.Models
         public int milNumber { get; set; }
         public int rankID { get; set; }
         public int personName { get; set; }
-        public int callerID { get; set; }
+        public string callerID { get; set; }
         public int hasDevices { get; set; }
         public string serial { get; set; }
         public string plateNumber { get; set; }
         public int patrolPersonStateID { get; set; }
         public DateTime sunRiseTimeStamp { get; set; }
         public DateTime sunSetTimeStamp { get; set; }
+
+        public int sortIndex { get; set; }
+        public int handHeldID { get; set; }
+
+        public int hasFixedCallerID { get; set; }
+
+        public DateTime lastLandTimeStamp { get; set; }
+        public int incidentID { get; set; }
+
+        public DateTime lastAwayTimeStamp { get; set; }
+
+        public DateTime lastComeBackTimeStamp { get; set; }
+
+
 
     }
 }
