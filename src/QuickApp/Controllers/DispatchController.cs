@@ -239,7 +239,7 @@ namespace MOI.Patrol.Controllers
         }
 
         [HttpDelete("deleteAhwalMapping")]
-        public OperationLog DeleteAhwalMapping([FromBody]int ahwalMappingID , [FromQuery]int userid)
+        public OperationLog DeleteAhwalMapping([FromQuery]int ahwalMappingID , [FromQuery]int userid)
         {
             //string ol_label = "";
             OperationLog ol = new OperationLog();

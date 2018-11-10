@@ -113,7 +113,6 @@ topLeft: -20
 };
 
 selRowIndex:number;
-selAhwalMappingID:number;
   constructor(private svc:CommonService, private modalService: ModalService) {
       this.userid = parseInt(window.localStorage.getItem('UserID'),10);
       this.userobj.userID = this.userid;
@@ -415,19 +414,22 @@ WingSelected2(e)
   }
   else if(e.title ==='حذف')
   {
-    this.popupVisible = true;
+    console.log(e.title)
+    this.deleteMapping();
   }
 }
 
-async deleteMapping(ahwalMappingID:number) {
 
+ deleteMapping() {
+console.log(this.selahwalmappingid);
   if(this.selahwalmappingid !== null)
   {
     this.svc.DeleteAhwalMapping(this.selahwalmappingid,this.userid).toPromise().then(resp =>
     {
-        notify(resp, 'success', 600);
-
-
+      let olog:operationLog = new operationLog();
+      olog= <operationLog>resp;
+      notify( olog.text, 'success', 600);
+      this.loadData();
 
   });
 
@@ -436,6 +438,8 @@ async deleteMapping(ahwalMappingID:number) {
 onContextMenuprepare(e) {
   //this.menuOpen = true;
   console.log(e);
+  this.selahwalmappingid = e.row.key.ahwalmappingid;
+  console.log(this.selahwalmappingid);
   this.options.defaultOpen = true;
   this.styleExp = 'inline';
   if (e.row.rowType === 'data') {
