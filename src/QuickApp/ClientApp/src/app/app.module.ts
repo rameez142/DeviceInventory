@@ -58,7 +58,8 @@ import { RoleEditorComponent } from "./components/controls/role-editor.component
 import { DxTreeViewModule } from "../../node_modules/devextreme-angular";
 
 import {DxLookupModule, DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
-  DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,DxCheckBoxModule,DxDropDownBoxModule } from "devextreme-angular";
+  DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,
+  DxCheckBoxModule,DxDropDownBoxModule } from "devextreme-angular";
 
 
 import { DispatchComponent } from './components/dispatcher/dispatch/dispatch.component';
@@ -110,7 +111,7 @@ import { adminLteConf } from './admin-lte.conf';
      DxTabPanelModule,DxCheckBoxModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
-    //,FanMenuModule
+   // ,FanMenuModule
   ],
   declarations: [
     AppComponent,

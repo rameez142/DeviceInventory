@@ -91,7 +91,7 @@ public wings = [{
   'color': '#ffcf14',
   'icon': {'name': 'fa fa-clock-o'}
 },
-, {
+ {
   'title': 'حذف',
   'color': '#ffcf20',
   'icon': {'name': 'fa fa-clock-o'}
@@ -109,7 +109,7 @@ left:600
 };
 
 public startAngles = {
-topLeft: -20,
+topLeft: -20
 };
 
 selRowIndex:number;
@@ -563,7 +563,7 @@ if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainA
               });
         }
         else {
-            this.svc.AddAhwalMapping2(ahwalmappingobj,this.userobj).subscribe(resp =>
+            this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
                   let olog:operationLog = new operationLog();
@@ -613,10 +613,12 @@ parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSec
               });
         }
         else {
-            this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+            this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = resp;
+                    let ol:operationLog = new operationLog();
+                    ol= <operationLog>resp;
+                    this.ahwalMapping_Add_status_label = ol.text;
                  this.loadData();
               });
         }
@@ -661,10 +663,12 @@ if(this.ahwalMappingAddMethod === 'UPDATE'){
       });
 }
 else{
-    this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+    this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
         {
             this.clearpersonpopupvalues();
-            this.ahwalMapping_Add_status_label = resp;
+            let ol:operationLog = new operationLog();
+            ol= <operationLog>resp;
+            this.ahwalMapping_Add_status_label = ol.text;
          this.loadData();
       });
 }
@@ -709,10 +713,12 @@ else
     else{
         console.log('insert');
         console.log(ahwalmappingobj );
-        this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+        this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
             {
                 this.clearpersonpopupvalues();
-                this.ahwalMapping_Add_status_label = resp;
+                let ol:operationLog = new operationLog();
+                ol= <operationLog>resp;
+                this.ahwalMapping_Add_status_label = ol.text;
              this.loadData();
           });
     }

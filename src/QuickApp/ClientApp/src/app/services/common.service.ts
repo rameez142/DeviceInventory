@@ -168,7 +168,7 @@ public Addpersons(frm:persons){
 
         }
 
-        public AddAhwalMapping2(ahwalmappingobj:ahwalmapping,userobj:user)
+        public AddAhwalMapping(ahwalmappingobj:ahwalmapping,userobj:user)
         {
           console.log('ahwalmappingobj' + ahwalmappingobj);
           let myData = {
@@ -181,12 +181,7 @@ public Addpersons(frm:persons){
 
         }
 
-        public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
-        {
-          console.log('ahwalmappingobj' + ahwalmappingobj);
-          return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping?' , ahwalmappingobj , { responseType: 'text' });
 
-        }
         public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
           return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' });
