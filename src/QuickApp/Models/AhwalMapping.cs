@@ -7,12 +7,12 @@ namespace MOI.Patrol.Models
 {
     public class AhwalMapping
     {
-        public int ahwalID { get; set; } 
-        public int sectorID { get; set; }
-        public int? patrolRoleID { get; set; } = 0;
-        public int shiftID { get; set; }
+        public int? ahwalID { get; set; } 
+        public int? sectorID { get; set; }
+        public int? patrolRoleID { get; set; } 
+        public int? shiftID { get; set; }
         public int personID { get; set; }
-        public int ahwalMappingID { get; set; }
+        public int? ahwalMappingID { get; set; }
         public int? cityGroupID { get; set; }
         public int? milNumber { get; set; }
         public int? rankID { get; set; }

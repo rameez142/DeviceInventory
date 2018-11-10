@@ -18,6 +18,8 @@ using Npgsql;
 using MOI.Patrol.DataAccessLayer;
 using MOI.Patrol.Models;
 using MOI.Patrol.Core;
+using Newtonsoft.Json.Linq;
+
 namespace MOI.Patrol.Controllers
 {
     [Route("api/[controller]")]
@@ -128,24 +130,36 @@ namespace MOI.Patrol.Controllers
         }
 
         [HttpPost("addAhwalMapping")]
-        public string PostAddAhwalMapping([FromBody]AhwalMapping frm)
+        public OperationLog PostAddAhwalMapping([FromBody]JObject data)
         {
+            AhwalMapping frm = Newtonsoft.Json.JsonConvert.DeserializeObject<AhwalMapping>(data["ahwalmappingobj"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore}); 
+            User u = data["userobj"].ToObject<User>();
             //  GetPerson = "";
-            string ol_failed = "";
-
+            // string ol_failed = "";
+            //OperationLog ol = new OperationLog();
             //we have to check first that this person doesn't exists before in mapping
             Persons GetPerson = GetPersonById(frm.personID);
             if (GetPerson == null)
             {
-                ol_failed = "لم يتم العثور على الفرد: " + frm.personID; //todo, change it actual person name
+                OperationLog ol_failed = new OperationLog();
+                ol_failed.userID = u.userID;
+                ol_failed.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
+                ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
 
+                ol_failed.text = "لم يتم العثور على الفرد: " + frm.personID; //todo, change it actual person name
+                Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
             string person_mapping_exists = DAL.PostGre_ExScalar("select count(1) from AhwalMapping where personid = " + frm.personID);
             if (person_mapping_exists == null || person_mapping_exists == "0")
             {
-                ol_failed = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+                OperationLog ol_failed = new OperationLog();
+                ol_failed.userID = u.userID;
+                ol_failed.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
+                ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
+                ol_failed.text = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+                Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
             frm.sortingIndex = 10000;
@@ -168,16 +182,50 @@ namespace MOI.Patrol.Controllers
             frm.patrolPersonStateID = Handler_AhwalMapping.PatrolPersonState_None;
 
             string InsQry = "";
-            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
-                "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" + 
-                frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
-                 "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID + 
-                ",'" + frm.callerID + "')";
+            if(frm.patrolRoleID == Handler_AhwalMapping.PatrolRole_CaptainAllSectors || frm.patrolRoleID==Handler_AhwalMapping.PatrolRole_CaptainShift)
+            {
+                InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+               "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" +
+               frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
+                "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID +
+               ",'" + frm.callerID + "')";
+            }
+           else if (frm.patrolRoleID == Handler_AhwalMapping.PatrolRole_CaptainSector || frm.patrolRoleID == Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+            {
+                InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+               "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" +
+               frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
+                "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID +
+               ",'" + frm.callerID + "')";
+            }
+            else if (frm.patrolRoleID == Handler_AhwalMapping.PatrolRole_Associate)
+            {
+                InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+               "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" +
+               frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
+                "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID +
+               ",'" + frm.callerID + "')";
+            }
+            else
+            {
+                InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+               "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" +
+               frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
+                "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID +
+               ",'" + frm.callerID + "')";
+            }
 
             int ret = DAL.PostGre_ExNonQry(InsQry);
-            ol_failed = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+            
+                OperationLog ol = new OperationLog();
+                 ol.userID = u.userID;
+                ol.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
+                ol.statusID = Handler_Operations.Opeartion_Status_Success;
+                ol.text = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+                Handler_Operations.Add_New_Operation_Log(ol);
+            return ol;
 
-            return ol_failed;
+            
         }
 
         [HttpPost("updateAhwalMapping")]
@@ -189,7 +237,30 @@ namespace MOI.Patrol.Controllers
             ret = DAL.PostGre_ExNonQry(UpdateQry);
             return ret;
         }
-      
+
+        [HttpDelete("deleteAhwalMapping")]
+        public OperationLog DeleteAhwalMapping([FromBody]int ahwalMappingID , [FromQuery]int userid)
+        {
+            //string ol_label = "";
+            OperationLog ol = new OperationLog();
+            int ret = 0;
+            string DelQry = "";
+            DelQry = "delete AhwalMapping where ahwalMappingID = " + ahwalMappingID;
+            ret = DAL.PostGre_ExNonQry(DelQry);
+            if(ret > 0)
+            {
+                ol.userID = userid;
+                ol.operationID = Handler_Operations.Opeartion_Mapping_Remove;
+                ol.statusID = Handler_Operations.Opeartion_Status_Success;
+                ol.text = "تم حذف الفرد ";  
+                return ol;
+            }
+            ol.statusID = Handler_Operations.Opeartion_Status_Failed;
+            ol.text = "Failed";
+            return ol;
+        }
+
+
         [HttpGet("cityGroupforAhwal")]
         public List<CityGroups> GetCityGroupForAhwal(int ahwalid)
         {
