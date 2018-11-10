@@ -142,19 +142,22 @@ namespace MOI.Patrol.Controllers
                 return ol_failed;
             }
 
-            AhwalMapping person_mapping_exists = GetMappingByPersonId(frm.personID);
-            if (person_mapping_exists != null)
+            string person_mapping_exists = DAL.PostGre_ExScalar("select count(1) from AhwalMapping where personid = " + frm.personID);
+            if (person_mapping_exists == null || person_mapping_exists == "0")
             {
                 ol_failed = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
+                return ol_failed;
             }
-            frm.sortIndex = 10000;
-
+            frm.sortingIndex = 10000;
+            frm.hasFixedCallerID = 0;
+            if (GetPerson.fixedCallerID != null)
+            { 
             if (GetPerson.fixedCallerID.Trim() != "" && GetPerson.fixedCallerID != null)
             {
                 frm.hasFixedCallerID = Convert.ToByte(1);
                 frm.callerID = GetPerson.fixedCallerID.Trim();
             }
-
+            }
             //frm.sunRiseTimeStamp = null;
             //frm.sunSetTimeStamp = null;
             //frm.lastLandTimeStamp = null;
@@ -165,7 +168,12 @@ namespace MOI.Patrol.Controllers
             frm.patrolPersonStateID = Handler_AhwalMapping.PatrolPersonState_None;
 
             string InsQry = "";
-            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid) values (" + frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID + "," + frm.personID + ")";
+            InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+                "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" + 
+                frm.ahwalID + "," + frm.sectorID + "," + frm.cityGroupID + "," + frm.shiftID + "," + frm.patrolRoleID +
+                 "," + frm.personID + "," + frm.hasDevices + "," + frm.patrolPersonStateID + "," + frm.sortingIndex + "," + frm.hasFixedCallerID + 
+                ",'" + frm.callerID + "')";
+
             int ret = DAL.PostGre_ExNonQry(InsQry);
             ol_failed = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
 

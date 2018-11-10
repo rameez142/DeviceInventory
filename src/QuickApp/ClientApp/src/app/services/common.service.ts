@@ -8,7 +8,7 @@ import {handhelds} from '../models/handhelds';
 import {accessorycls} from '../models/accessorycls';
 import {persons} from '../models/persons';
 import {citygroups} from '../models/citygroups';
-import { ahwalmapping } from '../models/ahwalmapping.model';
+import { ahwalmapping } from '../models/ahwalmapping';
 
 @Injectable()
 

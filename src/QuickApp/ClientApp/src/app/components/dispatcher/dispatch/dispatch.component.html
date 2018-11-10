@@ -14,8 +14,8 @@
                 [selectedRowKeys]="[]"
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
-                (onContextMenuPreparing)= "onContextMenuprepare($event)"
                 (onRowClick)="Rwclick($event)"
+                (onContextMenuPreparing)= "onContextMenuprepare($event)"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
                 <dxo-pager
@@ -23,7 +23,7 @@
                 [allowedPageSizes]="[80, 50, 10]"
                 [showInfo]="true">
             </dxo-pager>
-
+            <!-- onContextMenuPreparing)= "onContextMenuprepare($event)"  -->
 
             <dxo-export [enabled]="true" fileName="Vehicle"></dxo-export>
 
@@ -60,7 +60,7 @@
             <dxi-column dataField="personstate" caption="الحالة"></dxi-column>
             <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
             <div *dxTemplate="let data of 'maptemplate'">
-                 <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"  />
+                 <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
                <!-- <a  routerLink="/map" > <img src="../../../../assets/images/haritayikaydir_r_glow.png"  /></a> -->
                 </div>
 
@@ -120,7 +120,7 @@
                                         [focusStateEnabled]="true"
                                         (onRowClick)="RwPopupClick($event)"
                                 >
-                                
+
                                 </dx-data-grid>
                                 </div>
                             </dx-drop-down-box>
@@ -162,7 +162,7 @@
                      </tr>
                      <tr>
                      <td><label>القطاع</label></td>
-                     <td>  <dx-select-box 
+                     <td>  <dx-select-box
                         [dataSource]="sectorssrc"
                         displayExpr="shortName"
                         valueExpr="sectorID"
@@ -176,7 +176,7 @@
                     <tr>
                      <td><label>المنطقة</label></td>
                      <td>
-                            <dx-select-box 
+                            <dx-select-box
                             [dataSource]="citysrc"
                             displayExpr="shortName"
                             valueExpr="cityGroupID"
@@ -196,8 +196,8 @@
                             [deferRendering]="false"
                             [displayExpr]="associateExpr"
                             placeholder="Select a value..."
-                            [showClearButton]="true" 
-                            valueExpr="milnumber" 
+                            [showClearButton]="true"
+                            valueExpr="milnumber"
                     >
 
                         <div *dxTemplate="let data of 'content'">
@@ -222,9 +222,9 @@
                      <tr>
                          <td>
                         <button type="submit" (click)="AhwalMapping_Add_SubmitButton_Click($event)" data-dismiss="modal" class="btn btn-primary">أضافه</button>
-                    
+
                     </td>
-                      
+
 
                      </tr>
               <tr>
@@ -276,5 +276,10 @@
 </table>
             </div>
             </dx-popup>
+            <div [ngStyle]="{'display': styleExp}">
+            <app-menu-container (onMenuBtnClicked)="WingSelected($event)"  (onWingSelected)="WingSelected2($event)" [options]="options" [gutter]="gutter" [startAngles]="startAngles" [wings]="wings">
+
+            </app-menu-container>
+          </div>
           </form>
 </div>

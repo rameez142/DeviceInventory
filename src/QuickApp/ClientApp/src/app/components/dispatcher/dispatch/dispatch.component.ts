@@ -56,6 +56,7 @@ selectedCity:string=null;
 checkInOutPopupVisible:any=false;
 personname:string='';
 associatePersonMno:number = null;
+menuOpen:boolean=false;
 
   constructor(private svc:CommonService, private modalService: ModalService) {
       this.userid = parseInt(window.localStorage.getItem('UserID'));
@@ -74,7 +75,19 @@ associatePersonMno:number = null;
   }
   dataSource: any;
 
+  styleExp:string='none';
+
+  public options = {
+    spinable: true,
+    buttonWidth: 40,
+    defaultOpen:true
+};
+
+
+
+
   ngOnInit() {
+
     this.loadDataSources();
     this.loadData();
   }
@@ -334,9 +347,65 @@ onRowPrepared(e)
 
     }
 }
+public wings = [{
+  'title': 'Add Person',
+  'color': '#ea2a29',
+  'icon': {'name': 'fa fa-tablet'}
+}, {
+  'title': 'غياب',
+  'color': '#f16729',
+  'icon': {'name': 'fa fa-laptop'}
+}, {
+  'title': 'مرضيه',
+  'color': '#f89322',
+  'icon': {'name': 'fa fa-mobile'}
+}, {
+  'title': 'اجازه',
+  'color': '#ffcf14',
+  'icon': {'name': 'fa fa-clock-o'}
+}
+, {
+  'title': 'CheckIn/Out',
+  'color': '#ffcf16',
+  'icon': {'name': 'fa fa-clock-o'}
+}
+];
 
+public gutter = {
+top: 400,
+left:600
+};
+
+public startAngles = {
+topLeft: -20,
+}
+WingSelected(e)
+{
+  console.log(e);
+if(e === false)
+{
+  this.styleExp = 'none';
+}
+
+}
+WingSelected2(e)
+{
+  console.log(e);
+  if(e.title ==='Add Person')
+  {
+    this.popupVisible = true;
+  }
+}
 onContextMenuprepare(e) {
-   if (e.row.rowType === 'data') {
+  //this.menuOpen = true;
+  console.log(e);
+  this.options.defaultOpen = true;
+  this.styleExp = 'inline';
+  if (e.row.rowType === 'data') {
+    e.items = [{text:''}];
+  }
+  e.cancel = true;
+    /* if (e.row.rowType === 'data') {
     e.items = [{
       text: 'غياب',
       value:e.row.rowIndex
@@ -353,7 +422,7 @@ onContextMenuprepare(e) {
   }
 ];
 
-  }
+  } */
 }
 
 refreshDataGrid() {
@@ -452,7 +521,7 @@ if(parseInt(this.selectedRole , 10) === Handler_AhwalMapping.PatrolRole_CaptainA
             this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                    this.ahwalMapping_Add_status_label = resp;
                  this.loadData();
               });
         }
@@ -460,7 +529,7 @@ if(parseInt(this.selectedRole , 10) === Handler_AhwalMapping.PatrolRole_CaptainA
             this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                    this.ahwalMapping_Add_status_label = resp;
                  this.loadData();
               });
         }
@@ -500,7 +569,7 @@ parseInt(this.selectedRole,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSec
             this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                    this.ahwalMapping_Add_status_label = resp;
                  this.loadData();
               });
         }
@@ -508,7 +577,7 @@ parseInt(this.selectedRole,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSec
             this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                    this.ahwalMapping_Add_status_label = resp;
                  this.loadData();
               });
         }
@@ -548,7 +617,7 @@ if(this.ahwalMappingAddMethod === 'UPDATE'){
     this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
         {
             this.clearpersonpopupvalues();
-            this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+            this.ahwalMapping_Add_status_label = resp;
          this.loadData();
       });
 }
@@ -556,7 +625,7 @@ else{
     this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
         {
             this.clearpersonpopupvalues();
-            this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+            this.ahwalMapping_Add_status_label = resp;
          this.loadData();
       });
 }
@@ -594,7 +663,7 @@ else
         this.svc.UpDateAhwalMapping(ahwalmappingobj).subscribe(resp =>
             {
                 this.clearpersonpopupvalues();
-                this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                this.ahwalMapping_Add_status_label = resp;
              this.loadData();
           });
     }
@@ -604,7 +673,7 @@ else
         this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
             {
                 this.clearpersonpopupvalues();
-                this.ahwalMapping_Add_status_label = 'Saved SuccessFully';
+                this.ahwalMapping_Add_status_label = resp;
              this.loadData();
           });
     }
@@ -660,14 +729,14 @@ else {
 
 Rwclick(e)
 {
-    var component = e.component,
+   /* var component = e.component,
     prevClickTime = component.lastClickTime;
     component.lastClickTime = new Date();
     if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-            //Double click code
-             this.CallDblClick();
-    }
 
+             this.CallDblClick();
+    }*/
+    this.styleExp='inline';
 }
 
 RwAssociatePopupClick(e)
