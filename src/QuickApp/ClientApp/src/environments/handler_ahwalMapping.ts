@@ -1,4 +1,4 @@
-export const Handler_AhwalMapping = {
+export const handler_ahwalMapping = {
     //Roles
     PatrolRole_None: 0,
      PatrolRole_CaptainAllSectors:10,
@@ -15,7 +15,7 @@ export const Handler_AhwalMapping = {
      Shifts_Afternoon:2,
      Shifts_Night:3,
 
-     //sectors 
+     //sectors
      Sector_Public:1,
      Sector_First:2,
      Sector_Second:3,

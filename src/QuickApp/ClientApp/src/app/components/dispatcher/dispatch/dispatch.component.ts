@@ -3,7 +3,7 @@ import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent, DxSelectBoxComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
 import { ModalService } from '../../../services/modalservice';
-import { Handler_AhwalMapping } from '../../../../environments/AhwalMapping';
+import { handler_ahwalMapping } from '../../../../environments/handler_ahwalMapping';
 import {ahwalmapping} from '../../../models/ahwalmapping';
 import {citygroups} from '../../../models/citygroups';
 import {persons} from '../../../models/persons';
@@ -13,6 +13,10 @@ import { associates } from '../../../models/associates';
 import { sectors } from '../../../models/sectors';
 import { shifts } from '../../../models/shifts';
 import { patrolroles } from '../../../models/patrolroles';
+import { user } from '../../../models/user';
+import { operationLog } from '../../../models/operationLog';
+
+import { handler_operations } from '../../../../environments/handler_operations';
 
 @Component({
   selector: 'app-dispatch',
@@ -57,9 +61,62 @@ checkInOutPopupVisible:any=false;
 personname:string='';
 associatePersonMno:number = null;
 menuOpen:boolean=false;
+userobj:user = new user();
+dataSource: any;
+styleExp:string='none';
+AhwalMapping_CheckInOut_ID:any;
+AhwalMapping_CheckInOut_Method:any;
+selectedCheckInOutPerson: number =null;
+selectedCheckInOutPatrol:number = null;
+selectedCheckInOutHandHeld:number = null;
+  public options = {
+    spinable: true,
+    buttonWidth: 40,
+    defaultOpen:true
+};
+public wings = [{
+  'title': 'Add Person',
+  'color': '#ea2a29',
+  'icon': {'name': 'fa fa-tablet'}
+}, {
+  'title': 'غياب',
+  'color': '#f16729',
+  'icon': {'name': 'fa fa-laptop'}
+}, {
+  'title': 'مرضيه',
+  'color': '#f89322',
+  'icon': {'name': 'fa fa-mobile'}
+}, {
+  'title': 'اجازه',
+  'color': '#ffcf14',
+  'icon': {'name': 'fa fa-clock-o'}
+},
+, {
+  'title': 'حذف',
+  'color': '#ffcf20',
+  'icon': {'name': 'fa fa-clock-o'}
+}
+, {
+  'title': 'CheckIn/Out',
+  'color': '#ffcf16',
+  'icon': {'name': 'fa fa-clock-o'}
+}
+];
 
+public gutter = {
+top: 400,
+left:600
+};
+
+public startAngles = {
+topLeft: -20,
+};
+
+selRowIndex:number;
+selAhwalMappingID:number;
   constructor(private svc:CommonService, private modalService: ModalService) {
-      this.userid = parseInt(window.localStorage.getItem('UserID'));
+      this.userid = parseInt(window.localStorage.getItem('UserID'),10);
+      this.userobj.userID = this.userid;
     this.showLoadPanel();
    }
 
@@ -73,15 +130,7 @@ menuOpen:boolean=false;
   showLoadPanel() {
     this.loadingVisible = true;
   }
-  dataSource: any;
 
-  styleExp:string='none';
-
-  public options = {
-    spinable: true,
-    buttonWidth: 40,
-    defaultOpen:true
-};
 
 
 
@@ -99,8 +148,8 @@ this.selectedRole = (e.value);
 
 if(e.value !== null)
 {
-if(parseInt(e.value, 10) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||
- parseInt(e.value,10) === Handler_AhwalMapping.PatrolRole_CaptainShift)
+if(parseInt(e.value, 10) === handler_ahwalMapping.PatrolRole_CaptainAllSectors ||
+ parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_CaptainShift)
 {
   this.shiftvisibile = true;
   this.sectorvisibile = false;
@@ -108,8 +157,8 @@ if(parseInt(e.value, 10) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors |
  // this.searchInput.nativeElement.visible = false;
   this.associatevisibile = false;
 }
-else if(parseInt(e.value,10) === Handler_AhwalMapping.PatrolRole_CaptainSector ||
-parseInt(e.value,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+else if(parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_CaptainSector ||
+parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_SubCaptainSector)
 {
   this.shiftvisibile = true;
   this.sectorvisibile = true;
@@ -117,7 +166,7 @@ parseInt(e.value,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
   //this.searchInput.nativeElement.visible = false;
   this.associatevisibile = false;
 }
-else if( parseInt(e.value , 10) === Handler_AhwalMapping.PatrolRole_Associate)
+else if( parseInt(e.value , 10) === handler_ahwalMapping.PatrolRole_Associate)
 {
   this.shiftvisibile = false;
   this.sectorvisibile = false;
@@ -312,7 +361,7 @@ onRowPrepared(e)
     if(e.rowType ==='data')
     {
      //  console.log(e);
-        //let personState:Number = e.GetValue('PatrolPersonStateID');
+
         if(e.key.patrolpersonstateid === 20 || e.key.patrolpersonstateid === 30 ||
           e.key.patrolpersonstateid === 40 || e.key.patrolpersonstateid === 74)
         {
@@ -347,38 +396,7 @@ onRowPrepared(e)
 
     }
 }
-public wings = [{
-  'title': 'Add Person',
-  'color': '#ea2a29',
-  'icon': {'name': 'fa fa-tablet'}
-}, {
-  'title': 'غياب',
-  'color': '#f16729',
-  'icon': {'name': 'fa fa-laptop'}
-}, {
-  'title': 'مرضيه',
-  'color': '#f89322',
-  'icon': {'name': 'fa fa-mobile'}
-}, {
-  'title': 'اجازه',
-  'color': '#ffcf14',
-  'icon': {'name': 'fa fa-clock-o'}
-}
-, {
-  'title': 'CheckIn/Out',
-  'color': '#ffcf16',
-  'icon': {'name': 'fa fa-clock-o'}
-}
-];
 
-public gutter = {
-top: 400,
-left:600
-};
-
-public startAngles = {
-topLeft: -20,
-}
 WingSelected(e)
 {
   console.log(e);
@@ -394,6 +412,25 @@ WingSelected2(e)
   if(e.title ==='Add Person')
   {
     this.popupVisible = true;
+  }
+  else if(e.title ==='حذف')
+  {
+    this.popupVisible = true;
+  }
+}
+
+async deleteMapping(ahwalMappingID:number) {
+
+  if(this.selahwalmappingid !== null)
+  {
+    this.svc.DeleteAhwalMapping(this.selahwalmappingid,this.userid).toPromise().then(resp =>
+    {
+        notify(resp, 'success', 600);
+
+
+
+  });
+
   }
 }
 onContextMenuprepare(e) {
@@ -488,8 +525,8 @@ console.log(personobj);
 
 console.log(personobj);
 let ahwalmappingobj:ahwalmapping = new ahwalmapping();
-if(parseInt(this.selectedRole , 10) === Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||
- parseInt(this.selectedRole, 10 ) === Handler_AhwalMapping.PatrolRole_CaptainShift)
+if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainAllSectors ||
+ parseInt(this.selectedRole, 10 ) === handler_ahwalMapping.PatrolRole_CaptainShift)
 {
 
     if(this.selectedShift === null)
@@ -500,7 +537,7 @@ if(parseInt(this.selectedRole , 10) === Handler_AhwalMapping.PatrolRole_CaptainA
 
     ahwalmappingobj.ahwalID = personobj.ahwalID;
     ahwalmappingobj.personID = personobj.personID;
-    ahwalmappingobj.sectorID = Handler_AhwalMapping.Sector_Public;
+    ahwalmappingobj.sectorID = handler_ahwalMapping.Sector_Public;
     let citygroupsobj:citygroups[];
     await this.svc.GetCityGroupForAhwal(personobj.ahwalID).toPromise().then (resp =>
         {
@@ -526,16 +563,18 @@ if(parseInt(this.selectedRole , 10) === Handler_AhwalMapping.PatrolRole_CaptainA
               });
         }
         else {
-            this.svc.AddAhwalMapping(ahwalmappingobj).subscribe(resp =>
+            this.svc.AddAhwalMapping2(ahwalmappingobj,this.userobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
-                    this.ahwalMapping_Add_status_label = resp;
+                  let olog:operationLog = new operationLog();
+                 olog= <operationLog>resp;
+                    this.ahwalMapping_Add_status_label = olog.text;
                  this.loadData();
               });
         }
 }
-else if (parseInt(this.selectedRole,10) === Handler_AhwalMapping.PatrolRole_CaptainSector ||
-parseInt(this.selectedRole,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+else if (parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_CaptainSector ||
+parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSector)
 {
     if(this.selectedShift === null)
     {
@@ -582,7 +621,7 @@ parseInt(this.selectedRole,10) === Handler_AhwalMapping.PatrolRole_SubCaptainSec
               });
         }
 }
-else if(parseInt(this.selectedRole, 10 ) === Handler_AhwalMapping.PatrolRole_Associate)
+else if(parseInt(this.selectedRole, 10 ) === handler_ahwalMapping.PatrolRole_Associate)
 {
 
 if(this.selectedAssociateMapId === null){
@@ -704,11 +743,7 @@ clearpersonpopupvalues()
     //console.log('searchinput ' + this.searchInput);
 }
 
-AhwalMapping_CheckInOut_ID:any;
-AhwalMapping_CheckInOut_Method:any;
-selectedCheckInOutPerson: number =null;
-selectedCheckInOutPatrol:number = null;
-selectedCheckInOutHandHeld:number = null;
+
 
 RwPopupClick(e)
 {

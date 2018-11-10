@@ -9,6 +9,7 @@ import {accessorycls} from '../models/accessorycls';
 import {persons} from '../models/persons';
 import {citygroups} from '../models/citygroups';
 import { ahwalmapping } from '../models/ahwalmapping';
+import {user} from '../models/user';
 
 @Injectable()
 
@@ -62,7 +63,8 @@ public Addhandhelds(frm:handhelds){
       return this.http.post(this.api_url + '/api/maintainence/delhandheld', frm, { responseType: 'text' })
       }
       public GetHandHeldsInventoryList(ahwalid:number,userid:number){
-        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid=' + ahwalid + '&userid=' + userid, { responseType: 'text' })
+        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid=' +
+        ahwalid + '&userid=' + userid, { responseType: 'text' })
         }
 //#endregion "Hand Held"
 
@@ -154,26 +156,40 @@ public Addpersons(frm:persons){
 
         public GetPersonForUserForRole(mno:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/personForUserForRole?mno=' + mno + '&userid=' + userid , { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/personForUserForRole?mno=' +
+          mno + '&userid=' + userid , { responseType: 'json' });
 
         }
 
         public GetCityGroupForAhwal(ahwalid:number,sectorid?:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/cityGroupforAhwal?ahwalid=' + ahwalid + '&sectorid=' + sectorid, { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/cityGroupforAhwal?ahwalid=' +
+           ahwalid + '&sectorid=' + sectorid, { responseType: 'json' });
+
+        }
+
+        public AddAhwalMapping2(ahwalmappingobj:ahwalmapping,userobj:user)
+        {
+          console.log('ahwalmappingobj' + ahwalmappingobj);
+          let myData = {
+            ahwalmappingobj:ahwalmappingobj,
+            userobj:userobj
+          };
+
+          return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping' ,
+          myData,{ responseType: 'json' });
 
         }
 
         public AddAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
           console.log('ahwalmappingobj' + ahwalmappingobj);
-          return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+          return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping?' , ahwalmappingobj , { responseType: 'text' });
 
         }
-
         public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
-          return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' })
+          return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' });
         }
         public GetMappingByID(AssociateMapId:number,userid:number)
         {
@@ -184,19 +200,28 @@ public Addpersons(frm:persons){
 
         public GetPatrolCarByPlateNumberForUserForRole(CheckInOutPatrol:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/patrolCarByPlateNumberForUserForRole?CheckInOutPatrol=' + CheckInOutPatrol + '&userid=' + userid , { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/patrolCarByPlateNumberForUserForRole?CheckInOutPatrol=' +
+          CheckInOutPatrol + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetHandHeldBySerialForUserForRole(CheckInOutHandHeld:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/handHeldBySerialForUserForRole?CheckInOutHandHeld=' + CheckInOutHandHeld + '&userid=' + userid , { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/handHeldBySerialForUserForRole?CheckInOutHandHeld=' +
+           CheckInOutHandHeld + '&userid=' + userid , { responseType: 'json' })
 
         }
 
         public GetMappingByPersonID(CheckInOutPerson:number,userid:number)
         {
-          return this.http.get(this.api_url + '/api/dispatch/mappingByPersonID?CheckInOutPerson=' + CheckInOutPerson + '&userid=' + userid , { responseType: 'json' })
+          return this.http.get(this.api_url + '/api/dispatch/mappingByPersonID?CheckInOutPerson=' +
+           CheckInOutPerson + '&userid=' + userid , { responseType: 'json' }) ;
+
+        }
+        public DeleteAhwalMapping(ahwalmappingid:number,userid:number)
+        {
+          return this.http.delete(this.api_url + '/api/dispatch/deleteAhwalMapping?ahwalmappingid=' +
+           ahwalmapping + '&userid=' + userid , { responseType: 'json' });
 
         }
         //#endregion "Dispatch"
