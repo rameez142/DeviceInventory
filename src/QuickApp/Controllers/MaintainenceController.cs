@@ -1,30 +1,21 @@
-﻿using System;
-using System.Web;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Data.SqlClient;
-using System.Net.Http;
-using System.Web.Http;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using System.Threading;
-using System.Net.Http.Headers;
-using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using Npgsql;
 using MOI.Patrol.DataAccessLayer;
 using MOI.Patrol.Models;
+using Npgsql;
+using OpenIddict.Validation;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace MOI.Patrol.Controllers
 {
+    [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class MaintainenceController : ControllerBase
     {
-        public String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
+        public String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
         public DataAccess DAL = new DataAccess();
 
         [HttpPost("addpatrolcar")]
@@ -56,7 +47,7 @@ namespace MOI.Patrol.Controllers
         }
 
 
-
+        [Authorize("ViewPatrolCarsRole")]
         [HttpPost("patrolcarslist")]
         public List<PatrolCars> PostPatrolCarsList([FromBody] int ahwalid)
         {

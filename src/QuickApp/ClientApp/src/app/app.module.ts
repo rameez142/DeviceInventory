@@ -82,7 +82,7 @@ import { LoadingPageModule } from 'angular-loading-page';
 import { LayoutModule,BoxModule  } from '../../node_modules/angular-admin-lte';
 import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
-import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
+//import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 
 @NgModule({
   imports: [
@@ -109,7 +109,7 @@ import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
     DxPopupModule,DxDataGridModule,DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule,
      DxTabPanelModule,DxCheckBoxModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
-    LayoutModule.forRoot(adminLteConf),FanMenuModule
+    LayoutModule.forRoot(adminLteConf)
   ],
   declarations: [
     AppComponent,

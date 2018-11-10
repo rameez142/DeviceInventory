@@ -8,7 +8,7 @@ namespace MOI.Patrol.DataAccessLayer
 {
     public class DataAccess
     {
-        public String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
+        public String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=patrols";
       
 
         // function that creates a list of an object from the given qry

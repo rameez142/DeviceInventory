@@ -118,7 +118,7 @@ export class AuthService {
 
 
   private processLoginResponse(response: LoginResponse, rememberMe: boolean) {
-
+   
     let accessToken = response.access_token;
 
     if (accessToken == null)
@@ -135,7 +135,9 @@ export class AuthService {
 
     let jwtHelper = new JwtHelper();
     let decodedIdToken = <IdToken>jwtHelper.decodeToken(response.id_token);
-
+   // debugger
+    alert(12);
+    console.log(decodedIdToken)
     let permissions: PermissionValues[] = Array.isArray(decodedIdToken.permission) ? decodedIdToken.permission : [decodedIdToken.permission];
 
     if (!this.isLoggedIn)

@@ -21,6 +21,8 @@ using AssetManagement.ViewModels;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using AppPermissions = DAL.Core.ApplicationPermissions;
+using MOI.Patrol;
+using System.Threading.Tasks;
 
 namespace AssetManagement
 {
@@ -38,29 +40,33 @@ namespace AssetManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddEntityFrameworkNpgsql().AddDbContext<patrolsContext>(options =>
             {
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"], b => b.MigrationsAssembly("MOI.Patrol"));
+                options.UseNpgsql("server=localhost;Port=5432;User Id=postgres;password=12345;Database=patrols;Pooling=true;");
                 options.UseOpenIddict();
             });
 
-            
+
 
             // add identity
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<ApplicationUser, ApplicationRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
 
-            // Configure Identity options and password complexity here
-            services.Configure<IdentityOptions>(options =>
-            {
-                // User settings
-                options.User.RequireUniqueEmail = true;
+            //services.AddIdentity<ApplicationUser, ApplicationRole>()
+            //    .AddEntityFrameworkStores<patrolsContext>()
+            //    .AddDefaultTokenProviders();
 
-                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
-                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
-                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
-            });
+            //// Configure Identity options and password complexity here
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // User settings
+            //    options.User.RequireUniqueEmail = true;
+            //    options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
+            //    options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
+            //    options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+            //});
+
 
 
 
@@ -69,7 +75,7 @@ namespace AssetManagement
             services.AddOpenIddict()
                 .AddCore(options =>
                 {
-                    options.UseEntityFrameworkCore().UseDbContext<ApplicationDbContext>();
+                    options.UseEntityFrameworkCore().UseDbContext<patrolsContext>();
                 })
                 .AddServer(options =>
                 {
@@ -78,6 +84,10 @@ namespace AssetManagement
                     options.AllowPasswordFlow();
                     options.AllowRefreshTokenFlow();
                     options.AcceptAnonymousClients();
+
+                    options.SetAccessTokenLifetime(TimeSpan.FromMinutes(2));
+                    options.SetRefreshTokenLifetime(TimeSpan.FromMinutes(2));
+
                     options.DisableHttpsRequirement(); // Note: Comment this out in production
                     options.RegisterScopes(
                         OpenIdConnectConstants.Scopes.OpenId,
@@ -113,6 +123,8 @@ namespace AssetManagement
 
             services.AddAuthorization(options =>
             {
+                options.AddPolicy(Authorization.Policies.ViewPatrolCars, policy => policy.RequireClaim("ViewPatrolCars"));
+                options.AddPolicy(Authorization.Policies.ViewPatrolCarsRole, policy => policy.RequireClaim("ViewPatrolCarsRole"));
                 options.AddPolicy(Authorization.Policies.ViewAllUsersPolicy, policy => policy.RequireClaim(CustomClaimTypes.Permission, AppPermissions.ViewUsers));
                 options.AddPolicy(Authorization.Policies.ManageAllUsersPolicy, policy => policy.RequireClaim(CustomClaimTypes.Permission, AppPermissions.ManageUsers));
 
@@ -123,10 +135,10 @@ namespace AssetManagement
                 options.AddPolicy(Authorization.Policies.AssignAllowedRolesPolicy, policy => policy.Requirements.Add(new AssignRolesAuthorizationRequirement()));
             });
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile<AutoMapperProfile>();
-            });
+            //Mapper.Initialize(cfg =>
+            //{
+            //    cfg.AddProfile<AutoMapperProfile>();
+            //});
 
 
             // Configurations
@@ -140,15 +152,16 @@ namespace AssetManagement
             // Repositories
             services.AddScoped<IUnitOfWork, HttpUnitOfWork>();
             services.AddScoped<IAccountManager, AccountManager>();
-
+            services.AddHttpContextAccessor();
             // Auth Handlers
             services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, ManageUserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, ViewRoleAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AssignRolesAuthorizationHandler>();
 
-            // DB Creation and Seeding
-            services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
+
+
+
         }
 
 
@@ -202,7 +215,7 @@ namespace AssetManagement
 
                 if (env.IsDevelopment())
                 {
-                   //spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseAngularCliServer(npmScript: "start");
                     spa.Options.StartupTimeout = TimeSpan.FromSeconds(600); // Increase the timeout if angular app is taking longer to startup
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); // Use this instead to use the angular cli server
                 }
