@@ -67,12 +67,12 @@ dataSource: any;
 styleExp:string='none';
 AhwalMapping_CheckInOut_ID:any;
 AhwalMapping_CheckInOut_Method:any;
-selectedCheckInOutPerson: number =null;
-selectedCheckInOutPatrol:number = null;
-selectedCheckInOutHandHeld:number = null;
-checkPersonMno:number= null;
-checkPatrolCar:number = null;
+selCheckInOutPersonMno: number =null;
+selCheckInOutPatrolPltNo:number = null;
+selCheckInOutHHeldSerialNo:number = null;
+
 patrolCarsrc:patrolcars[];
+selRowIndex:number;
   public options = {
     spinable: true,
     buttonWidth: 40,
@@ -82,29 +82,29 @@ handHeldsrc:handhelds[];
 public wings = [{
   'title': 'Add Person',
   'color': '#ea2a29',
-  'icon': {'name': 'fa fa-tablet'}
+  'icon': {'name': ''}
 }, {
   'title': 'غياب',
   'color': '#f16729',
-  'icon': {'name': 'fa fa-laptop'}
+  'icon': {'name': ''}
 }, {
   'title': 'مرضيه',
   'color': '#f89322',
-  'icon': {'name': 'fa fa-mobile'}
+  'icon': {'name': ''}
 }, {
   'title': 'اجازه',
   'color': '#ffcf14',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 },
  {
   'title': 'حذف',
   'color': '#ffcf20',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 }
 , {
   'title': 'CheckIn/Out',
   'color': '#ffcf16',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 }
 ];
 
@@ -117,7 +117,7 @@ public startAngles = {
 topLeft: -20
 };
 
-selRowIndex:number;
+
   constructor(private svc:CommonService, private modalService: ModalService) {
       this.userid = parseInt(window.localStorage.getItem('UserID'),10);
       this.userobj.userID = this.userid;
@@ -487,7 +487,7 @@ onContextMenuprepare(e) {
   //this.menuOpen = true;
   console.log(e);
   this.selahwalmappingid = e.row.key.ahwalmappingid;
-  this.checkPersonMno = e.row.key.milnumber;
+  this.selCheckInOutPersonMno = e.row.key.milnumber;
   //console.log(this.selahwalmappingid);
   this.options.defaultOpen = true;
   this.styleExp = 'inline';
@@ -856,12 +856,12 @@ RwPatrolCheckPopupClick(e)
 {
     console.log(e);
     //console.log(e.data.patrolid);
-    this.checkPatrolCar = e.data.patrolid;
+    this.selCheckInOutPatrolPltNo = e.data.platenumber;
 }
 
 RwHandHeldCheckPopupClick(e)
 {
-
+this.selCheckInOutHHeldSerialNo =  e.data.serial;
 }
 
 CallDblClick()
@@ -872,83 +872,7 @@ CallDblClick()
    // this.ShowCheckInOutPopdtls();
  }
 
-    ShowCheckInOutPopdtls()
-    {
 
-    if(this.selectedCheckInOutPerson === null)
-    {
-    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
-    }
-    let personobj:persons = new persons();
-
-
-      this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
-        {
-
-            if (resp !== [])
-            {
-                personobj = <persons>resp;
-            }
-
-      });
-
-        if (personobj === null)
-        {
-            this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
-            return;
-
-          }
-
-    if(this.selectedCheckInOutPatrol === null)
-    {
-    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
-    }
-
-    let patrolobj:patrolcars = new patrolcars();
-    this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
-      {
-
-          if (resp !== [])
-          {
-            patrolobj = <patrolcars>resp;
-          }
-    });
-
-    if (patrolobj === null)
-    {
-        this.ahwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
-        return;
-
-      }
-    if(this.selectedCheckInOutHandHeld == null)
-    {
-      this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
-      return;
-    }
-      let handheldobj:handhelds = new handhelds();
-      this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
-        {
-
-            if (resp !== [])
-            {
-              handheldobj = <handhelds>(resp);
-            }
-      });
-      let personMapping ;
-      this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
-        {
-
-            if (resp !== [])
-            {
-              handheldobj = <handhelds>(resp);
-            }
-      });
-                if (personMapping == null)
-                {
-                    this.ahwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
-                    return;
-                }
-            }
 
 CloseCheckInoutPopup(){
   this.checkInOutPopupVisible = false;
@@ -956,8 +880,114 @@ CloseCheckInoutPopup(){
 }
 AhwalMapping_CheckInButton_Click(e)
 {
+    if(this.selCheckInOutPersonMno === null)
+    {
+    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
+    }
+   
+    if(this.selCheckInOutPatrolPltNo === null)
+    {
+    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
+    }
 
+ 
+    if(this.selCheckInOutHHeldSerialNo == null)
+    {
+      this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
+      return;
+    }
+    
+    /*
+    let personobj:persons = new persons();
+
+
+    this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+              personobj = <persons>resp;
+          }
+
+    });
+
+      if (personobj === null)
+      {
+          this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
+          return;
+
+        }
+
+
+  if(this.selectedCheckInOutPatrol === null)
+  {
+  this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
+  }
+
+  let patrolobj:patrolcars = new patrolcars();
+  this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
+    {
+
+        if (resp !== [])
+        {
+          patrolobj = <patrolcars>resp;
+        }
+  });
+
+  if (patrolobj === null)
+  {
+      this.ahwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
+      return;
+
+    }
+  if(this.selectedCheckInOutHandHeld == null)
+  {
+    this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
+    return;
+  }
+    let handheldobj:handhelds = new handhelds();
+    this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+            handheldobj = <handhelds>(resp);
+          }
+    });
+    let personMapping ;
+    this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+            handheldobj = <handhelds>(resp);
+          }
+    });
+              if (personMapping == null)
+              {
+                  this.ahwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
+                  return;
+              }
+               */
 }
 
+checkhandheldexpr(item)
+{
+    if ( item !== undefined )
+    { return  item.serial ;
+    }
+}
 
+checkInassociateExpr(item)
+{
+    if ( item !== undefined )
+    { return  item.milnumber ;
+    }
+}
+
+RwPersonCheckPopupClick(e)
+{
+this.selCheckInOutPersonMno = e.data.milnumber;
+
+}
 }

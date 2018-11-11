@@ -252,10 +252,10 @@
   <tr><td><label>الفرد</label></td>
   <td>
     <dx-drop-down-box
-    [(value)]="checkPersonMno"
+    [(value)]="selCheckInOutPersonMno"
     [dataSource]="associatesrc"
     [deferRendering]="false"
-    [displayExpr]="associateExpr"
+    [displayExpr]="checkInassociateExpr"
     placeholder="Select a value..."
     [showClearButton]="true"
     valueExpr="milnumber"
@@ -286,13 +286,13 @@
     </td>
     <td>
             <dx-drop-down-box
-            [(value)]="checkPatrolCar"
+            [(value)]="selCheckInOutPatrolPltNo"
             [dataSource]="patrolCarsrc"
             [deferRendering]="false"
             [displayExpr]="checkPatrolExp"
             placeholder="Select a value..."
             [showClearButton]="true"
-            valueExpr="patrolid"
+            valueExpr="platenumber"
              [searchEnabled]="true"
         >
         
@@ -317,10 +317,10 @@
   <tr>
     <td><label>الجهاز</label></td>
     <td>  <dx-drop-down-box
-        [(value)]="checkHandHeld"
+        [(value)]="selCheckInOutHHeldSerialNo"
         [dataSource]="handHeldsrc"
-        [displayExpr]="serial"
-        valueExpr="handheldid"
+        [displayExpr]="checkhandheldexpr"
+        valueExpr="serial"
         [searchEnabled]="true">
     
 
