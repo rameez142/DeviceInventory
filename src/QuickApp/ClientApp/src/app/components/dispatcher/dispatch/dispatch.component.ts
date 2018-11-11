@@ -17,6 +17,7 @@ import { user } from '../../../models/user';
 import { operationLog } from '../../../models/operationLog';
 
 import { handler_operations } from '../../../../environments/handler_operations';
+import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
 
 @Component({
   selector: 'app-dispatch',
@@ -69,11 +70,15 @@ AhwalMapping_CheckInOut_Method:any;
 selectedCheckInOutPerson: number =null;
 selectedCheckInOutPatrol:number = null;
 selectedCheckInOutHandHeld:number = null;
+checkPersonMno:number= null;
+checkPatrolCar:number = null;
+patrolCarsrc:patrolcars[];
   public options = {
     spinable: true,
     buttonWidth: 40,
     defaultOpen:true
 };
+handHeldsrc:handhelds[];
 public wings = [{
   'title': 'Add Person',
   'color': '#ea2a29',
@@ -225,6 +230,18 @@ else if (parseInt(e.value , 10) != -1 && parseInt(e.value ,10) != null)
             this.personsrc = <persons[]> resp;
             });
 
+            this.svc.GetCheckinPatrolCarList(this.selahwalid,this.userid).toPromise().then(resp =>
+                {
+     
+                 this.patrolCarsrc = <patrolcars[]> resp;
+                 });
+
+                 this.svc.GetCheckinHandHeldList(this.selahwalid,this.userid).toPromise().then(resp =>
+                    {
+         
+                     this.handHeldsrc = <handhelds[]> resp;
+                     });
+
   }
 
 
@@ -262,6 +279,12 @@ associateExpr(item){
 
 }
 
+checkPatrolExp(item)
+{
+    if ( item !== undefined )
+    { return  item.platenumber ;
+    }
+}
 
 loadData()
 {
@@ -407,26 +430,24 @@ if(e === false)
 }
 WingSelected2(e)
 {
-  console.log(e);
-  if(e.title ==='Add Person')
+
+    if(e.title ==='Add Person')
   {
     this.popupVisible = true;
   }
   else if(e.title ==='حذف')
   {
-    console.log(e.title)
+    
     this.deleteMapping();
   }
   else if(e.title ==='غياب' ||e.title ==='مرضيه'  || e.title ==='اجازه' )
   {
-    
-    
+      
     this.updatePersonState(e.title);
   }
   else if(e.title ==='CheckIn/Out'  )
   {
-    
-    
+     
     this.CallDblClick();
   }
 }
@@ -466,13 +487,16 @@ onContextMenuprepare(e) {
   //this.menuOpen = true;
   console.log(e);
   this.selahwalmappingid = e.row.key.ahwalmappingid;
-  console.log(this.selahwalmappingid);
+  this.checkPersonMno = e.row.key.milnumber;
+  //console.log(this.selahwalmappingid);
   this.options.defaultOpen = true;
   this.styleExp = 'inline';
   if (e.row.rowType === 'data') {
     e.items = [{text:''}];
   }
+
   e.cancel = true;
+
     /* if (e.row.rowType === 'data') {
     e.items = [{
       text: 'غياب',
@@ -828,14 +852,25 @@ else {
 
 }
 
+RwPatrolCheckPopupClick(e)
+{
+    console.log(e);
+    //console.log(e.data.patrolid);
+    this.checkPatrolCar = e.data.patrolid;
+}
+
+RwHandHeldCheckPopupClick(e)
+{
+
+}
 
 CallDblClick()
 {
     this.checkInOutPopupVisible=true;
     this.AhwalMapping_CheckInOut_ID = this.selahwalmappingid;
 
-    this.ShowCheckInOutPopdtls();
-    }
+   // this.ShowCheckInOutPopdtls();
+ }
 
     ShowCheckInOutPopdtls()
     {
@@ -919,4 +954,10 @@ CloseCheckInoutPopup(){
   this.checkInOutPopupVisible = false;
 
 }
+AhwalMapping_CheckInButton_Click(e)
+{
+
+}
+
+
 }

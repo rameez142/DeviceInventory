@@ -237,7 +237,14 @@ public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
 
         }
 
+        public GetCheckinPatrolCarList(ahwalid:number,userid:number){
+          return this.http.get(this.api_url + '/api/maintainence/checkinpatrolcarslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
+          }
 
+          public GetCheckinHandHeldList(ahwalid:number,userid:number){
+            return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
+            }
 
+          
 
 }
