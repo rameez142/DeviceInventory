@@ -17,6 +17,7 @@ import { user } from '../../../models/user';
 import { operationLog } from '../../../models/operationLog';
 
 import { handler_operations } from '../../../../environments/handler_operations';
+import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
 
 @Component({
   selector: 'app-dispatch',
@@ -66,40 +67,44 @@ dataSource: any;
 styleExp:string='none';
 AhwalMapping_CheckInOut_ID:any;
 AhwalMapping_CheckInOut_Method:any;
-selectedCheckInOutPerson: number =null;
-selectedCheckInOutPatrol:number = null;
-selectedCheckInOutHandHeld:number = null;
+selCheckInOutPersonMno: number =null;
+selCheckInOutPatrolPltNo:number = null;
+selCheckInOutHHeldSerialNo:number = null;
+
+patrolCarsrc:patrolcars[];
+selRowIndex:number;
   public options = {
     spinable: true,
     buttonWidth: 40,
     defaultOpen:true
 };
+handHeldsrc:handhelds[];
 public wings = [{
   'title': 'Add Person',
   'color': '#ea2a29',
-  'icon': {'name': 'fa fa-tablet'}
+  'icon': {'name': ''}
 }, {
   'title': 'غياب',
   'color': '#f16729',
-  'icon': {'name': 'fa fa-laptop'}
+  'icon': {'name': ''}
 }, {
   'title': 'مرضيه',
   'color': '#f89322',
-  'icon': {'name': 'fa fa-mobile'}
+  'icon': {'name': ''}
 }, {
   'title': 'اجازه',
   'color': '#ffcf14',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 },
  {
   'title': 'حذف',
   'color': '#ffcf20',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 }
 , {
   'title': 'CheckIn/Out',
   'color': '#ffcf16',
-  'icon': {'name': 'fa fa-clock-o'}
+  'icon': {'name': ''}
 }
 ];
 
@@ -112,8 +117,7 @@ public startAngles = {
 topLeft: -20
 };
 
-selRowIndex:number;
-selAhwalMappingID:number;
+
   constructor(private svc:CommonService, private modalService: ModalService) {
       this.userid = parseInt(window.localStorage.getItem('UserID'),10);
       this.userobj.userID = this.userid;
@@ -226,6 +230,18 @@ else if (parseInt(e.value , 10) != -1 && parseInt(e.value ,10) != null)
             this.personsrc = <persons[]> resp;
             });
 
+            this.svc.GetCheckinPatrolCarList(this.selahwalid,this.userid).toPromise().then(resp =>
+                {
+     
+                 this.patrolCarsrc = <patrolcars[]> resp;
+                 });
+
+                 this.svc.GetCheckinHandHeldList(this.selahwalid,this.userid).toPromise().then(resp =>
+                    {
+         
+                     this.handHeldsrc = <handhelds[]> resp;
+                     });
+
   }
 
 
@@ -263,6 +279,12 @@ associateExpr(item){
 
 }
 
+checkPatrolExp(item)
+{
+    if ( item !== undefined )
+    { return  item.platenumber ;
+    }
+}
 
 loadData()
 {
@@ -408,26 +430,54 @@ if(e === false)
 }
 WingSelected2(e)
 {
-  console.log(e);
-  if(e.title ==='Add Person')
+
+    if(e.title ==='Add Person')
   {
     this.popupVisible = true;
   }
   else if(e.title ==='حذف')
   {
-    this.popupVisible = true;
+    
+    this.deleteMapping();
+  }
+  else if(e.title ==='غياب' ||e.title ==='مرضيه'  || e.title ==='اجازه' )
+  {
+      
+    this.updatePersonState(e.title);
+  }
+  else if(e.title ==='CheckIn/Out'  )
+  {
+     
+    this.CallDblClick();
   }
 }
 
-async deleteMapping(ahwalMappingID:number) {
-
+updatePersonState(selmenu:string)
+{
+    if(this.selahwalmappingid !== null)
+    {
+        
+      this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
+      {
+        let olog:operationLog = new operationLog();
+        olog= <operationLog>resp;
+        notify( olog.text, 'success', 600);
+        this.loadData();
+  
+    });
+  
+    }
+}
+ deleteMapping() {
+console.log(this.selahwalmappingid);
   if(this.selahwalmappingid !== null)
   {
     this.svc.DeleteAhwalMapping(this.selahwalmappingid,this.userid).toPromise().then(resp =>
     {
-        notify(resp, 'success', 600);
-
-
+      let olog:operationLog = new operationLog();
+      olog= <operationLog>resp;
+      notify( olog.text, 'success', 600);
+      this.loadData();
 
   });
 
@@ -436,12 +486,17 @@ async deleteMapping(ahwalMappingID:number) {
 onContextMenuprepare(e) {
   //this.menuOpen = true;
   console.log(e);
+  this.selahwalmappingid = e.row.key.ahwalmappingid;
+  this.selCheckInOutPersonMno = e.row.key.milnumber;
+  //console.log(this.selahwalmappingid);
   this.options.defaultOpen = true;
   this.styleExp = 'inline';
   if (e.row.rowType === 'data') {
     e.items = [{text:''}];
   }
+
   e.cancel = true;
+
     /* if (e.row.rowType === 'data') {
     e.items = [{
       text: 'غياب',
@@ -797,95 +852,152 @@ else {
 
 }
 
+RwPatrolCheckPopupClick(e)
+{
+    console.log(e);
+    //console.log(e.data.patrolid);
+    this.selCheckInOutPatrolPltNo = e.data.platenumber;
+}
+
+RwHandHeldCheckPopupClick(e)
+{
+this.selCheckInOutHHeldSerialNo =  e.data.serial;
+}
 
 CallDblClick()
 {
     this.checkInOutPopupVisible=true;
-    this.AhwalMapping_CheckInOut_ID = 1165;
+    this.AhwalMapping_CheckInOut_ID = this.selahwalmappingid;
 
-    this.ShowCheckInOutPopdtls();
-    }
+   // this.ShowCheckInOutPopdtls();
+ }
 
-    ShowCheckInOutPopdtls()
-    {
 
-    if(this.selectedCheckInOutPerson === null)
+
+CloseCheckInoutPopup(){
+  this.checkInOutPopupVisible = false;
+
+}
+AhwalMapping_CheckInButton_Click(e)
+{
+    if(this.selCheckInOutPersonMno === null)
     {
     this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
     }
-    let personobj:persons = new persons();
-
-
-      this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
-        {
-
-            if (resp !== [])
-            {
-                personobj = <persons>resp;
-            }
-
-      });
-
-        if (personobj === null)
-        {
-            this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
-            return;
-
-          }
-
-    if(this.selectedCheckInOutPatrol === null)
+   
+    if(this.selCheckInOutPatrolPltNo === null)
     {
     this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
     }
 
-    let patrolobj:patrolcars = new patrolcars();
-    this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
-      {
-
-          if (resp !== [])
-          {
-            patrolobj = <patrolcars>resp;
-          }
-    });
-
-    if (patrolobj === null)
-    {
-        this.ahwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
-        return;
-
-      }
-    if(this.selectedCheckInOutHandHeld == null)
+ 
+    if(this.selCheckInOutHHeldSerialNo == null)
     {
       this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
       return;
     }
-      let handheldobj:handhelds = new handhelds();
-      this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
+
+    /*this.svc.CheckInAhwalMapping(this.selCheckInOutPersonMno,this.selCheckInOutPatrolPltNo,
+        this.selCheckInOutHHeldSerialNo,this.userid).subscribe(resp =>
         {
+  
+          
+                this.ahwalMapping_Add_status_label = resp;
+          
+  
+      });*/
 
-            if (resp !== [])
-            {
-              handheldobj = <handhelds>(resp);
-            }
-      });
-      let personMapping ;
-      this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+    /*
+    let personobj:persons = new persons();
+
+
+    this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+              personobj = <persons>resp;
+          }
+
+    });
+
+      if (personobj === null)
+      {
+          this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
+          return;
+
+        }
+
+
+  if(this.selectedCheckInOutPatrol === null)
+  {
+  this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
+  }
+
+  let patrolobj:patrolcars = new patrolcars();
+  this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
+    {
+
+        if (resp !== [])
         {
+          patrolobj = <patrolcars>resp;
+        }
+  });
 
-            if (resp !== [])
-            {
-              handheldobj = <handhelds>(resp);
-            }
-      });
-                if (personMapping == null)
-                {
-                    this.ahwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
-                    return;
-                }
-            }
+  if (patrolobj === null)
+  {
+      this.ahwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
+      return;
 
-CloseCheckInoutPopup(){
-  this.checkInOutPopupVisible = false;
+    }
+  if(this.selectedCheckInOutHandHeld == null)
+  {
+    this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
+    return;
+  }
+    let handheldobj:handhelds = new handhelds();
+    this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+            handheldobj = <handhelds>(resp);
+          }
+    });
+    let personMapping ;
+    this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
+      {
+
+          if (resp !== [])
+          {
+            handheldobj = <handhelds>(resp);
+          }
+    });
+              if (personMapping == null)
+              {
+                  this.ahwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
+                  return;
+              }
+               */
+}
+
+checkhandheldexpr(item)
+{
+    if ( item !== undefined )
+    { return  item.serial ;
+    }
+}
+
+checkInassociateExpr(item)
+{
+    if ( item !== undefined )
+    { return  item.milnumber ;
+    }
+}
+
+RwPersonCheckPopupClick(e)
+{
+this.selCheckInOutPersonMno = e.data.milnumber;
 
 }
 }

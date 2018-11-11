@@ -177,6 +177,24 @@ namespace MOI.Patrol.Controllers
             return dt;
         }
 
+
+        [HttpGet("checkinpatrolcarslist")]
+        public List<PatrolCars> GetCheckinPatrolCarList([FromQuery] int ahwalid, [FromQuery] int userid)
+        {
+
+            string subqry = "";
+            subqry = " and d.ahwalid in (select ahwalid from UsersRolesMap where UserID= " + userid  + " )";
+            if (ahwalid != -1)
+            {
+                subqry = subqry + " and d.ahwalid = " + ahwalid;
+            }
+            String Qry = "select (select a.name from ahwal a where  a.ahwalid = d.ahwalid) ahwalname,d.ahwalid, d.patrolid,d.plateNumber,d.Model,(select codedesc from codemaster where code = typecode)  as type,typecode,d.Defective,d.Rental,d.BarCode,vinnumber from patrolcars d where d.delflag is null  " + subqry;
+            List<PatrolCars> ptc = DAL.PostGre_GetData<PatrolCars>(Qry);
+            return ptc;
+
+        }
+        
+
         /*Hand Helds*/
         #region Hand Helds
         [HttpPost("addhandheld")]
@@ -259,6 +277,25 @@ namespace MOI.Patrol.Controllers
 
 
             return dt;
+        }
+
+
+        
+
+        [HttpGet("checkinhandheldslist")]
+        public List<HandHelds> GetCheckinHandHeldList([FromQuery] int ahwalid, [FromQuery] int userid)
+        {
+
+            string subqry = "";
+            subqry = " and d.ahwalid in (select ahwalid from UsersRolesMap where UserID= " + userid + " )";
+            if (ahwalid != -1)
+            {
+                subqry = subqry + " and d.ahwalid = " + ahwalid;
+            }
+            String Qry = "select d.handheldid,d.serial,d.Defective,d.BarCode,d.AhwalID,(select a.name from ahwal a where a.ahwalid = d.ahwalid ) ahwalname from handhelds d where d.serial is not null AND AhwalID IN(SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + ") ";
+            List<HandHelds> ptc = DAL.PostGre_GetData<HandHelds>(Qry);
+            return ptc;
+
         }
 
 

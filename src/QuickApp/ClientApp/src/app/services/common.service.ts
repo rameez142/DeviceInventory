@@ -214,7 +214,7 @@ export class CommonService extends EndpointFactory {
         public DeleteAhwalMapping(ahwalmappingid:number,userid:number)
         {
           return this.http.delete(this.api_url + '/api/dispatch/deleteAhwalMapping?ahwalmappingid=' +
-           ahwalmapping + '&userid=' + userid , { responseType: 'json' });
+          ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
 
   }
   //#endregion "Dispatch"
@@ -228,8 +228,22 @@ export class CommonService extends EndpointFactory {
     return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
   }
 
+public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
+        {
+          return this.http.put(this.api_url + '/api/dispatch/updatePersonState?selmenu='+ selmenu + '&ahwalmappingid=' +
+          ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
 
+        }
 
+        public GetCheckinPatrolCarList(ahwalid:number,userid:number){
+          return this.http.get(this.api_url + '/api/maintainence/checkinpatrolcarslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
+          }
 
-
+          public GetCheckinHandHeldList(ahwalid:number,userid:number){
+            return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
+            }
+        /*     public CheckInAhwalMapping(milnumber:number,platenumber:number,userid:number){
+              return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'text' });
+              } */
+          
 }

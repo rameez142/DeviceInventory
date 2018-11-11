@@ -19,8 +19,6 @@ namespace MOI.Patrol.Models
         public string personName { get; set; }
         public string callerID { get; set; }
         public int? hasDevices { get; set; }
-        public string serial { get; set; }
-        public string plateNumber { get; set; }
         public int? patrolPersonStateID { get; set; }
         public DateTime? sunRiseTimeStamp { get; set; }
         public DateTime? sunSetTimeStamp { get; set; }
