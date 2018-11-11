@@ -417,9 +417,36 @@ WingSelected2(e)
     console.log(e.title)
     this.deleteMapping();
   }
+  else if(e.title ==='غياب' ||e.title ==='مرضيه'  || e.title ==='اجازه' )
+  {
+    
+    
+    this.updatePersonState(e.title);
+  }
+  else if(e.title ==='CheckIn/Out'  )
+  {
+    
+    
+    this.CallDblClick();
+  }
 }
 
-
+updatePersonState(selmenu:string)
+{
+    if(this.selahwalmappingid !== null)
+    {
+        
+      this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
+      {
+        let olog:operationLog = new operationLog();
+        olog= <operationLog>resp;
+        notify( olog.text, 'success', 600);
+        this.loadData();
+  
+    });
+  
+    }
+}
  deleteMapping() {
 console.log(this.selahwalmappingid);
   if(this.selahwalmappingid !== null)
@@ -805,7 +832,7 @@ else {
 CallDblClick()
 {
     this.checkInOutPopupVisible=true;
-    this.AhwalMapping_CheckInOut_ID = 1165;
+    this.AhwalMapping_CheckInOut_ID = this.selahwalmappingid;
 
     this.ShowCheckInOutPopdtls();
     }

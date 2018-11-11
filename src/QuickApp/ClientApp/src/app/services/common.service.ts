@@ -216,7 +216,7 @@ public Addpersons(frm:persons){
         public DeleteAhwalMapping(ahwalmappingid:number,userid:number)
         {
           return this.http.delete(this.api_url + '/api/dispatch/deleteAhwalMapping?ahwalmappingid=' +
-           ahwalmapping + '&userid=' + userid , { responseType: 'json' });
+          ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
 
         }
         //#endregion "Dispatch"
@@ -230,6 +230,12 @@ public GetDeviceTypesList(){
    return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
 }
 
+public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
+        {
+          return this.http.put(this.api_url + '/api/dispatch/updatePersonState?selmenu='+ selmenu + '&ahwalmappingid=' +
+          ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
+
+        }
 
 
 

@@ -67,7 +67,24 @@ namespace MOI.Patrol.Controllers
             return DAL.PostGre_GetData<Associates>(Qry);
         }
 
+        
+        public AhwalMapping GetAhwal(int ahwalmappingid)
+        {
+            String Qry = "SELECT lastComeBackTimeStamp,lastAwayTimeStamp,incidentID,lastLandTimeStamp,hasFixedCallerID,handHeldID,sortingIndex,sunRiseTimeStamp,sunSetTimeStamp,patrolPersonStateID,hasDevices,callerID,cityGroupID,ahwalMappingID,sectorID,patrolRoleID," +
+                "shiftID, Persons.PersonID,Persons.AhwalId, Persons.MilNumber, Persons.Name as personName,Persons.RankId  FROM AhwalMapping" +
+                " INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID where AhwalMappingId =" + ahwalmappingid;
+            List<AhwalMapping> obj = DAL.PostGre_GetData<AhwalMapping>(Qry);
 
+            if (obj.Count > 0)
+            {
+                return obj[0];
+            }
+            return null;
+           
+
+        }
+
+      
         [HttpGet("personForUserForRole")]
         public Persons GetPersonForUserForRole(int mno, int userid)
         {
@@ -245,7 +262,7 @@ namespace MOI.Patrol.Controllers
             OperationLog ol = new OperationLog();
             int ret = 0;
             string DelQry = "";
-            DelQry = "delete AhwalMapping where ahwalMappingID = " + ahwalMappingID;
+            DelQry = "delete from AhwalMapping where ahwalMappingID = " + ahwalMappingID;
             ret = DAL.PostGre_ExNonQry(DelQry);
             if(ret > 0)
             {
@@ -296,6 +313,86 @@ namespace MOI.Patrol.Controllers
             }
             return null;
         }
+
+        [HttpPut("updatePersonState")]
+        public OperationLog updatePersonState([FromQuery]string selmenu,[FromQuery]int ahwalMappingID, [FromQuery]int userid)
+        {
+            //string ol_label = "";
+            int PatrolPersonStateID = 0;
+            if (selmenu == "غياب")
+            {
+                PatrolPersonStateID = Core.Handler_AhwalMapping.PatrolPersonState_Absent;
+            }
+            else if (selmenu == "مرضيه")
+            {
+                PatrolPersonStateID = Core.Handler_AhwalMapping.PatrolPersonState_Sick;
+            }
+            else if (selmenu == "اجازه")
+            {
+                PatrolPersonStateID = Core.Handler_AhwalMapping.PatrolPersonState_Off;
+            }
+
+            AhwalMapping person_mapping_exists = GetAhwal(ahwalMappingID);
+           
+            if (person_mapping_exists == null)
+            {
+                OperationLog ol_failed = new OperationLog();
+                ol_failed.userID = userid;
+                ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
+                ol_failed.text = "لم يتم العثور على التوزيع";
+                Handler_Operations.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+
+
+            Persons GetPerson  = GetPersonById(person_mapping_exists.personID);
+
+            if (GetPerson == null)
+            {
+                OperationLog ol_failed = new OperationLog();
+                ol_failed.userID =userid;
+                ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
+                ol_failed.text = "لم يتم العثور على الفرد: " + person_mapping_exists.personID; //todo, change it actual person name
+                Handler_Operations.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+
+            //last check
+            //if he has devices, dont change his state to anything
+            if (Convert.ToBoolean(person_mapping_exists.hasDevices))
+            {
+
+                OperationLog ol_failed = new OperationLog();
+                ol_failed.userID = userid;
+                ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
+                ol_failed.text = "هذا المستخدم يملك حاليا اجهزة";
+                Handler_Operations.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+
+            OperationLog ol = new OperationLog();
+            int ret = 0;
+            string Qry = "";
+            Qry = "update AhwalMapping set PatrolPersonStateID = " + PatrolPersonStateID + " , LastStateChangeTimeStamp = '" + DateTime.Now + "' where AhwalMappingId = " + ahwalMappingID;
+            ret = DAL.PostGre_ExNonQry(Qry);
+            Qry = "insert into patrolpersonstatelog (UserID,PatrolPersonStateID,TimeStamp,PersonID) values(" + userid + " , " + PatrolPersonStateID + " , '" + DateTime.Now + "' , " + person_mapping_exists.personID + ")";
+            ret = DAL.PostGre_ExNonQry(Qry);
+            if (ret > 0)
+            {
+                ol.userID = userid;
+                ol.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                ol.statusID = Handler_Operations.Opeartion_Status_Success;
+                ol.text = "احوال تغيير حالة الفرد " + GetPerson.milnumber + " " + GetPerson.name ;
+                return ol;
+            }
+            ol.statusID = Handler_Operations.Opeartion_Status_Failed;
+            ol.text = "Failed";
+            return ol;
+        }
+
 
         #endregion
 
