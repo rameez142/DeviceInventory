@@ -242,8 +242,8 @@ public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
           public GetCheckinHandHeldList(ahwalid:number,userid:number){
             return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
             }
-        /*     public CheckInAhwalMapping(milnumber:number,platenumber:number,userid:number){
-              return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'text' });
-              } */
+            public CheckInAhwalMapping(milnumber:number,platenumber:number,serial:number,userid:number){
+              return this.http.post(this.api_url + '/api/maintainence/checkinAhwalMapping?milnumber=' + milnumber + '&userid=' + userid , { responseType: 'text' });
+              } 
           
 }

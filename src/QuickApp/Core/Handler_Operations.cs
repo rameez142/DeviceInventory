@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MOI.Patrol.Models;
 namespace MOI.Patrol.Core
 {
     public class Handler_Operations
@@ -49,7 +48,7 @@ namespace MOI.Patrol.Core
         public const int Opeartion_Status_UnKnownError = 4;
         public const int Opeartion_Status_LoginSuccess = 5;
         public const int Opeartion_Status_LoginFail = 6;
-        public static bool Add_New_Operation_Log(OperationLog ol)
+        public static bool Add_New_Operation_Log(Operationlogs ol)
         {
 
             try

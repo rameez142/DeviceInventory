@@ -897,15 +897,15 @@ AhwalMapping_CheckInButton_Click(e)
       return;
     }
 
-    /*this.svc.CheckInAhwalMapping(this.selCheckInOutPersonMno,this.selCheckInOutPatrolPltNo,
+    this.svc.CheckInAhwalMapping(this.selCheckInOutPersonMno,this.selCheckInOutPatrolPltNo,
         this.selCheckInOutHHeldSerialNo,this.userid).subscribe(resp =>
         {
   
           
-                this.ahwalMapping_Add_status_label = resp;
+                //this.ahwalMapping_Add_status_label = resp;
           
   
-      });*/
+      });
 
     /*
     let personobj:persons = new persons();

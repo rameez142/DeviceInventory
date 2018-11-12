@@ -4,11 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using Npgsql;
+using Microsoft.Extensions.Configuration;
+
 namespace MOI.Patrol.DataAccessLayer
 {
     public class DataAccess
     {
-        public String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=patrols";
+        //public String constr;
+        public IConfiguration _connectionstring { get; }
+        
+        // public DataAccess(IConfiguration configuration)
+        //{
+        //    _connectionstring = configuration;
+        //    constr = _connectionstring["ConnectionStrings:DefaultConnection"];
+        //}
+
+        public String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=patrols";
       
 
         // function that creates a list of an object from the given qry
