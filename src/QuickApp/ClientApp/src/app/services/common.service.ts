@@ -23,8 +23,8 @@ export class CommonService extends EndpointFactory {
   }
   //#region "PatrolCars"
   public GetPatrolCarList(ahwal: number, userid: number) {
-    //  return this.http.post(this.api_url + '/api/maintainence/patrolcarslist',ahwal, { responseType: 'text' })
-    return this.http.post(this.api_url + '/api/maintainence/patrolcarslist', ahwal, this.getRequestHeaders())
+      return this.http.post(this.api_url + '/api/maintainence/patrolcarslist',ahwal, { responseType: 'text' })
+    //return this.http.post(this.api_url + '/api/maintainence/patrolcarslist', ahwal, this.getRequestHeaders())
   }
 
   public AddPatrolCar(frm: patrolcars) {

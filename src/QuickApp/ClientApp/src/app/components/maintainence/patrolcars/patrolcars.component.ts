@@ -108,7 +108,7 @@ export class PatrolcarsComponent implements OnInit {
     let userid: string = window.localStorage.getItem('UserID');
     this.svc.GetPatrolCarList(this.selahwalid, parseInt(userid)).subscribe(resp => {
 
-      //this.dataSource = JSON.parse(resp);
+      this.dataSource = JSON.parse(resp);
       //console.log('resp' + this.dataSource);
       //this.dataGrid.dataSource = this.dataSource;
 
