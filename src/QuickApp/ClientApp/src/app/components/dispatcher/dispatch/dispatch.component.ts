@@ -880,7 +880,7 @@ CloseCheckInoutPopup(){
 }
 AhwalMapping_CheckInButton_Click(e)
 {
-    if(this.selCheckInOutPersonMno === null)
+   /*  if(this.selCheckInOutPersonMno === null)
     {
     this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
     }
@@ -895,14 +895,20 @@ AhwalMapping_CheckInButton_Click(e)
     {
       this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
       return;
-    }
+    } */
 
-    this.svc.CheckInAhwalMapping(this.selCheckInOutPersonMno,this.selCheckInOutPatrolPltNo,
-        this.selCheckInOutHHeldSerialNo,this.userid).subscribe(resp =>
+    let rqhdr:object = {
+        personMno :this.selCheckInOutPersonMno,
+        plateNumber:this.selCheckInOutPatrolPltNo,
+        serial:this.selCheckInOutHHeldSerialNo,
+        userid:this.userid
+      };
+
+    this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
         {
   
           
-                //this.ahwalMapping_Add_status_label = resp;
+                this.ahwalMapping_Add_status_label = resp;
           
   
       });

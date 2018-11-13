@@ -12,7 +12,6 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Threading;
 using System.Net.Http.Headers;
-using System.Data;
 using Microsoft.Extensions.Configuration;
 using Elasticsearch.Net;
 using Nest;

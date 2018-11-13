@@ -42,7 +42,7 @@ namespace AssetManagement
         {
             services.AddEntityFrameworkNpgsql().AddDbContext<patrolsContext>(options =>
             {
-                options.UseNpgsql("server=localhost;Port=5432;User Id=postgres;password=12345;Database=patrols;Pooling=true;");
+                options.UseNpgsql("server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols;Pooling=true;");
                 options.UseOpenIddict();
             });
 
