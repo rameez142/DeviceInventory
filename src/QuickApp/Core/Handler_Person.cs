@@ -9,16 +9,10 @@ namespace Core
 {
     class Handler_Person
     {
-        private readonly patrolsContext _context;
-        private readonly Handler_User _user;
+        private  patrolsContext _context  = new patrolsContext();
+        private  Handler_User _user = new Handler_User();
 
-        public Handler_Person(patrolsContext context, Handler_User user)
-        {
-            _context = context;
-            _user = user;
-
-        }
-
+       
         public const int Rank_Lawaa = 10;
         public const int Rank_Ameed = 20;
         public const int Rank_Aqeed = 30;

@@ -11,15 +11,11 @@ namespace MOI.Patrol.Controllers
     [Route("api/[controller]")]
     public class DispatcherController : Controller
     {
-        private readonly Handler_Person _person;
-        private readonly Handler_User _user;
+        private  Handler_Person _person = new Handler_Person();
+        private Handler_User _user = new Handler_User();
 
-        DispatcherController(Handler_Person person, Handler_User user)
-        {
-            _person = person;
-            _user = user;
-        }
-        
+       
+
 
 
         [HttpPost("checkinahwalmapping")]

@@ -251,7 +251,7 @@ public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
                 userid:2
               };
 
-              return this.http.post(this.api_url + '/api/dispatcher/checkinahwalmapping',rqhdr2  , { responseType: 'text' });
+              return this.http.post(this.api_url + '/api/dispatcher/checkinahwalmapping',rqhdr  , { responseType: 'text' });
               } 
           
 }

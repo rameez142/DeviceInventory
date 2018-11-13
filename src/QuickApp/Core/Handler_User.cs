@@ -11,12 +11,9 @@ namespace Core
 {
     class Handler_User
     {
-        private readonly patrolsContext _context;
+        private  patrolsContext _context = new patrolsContext();
 
-        public Handler_User(patrolsContext context)
-        {
-            _context = context;
-        }
+       
 
         // only admin can perform changes to roles or users
         public const int User_Role_Ahwal = 10;

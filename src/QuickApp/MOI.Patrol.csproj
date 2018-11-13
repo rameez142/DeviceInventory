@@ -54,6 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Dispatch2Controller.cs" />
+    <Compile Remove="Controllers\Dispatcher2Controller.cs" />
     <Compile Remove="Controllers\Maintainence2Controller.cs" />
   </ItemGroup>
 
