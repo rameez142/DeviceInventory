@@ -113,14 +113,13 @@ namespace Core
         //    return ol;
         //}
 
-        //public static bool isAuthorized(long userid, long ahwalid, long userRoleID)
-        //{
-        //    DataClassesDataContext db = new DataClassesDataContext(Handler_Global.connectString);
-        //    UsersRolesMap permisson_esists = db.UsersRolesMaps.FirstOrDefault(r => r.UserID == userid && r.AhwalID == ahwalid && r.UserRoleID == userRoleID);
-        //    if (permisson_esists == null)
-        //        return false;
-        //    return true;
-        //}
+        public  bool isAuthorized(long userid, long ahwalid, long userRoleID)
+        {
+            Usersrolesmap permisson_esists = _context.Usersrolesmap.FirstOrDefault(r => r.Userid == userid && r.Ahwalid == ahwalid && r.Userroleid == userRoleID);
+            if (permisson_esists == null)
+                return false;
+            return true;
+        }
 
         //public static User GetUserByName(string UserName)
         //{

@@ -172,23 +172,22 @@ namespace Core
             }
             return null;
         }
-        //public static PatrolCar GetPatrolCardByID(User u, PatrolCar p)
-        //{
+        public  Patrolcars GetPatrolCardByID(Users u, Patrolcars p)
+        {
 
-        //    DataClassesDataContext db = new DataClassesDataContext(Handler_Global.connectString);
-        //    //first we have to check if this user is authorized to perform this transaction
-        //    if (!Core.Handler_User.isAuthorized(u.UserID, p.AhwalID, Handler_User.User_Role_Ahwal))
-        //    {
+            //first we have to check if this user is authorized to perform this transaction
+            if (!_user.isAuthorized(u.Userid, p.Ahwalid, Handler_User.User_Role_Ahwal))
+            {
 
-        //        return null; //we dont need to log this since its just read operation
-        //    }
-        //    var result = db.PatrolCars.FirstOrDefault<PatrolCar>(e => e.PatrolID == p.PatrolID);
-        //    if (result != null)
-        //    {
-        //        return result;
-        //    }
-        //    return null;
-        //}
+                return null; //we dont need to log this since its just read operation
+            }
+            var result = _context.Patrolcars.FirstOrDefault<Patrolcars>(e => e.Patrolid == p.Patrolid);
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
 
     }
 }

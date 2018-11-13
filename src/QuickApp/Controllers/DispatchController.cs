@@ -164,7 +164,7 @@ namespace Controllers
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
 
                 ol_failed.text = "لم يتم العثور على الفرد: " + frm.personID; //todo, change it actual person name
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -176,7 +176,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
             frm.sortingIndex = 10000;
@@ -239,7 +239,7 @@ namespace Controllers
                 ol.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
                 ol.statusID = Handler_Operations.Opeartion_Status_Success;
                 ol.text = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
-                Handler_Operations.Add_New_Operation_Log(ol);
+               // Handler_Operations.Add_New_Operation_Log(ol);
             return ol;
 
             
@@ -341,7 +341,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "لم يتم العثور على التوزيع";
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -355,7 +355,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "لم يتم العثور على الفرد: " + person_mapping_exists.personID; //todo, change it actual person name
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+              //  Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -369,7 +369,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "هذا المستخدم يملك حاليا اجهزة";
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
