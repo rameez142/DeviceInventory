@@ -13,8 +13,8 @@ namespace MOI.Patrol.Controllers
     {
         private  Handler_Person _person = new Handler_Person();
         private Handler_User _user = new Handler_User();
+        private Handler_PatrolCars _patrol = new Handler_PatrolCars();
 
-       
 
 
 
@@ -39,6 +39,19 @@ namespace MOI.Patrol.Controllers
                 responsemsg = "لم يتم العثور على الفرد";
                 return Ok(responsemsg);
             }
+
+            if (selectedPatrol == null)
+            {
+                responsemsg = "يرجى اختيار الدورية";
+                return Ok(responsemsg);
+            }
+            var patrol = _patrol.GetPatrolCarByPlateNumberForUserForRole(user, selectedPatrol.ToString().Trim(), Core.Handler_User.User_Role_Ahwal);
+            if (patrol == null)
+            {
+                responsemsg = "لم يتم العثور على الدورية";
+                return Ok(responsemsg);
+            }
+
 
             return Ok(responsemsg);
 
