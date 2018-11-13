@@ -251,7 +251,7 @@
 <table>
   <tr><td><label>الفرد</label></td>
   <td>
-    <dx-drop-down-box 
+    <dx-drop-down-box
     [(value)]="selCheckInOutPersonMno"
     [dataSource]="associatesrc"
     [deferRendering]="false"
@@ -259,7 +259,7 @@
     placeholder="Select a value..."
     [showClearButton]="true"
     valueExpr="milnumber"
-    
+
 >
 
 <div *dxTemplate="let data of 'content'">
@@ -296,7 +296,7 @@
             valueExpr="platenumber"
              [searchEnabled]="true"
         >
-        
+
         <div *dxTemplate="let data of 'content'">
             <dx-data-grid
                     [dataSource]="patrolCarsrc"
@@ -313,7 +313,7 @@
         </div>
         </dx-drop-down-box>
     </td>
-    
+
   </tr>
   <tr>
     <td><label>الجهاز</label></td>
@@ -323,7 +323,7 @@
         [displayExpr]="checkhandheldexpr"
         valueExpr="serial"
         [searchEnabled]="true">
-    
+
 
     <div *dxTemplate="let data of 'content'">
         <dx-data-grid
@@ -341,12 +341,13 @@
         </dx-data-grid>
     </div>
     </dx-drop-down-box></td>
-    
+
   </tr>
   <tr>
+
     <td colspan="2">
-      <label>{{ahwalMapping_CheckInOut_StatusLabel}}</label>
-    </td>
+      <div class="errormsg"> {{ahwalMapping_CheckInOut_StatusLabel}} </div>
+ </td>
   </tr>
 <tr>
   <td>

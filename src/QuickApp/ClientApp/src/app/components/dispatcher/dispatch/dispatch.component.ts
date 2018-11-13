@@ -232,13 +232,13 @@ else if (parseInt(e.value , 10) != -1 && parseInt(e.value ,10) != null)
 
             this.svc.GetCheckinPatrolCarList(this.selahwalid,this.userid).toPromise().then(resp =>
                 {
-     
+
                  this.patrolCarsrc = <patrolcars[]> resp;
                  });
 
                  this.svc.GetCheckinHandHeldList(this.selahwalid,this.userid).toPromise().then(resp =>
                     {
-         
+
                      this.handHeldsrc = <handhelds[]> resp;
                      });
 
@@ -437,17 +437,17 @@ WingSelected2(e)
   }
   else if(e.title ==='حذف')
   {
-    
+
     this.deleteMapping();
   }
   else if(e.title ==='غياب' ||e.title ==='مرضيه'  || e.title ==='اجازه' )
   {
-      
+
     this.updatePersonState(e.title);
   }
   else if(e.title ==='CheckIn/Out'  )
   {
-     
+
     this.CallDblClick();
   }
 }
@@ -456,16 +456,16 @@ updatePersonState(selmenu:string)
 {
     if(this.selahwalmappingid !== null)
     {
-        
+
       this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
       {
         let olog:operationLog = new operationLog();
         olog= <operationLog>resp;
         notify( olog.text, 'success', 600);
         this.loadData();
-  
+
     });
-  
+
     }
 }
  deleteMapping() {
@@ -884,19 +884,19 @@ AhwalMapping_CheckInButton_Click(e)
     {
     this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
     }
-   
+
     if(this.selCheckInOutPatrolPltNo === null)
     {
     this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
     }
 
- 
+
     if(this.selCheckInOutHHeldSerialNo == null)
     {
       this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
       return;
     } */
-
+console.log(e);
     let rqhdr:object = {
         personMno :this.selCheckInOutPersonMno,
         plateNumber:this.selCheckInOutPatrolPltNo,
@@ -906,11 +906,11 @@ AhwalMapping_CheckInButton_Click(e)
 
     this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
         {
-  
-          
-                this.ahwalMapping_Add_status_label = resp;
-          
-  
+
+//console.log(resp);
+                this.ahwalMapping_CheckInOut_StatusLabel = resp;
+
+
       });
 
     /*

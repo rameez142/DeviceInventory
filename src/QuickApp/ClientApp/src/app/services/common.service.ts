@@ -244,14 +244,9 @@ public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
             }
 
             public CheckInAhwalMapping(rqhdr:object ){
-              let rqhdr2 = {
-                personMno :2,
-                plateNumber:2,
-                serial:2,
-                userid:2
-              };
+
 
               return this.http.post(this.api_url + '/api/dispatcher/checkinahwalmapping',rqhdr  , { responseType: 'text' });
-              } 
-          
+              }
+
 }
