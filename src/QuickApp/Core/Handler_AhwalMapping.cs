@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-namespace MOI.Patrol.Core
+using CustomModels;
+namespace Core
 {
     public class Handler_AhwalMapping
     {
