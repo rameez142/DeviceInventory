@@ -134,7 +134,7 @@ namespace Controllers
 
             Qry = Qry + " PatrolPersonStateID,(select name from patrolroles where patrolroleid = AhwalMapping.PatrolRoleID) as patrolrolename,SunRiseTimeStamp, SunSetTimeStamp,SortingIndex,(Select Mobile From Persons where PersonID = AhwalMapping.PersonID) as PersonMobile,IncidentID,";
             Qry = Qry + " LastStateChangeTimeStamp,(Select ShortName From sectors where SectorID=AhwalMapping.SectorID) as SectorDesc , (Select (select Name from Ranks where rankid = persons.rankid) From Persons where PersonID=AhwalMapping.PersonID) as RankDesc,(SELECT  Name FROM PatrolPersonStates PS ";
-            Qry = Qry + " where PS.PatrolPersonStateID = AhwalMapping.PatrolPersonStateID ) as PersonState  FROM AhwalMapping Order by SortingIndex";
+            Qry = Qry + " where PS.PatrolPersonStateID = AhwalMapping.PatrolPersonStateID ) as PersonState,(select ShortName from CityGroups where CityGroups.Disabled<>1 and CityGroups.CityGroupID =AhwalMapping.CityGroupID ) as CityGroupName   FROM AhwalMapping Order by SortingIndex";
                
 
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
