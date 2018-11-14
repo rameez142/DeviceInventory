@@ -10,7 +10,7 @@
                 [dataSource]="dataSource"
                 [showBorders]="true"
                 [rtlEnabled]="true"
-                [hoverStateEnabled]="true"
+                [hoverStateEnabled]="false"
                 [selectedRowKeys]="[]"
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
@@ -31,7 +31,7 @@
             <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
 
             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-filter-row [visible]="true" ></dxo-filter-row>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
 
             <dx-load-panel
@@ -46,10 +46,12 @@
                 (onShown)="onShown()">
             </dx-load-panel>
 
-            <dxi-column dataField="sectordesc" [groupIndex]="1" caption="القطاع"></dxi-column>
+            <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
             <dxi-column dataField="milnumber" caption="الرقم العسكري"></dxi-column>
-            <dxi-column dataField="rankdesc" [groupIndex]="2" caption="الرتبه"></dxi-column>
+            <dxi-column dataField="rankdesc" caption="الرتبه"></dxi-column>
             <dxi-column dataField="personname" caption="الاسم"></dxi-column>
+            <dxi-column dataField="patrolrolename" caption="المسؤولية"></dxi-column>
+
             <dxi-column dataField="callerid" caption="النداء"></dxi-column>
             <dxi-column dataField="platenumber"  caption="الدورية"></dxi-column>
             <dxi-column dataField="sunrisetimestamp" caption="شروق" dataType="date"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
@@ -365,7 +367,7 @@
           <dx-popup
           class="popup"
           [width]="400"
-          [height]="400"
+          [height]="600"
           [showTitle]="true"
           title=""
           [showCloseButton]= "true"
@@ -379,8 +381,8 @@
                 [dataSource]="state_src"
                 [columns]="[{caption:'الحالة',dataField:'name'},{caption:'الوقت',dataField:'timestamp',dataType:'date',format: 'dd/MM/yyyy hh:mm:ss a' }]"
                 [selection]="{ mode: 'single' }"
-                [hoverStateEnabled]="true"
-                [paging]="{ enabled: true, pageSize: 5 }"
+                [hoverStateEnabled]="false"
+                [paging]="{ enabled: true, pageSize: 10 }"
                  [filterRow]="{ visible: true }"
                  [rtlEnabled]= "true"
                 [focusStateEnabled]="true"
