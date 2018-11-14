@@ -23,9 +23,15 @@ namespace MOI.Patrol.Controllers
         [HttpPost("checkinahwalmapping")]
         public IActionResult PostCheckInAhwalMapping([FromBody]JObject RqHdr)
         {
-            var selectedPerson = RqHdr["personMno"].ToString();
-            var selectedPatrol = RqHdr["plateNumber"].ToString();
-            var selectedHandHeld = RqHdr["serial"].ToString();
+
+            
+           var selectedPerson = RqHdr["personMno"].ToString();
+          //  var selectedPatrol = RqHdr["plateNumber"].ToString();
+
+            var selectedPatrol = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["plateNumber"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+
+            var selectedHandHeld = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["serial"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+
             string responsemsg = "";
             Users user = new Users();
             user.Userid = Convert.ToInt32(RqHdr["userid"]);

@@ -2,6 +2,8 @@ import { ElementRef,Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent, DxSelectBoxComponent } from 'devextreme-angular'
 import notify from 'devextreme/ui/notify';
+import { confirm } from 'devextreme/ui/dialog';
+import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
 import { ModalService } from '../../../services/modalservice';
 import { handler_ahwalMapping } from '../../../../environments/handler_ahwalMapping';
 import {ahwalmapping} from '../../../models/ahwalmapping';
@@ -18,6 +20,7 @@ import { operationLog } from '../../../models/operationLog';
 
 import { handler_operations } from '../../../../environments/handler_operations';
 import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
+import { Timestamp } from '../../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-dispatch',
@@ -79,11 +82,7 @@ selRowIndex:number;
     defaultOpen:true
 };
 handHeldsrc:handhelds[];
-public wings = [{
-  'title': 'Add Person',
-  'color': '#ea2a29',
-  'icon': {'name': ''}
-}, {
+public wings = [ {
   'title': 'غياب',
   'color': '#f16729',
   'icon': {'name': ''}
@@ -100,6 +99,11 @@ public wings = [{
   'title': 'حذف',
   'color': '#ffcf20',
   'icon': {'name': ''}
+},
+{
+ 'title': 'آخر كمن حاله',
+ 'color': '#ffcf16',
+ 'icon': {'name': ''}
 }
 , {
   'title': 'CheckIn/Out',
@@ -118,7 +122,7 @@ topLeft: -20
 };
 
 
-  constructor(private svc:CommonService, private modalService: ModalService) {
+  constructor(private svc:CommonService, private modalService: ModalService,private alertService: AlertService) {
       this.userid = parseInt(window.localStorage.getItem('UserID'),10);
       this.userobj.userID = this.userid;
     this.showLoadPanel();
@@ -141,8 +145,8 @@ topLeft: -20
 
   ngOnInit() {
 
-    this.loadDataSources();
-    this.loadData();
+    this.bindAhwalMappingGridSources();
+    this.bindAhwalMappingGrid();
   }
 
   roleSelection(e)
@@ -190,7 +194,7 @@ else if (parseInt(e.value , 10) != -1 && parseInt(e.value ,10) != null)
 
   }
 
-   loadDataSources()
+   bindAhwalMappingGridSources()
   {
 
      this.svc.GetShiftsList().toPromise().then(resp =>
@@ -286,7 +290,7 @@ checkPatrolExp(item)
     }
 }
 
-loadData()
+bindAhwalMappingGrid()
 {
   this.svc.GetDispatchList().subscribe(resp =>
     {
@@ -363,18 +367,10 @@ strt =JSON.parse(window.localStorage.getItem('Orgs'));
 
 ahwalChanged(e) {
     this.selahwalid = e.value;
-    this.loadData();
+    this.bindAhwalMappingGrid();
 
 }
 
-groupChanged(e) {
-    if (parseInt(e.value , 10 ) === 3)
-    {
-        this.loadData();
-        this.refreshDataGrid();
-    }
-
-}
 
 onRowPrepared(e)
 {
@@ -382,37 +378,80 @@ onRowPrepared(e)
 
     if(e.rowType ==='data')
     {
-     //  console.log(e);
+      console.log(e);
+    //set default to white first
+     e.rowElement.bgColor = "White";
+    // e.rowElement.font = "Italic";
+     //e.rowElement.css('background', 'green');
+    // e.cells[0].cellElement.css("color", "red");
+    // e.rowElement.color="red";
+     //e.rowElement.Font.Bold = false;
 
-        if(e.key.patrolpersonstateid === 20 || e.key.patrolpersonstateid === 30 ||
-          e.key.patrolpersonstateid === 40 || e.key.patrolpersonstateid === 74)
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
+             e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back || 
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
         {
-            e.rowElement.bgColor='#a0d89e';
-
-        }
-        if(e.key.patrolpersonstateid === 70 )
-        {
-            e.rowElement.bgColor='#bfbeaa';
-
-        }
-        if(e.key.patrolpersonstateid === 60 )
-        {
-            e.rowElement.bgColor='#edeb9e';
-
-        }
-        if(e.key.patrolpersonstateid === 100 || e.key.patrolpersonstateid === 80 || e.key.patrolpersonstateid === 90 )
-        {
-            e.rowElement.bgColor='#ea88c8';
+            e.rowElement.bgColor='LightGreen';
 
         }
-        if(e.key.patrolpersonstateid === 72  )
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Land )
         {
-            e.rowElement.bgColor='#ea88c8';
+            e.rowElement.bgColor='LightGray';
 
         }
-        if(e.key.patrolpersonstateid === 70  )
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Away )
         {
-            e.rowElement.bgColor='sandybrown';
+            e.rowElement.bgColor='Yellow';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sick || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Absent || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Off )
+        {
+            e.rowElement.bgColor='PaleVioletRed';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_WalkingPatrol  )
+        {
+            e.rowElement.bgColor='CadetBlue';
+
+        }
+        if(e.key.patrolroleid === handler_ahwalMapping.PatrolRole_Associate  )
+        {
+            e.rowElement.bgColor='SandyBrown';
+
+        }
+    
+
+        if(e.key.incidentid !== null &&  e.key.incidentid !== '' )
+        {
+            e.rowElement.bgColor='Red';
+
+        }
+
+        if (e.key.laststatechangetimestamp != null )
+        {
+            var lastTimeStamp = <Date>(e.key.laststatechangetimestamp);
+            if (e.key.personState === handler_ahwalMapping.PatrolPersonState_Land) //max 1 hour
+            {
+            
+
+               /*  var hours = (DateTime.Now - lastTimeStamp).TotalHours;
+                if (hours >= 1)
+                {
+                    e.Row.ForeColor = System.Drawing.Color.PaleVioletRed;
+                    e.Row.Font.Bold = true;
+                } */
+            }
+            else if (e.key.personState  == handler_ahwalMapping.PatrolPersonState_Away) //max 10 minues
+            {
+                /* var minutes = (DateTime.Now - lastTimeStamp).TotalMinutes;
+                if (minutes >= 11)
+                {
+                    e.Row.ForeColor = System.Drawing.Color.PaleVioletRed;
+                    e.Row.Font.Bold = true;
+                } */
+            }
+
 
         }
 
@@ -431,27 +470,52 @@ if(e === false)
 WingSelected2(e)
 {
 
-    if(e.title ==='Add Person')
+    if(e.title ==='حذف')
   {
-    this.popupVisible = true;
+    this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
+    
+    
   }
-  else if(e.title ==='حذف')
+  else if(e.title ==='غياب')
   {
-
-    this.deleteMapping();
+    this.alertService.showDialog("متأكد تبي تغير الحالة لغياب؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
+   /*  var result = confirm("متأكد تبي تغير الحالة لغياب؟ أكيد؟", "");
+    result.done(function (dialogResult) {
+        if(dialogResult) this.updatePersonState(e.title);
+    }); */
   }
-  else if(e.title ==='غياب' ||e.title ==='مرضيه'  || e.title ==='اجازه' )
+  else if(e.title ==='مرضيه')
   {
+    this.alertService.showDialog("متأكد تبي تغير الحالة مرضيه؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
 
-    this.updatePersonState(e.title);
+ /*    var result = confirm("متأكد تبي تغير الحالة مرضيه؟ أكيد؟", "");
+    result.done(function (dialogResult) {
+        if(dialogResult) this.updatePersonState(e.title);
+    });  */
+  }
+  else if(e.title ==='اجازه')
+  {
+    this.alertService.showDialog("متأكد تبي تغير الحالة لاجازه؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
+
+ /*    var result = confirm("متأكد تبي تغير الحالة لاجازه؟ أكيد؟", "");
+    result.done(function (dialogResult) {
+        if(dialogResult) this.updatePersonState(e.title);
+    });  */
+  }
+  else if(e.title ==='آخر كمن حاله')
+  {
+    this.show_States_PopUp();
   }
   else if(e.title ==='CheckIn/Out'  )
   {
 
-    this.CallDblClick();
+    this.ShowCheckInoutPopup();
   }
 }
 
+show_States_PopUp(){
+
+}
 updatePersonState(selmenu:string)
 {
     if(this.selahwalmappingid !== null)
@@ -462,7 +526,7 @@ updatePersonState(selmenu:string)
         let olog:operationLog = new operationLog();
         olog= <operationLog>resp;
         notify( olog.text, 'success', 600);
-        this.loadData();
+        this.bindAhwalMappingGrid();
 
     });
 
@@ -477,15 +541,16 @@ console.log(this.selahwalmappingid);
       let olog:operationLog = new operationLog();
       olog= <operationLog>resp;
       notify( olog.text, 'success', 600);
-      this.loadData();
+      this.bindAhwalMappingGrid();
 
   });
 
   }
 }
-onContextMenuprepare(e) {
+/* onContextMenuprepare(e) {
   //this.menuOpen = true;
   console.log(e);
+  this.clearCheckInPopupValues();
   this.selahwalmappingid = e.row.key.ahwalmappingid;
   this.selCheckInOutPersonMno = e.row.key.milnumber;
   //console.log(this.selahwalmappingid);
@@ -497,7 +562,7 @@ onContextMenuprepare(e) {
 
   e.cancel = true;
 
-    /* if (e.row.rowType === 'data') {
+    if (e.row.rowType === 'data') {
     e.items = [{
       text: 'غياب',
       value:e.row.rowIndex
@@ -514,11 +579,12 @@ onContextMenuprepare(e) {
   }
 ];
 
-  } */
-}
+  } 
+} */
 
 refreshDataGrid() {
-  this.dataGrid.instance.refresh();
+ // this.dataGrid.instance.refresh();
+ this.bindAhwalMappingGrid();
 }
 
 popupVisible:any = false;
@@ -614,7 +680,7 @@ if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainA
                 {
                     this.clearpersonpopupvalues();
                     this.ahwalMapping_Add_status_label = resp;
-                 this.loadData();
+                 this.bindAhwalMappingGrid();
               });
         }
         else {
@@ -624,7 +690,7 @@ if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainA
                   let olog:operationLog = new operationLog();
                  olog= <operationLog>resp;
                     this.ahwalMapping_Add_status_label = olog.text;
-                 this.loadData();
+                 this.bindAhwalMappingGrid();
               });
         }
 }
@@ -664,7 +730,7 @@ parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSec
                 {
                     this.clearpersonpopupvalues();
                     this.ahwalMapping_Add_status_label = resp;
-                 this.loadData();
+                 this.bindAhwalMappingGrid();
               });
         }
         else {
@@ -674,7 +740,7 @@ parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSec
                     let ol:operationLog = new operationLog();
                     ol= <operationLog>resp;
                     this.ahwalMapping_Add_status_label = ol.text;
-                 this.loadData();
+                 this.bindAhwalMappingGrid();
               });
         }
 }
@@ -714,7 +780,7 @@ if(this.ahwalMappingAddMethod === 'UPDATE'){
         {
             this.clearpersonpopupvalues();
             this.ahwalMapping_Add_status_label = resp;
-         this.loadData();
+         this.bindAhwalMappingGrid();
       });
 }
 else{
@@ -724,7 +790,7 @@ else{
             let ol:operationLog = new operationLog();
             ol= <operationLog>resp;
             this.ahwalMapping_Add_status_label = ol.text;
-         this.loadData();
+         this.bindAhwalMappingGrid();
       });
 }
 
@@ -762,7 +828,7 @@ else
             {
                 this.clearpersonpopupvalues();
                 this.ahwalMapping_Add_status_label = resp;
-             this.loadData();
+             this.bindAhwalMappingGrid();
           });
     }
     else{
@@ -774,7 +840,7 @@ else
                 let ol:operationLog = new operationLog();
                 ol= <operationLog>resp;
                 this.ahwalMapping_Add_status_label = ol.text;
-             this.loadData();
+             this.bindAhwalMappingGrid();
           });
     }
 }
@@ -800,8 +866,7 @@ clearpersonpopupvalues()
 
     this.selectedSector = null;
    this.selectedRole = null;
-    //this.searchInput.nativeElement.visible = false;
-    //console.log('searchinput ' + this.searchInput);
+   
 }
 
 
@@ -810,9 +875,9 @@ RwPopupClick(e)
 {
     var component = e.component,
     prevClickTime = component.lastClickTime;
-component.lastClickTime = new Date();
+    component.lastClickTime = new Date();
 if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-    //Double click code
+    
 
 }
 else {
@@ -825,14 +890,18 @@ else {
 
 Rwclick(e)
 {
-   /* var component = e.component,
+   // console.log(e);
+     var component = e.component,
     prevClickTime = component.lastClickTime;
     component.lastClickTime = new Date();
     if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-
-             this.CallDblClick();
-    }*/
-    this.styleExp='inline';
+        this.clearCheckInPopupValues();
+        this.selahwalmappingid = e.key.ahwalmappingid;
+        this.selCheckInOutPersonMno = e.key.milnumber;
+        this.options.defaultOpen = true;
+        this.styleExp = 'inline';
+    } 
+   
 }
 
 RwAssociatePopupClick(e)
@@ -864,15 +933,21 @@ RwHandHeldCheckPopupClick(e)
 this.selCheckInOutHHeldSerialNo =  e.data.serial;
 }
 
-CallDblClick()
+ShowCheckInoutPopup()
 {
+    
     this.checkInOutPopupVisible=true;
     this.AhwalMapping_CheckInOut_ID = this.selahwalmappingid;
-
    // this.ShowCheckInOutPopdtls();
  }
 
-
+ clearCheckInPopupValues()
+ {
+     this.ahwalMapping_CheckInOut_StatusLabel = null;
+     this.selCheckInOutPersonMno = null;
+     this.selCheckInOutPatrolPltNo = null;
+     this.selCheckInOutHHeldSerialNo = null;
+ }
 
 CloseCheckInoutPopup(){
   this.checkInOutPopupVisible = false;
@@ -880,23 +955,7 @@ CloseCheckInoutPopup(){
 }
 AhwalMapping_CheckInButton_Click(e)
 {
-   /*  if(this.selCheckInOutPersonMno === null)
-    {
-    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الفرد';
-    }
-
-    if(this.selCheckInOutPatrolPltNo === null)
-    {
-    this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
-    }
-
-
-    if(this.selCheckInOutHHeldSerialNo == null)
-    {
-      this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
-      return;
-    } */
-console.log(e);
+   
     let rqhdr:object = {
         personMno :this.selCheckInOutPersonMno,
         plateNumber:this.selCheckInOutPatrolPltNo,
@@ -907,84 +966,13 @@ console.log(e);
     this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
         {
 
-//console.log(resp);
-                this.ahwalMapping_CheckInOut_StatusLabel = resp;
 
+                this.ahwalMapping_CheckInOut_StatusLabel = resp;
+   this.bindAhwalMappingGrid();
 
       });
 
-    /*
-    let personobj:persons = new persons();
-
-
-    this.svc.GetPersonForUserForRole(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
-      {
-
-          if (resp !== [])
-          {
-              personobj = <persons>resp;
-          }
-
-    });
-
-      if (personobj === null)
-      {
-          this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
-          return;
-
-        }
-
-
-  if(this.selectedCheckInOutPatrol === null)
-  {
-  this.ahwalMapping_CheckInOut_StatusLabel = 'يرجى اختيار الدورية';
-  }
-
-  let patrolobj:patrolcars = new patrolcars();
-  this.svc.GetPatrolCarByPlateNumberForUserForRole(this.selectedCheckInOutPatrol,this.userid).subscribe(resp =>
-    {
-
-        if (resp !== [])
-        {
-          patrolobj = <patrolcars>resp;
-        }
-  });
-
-  if (patrolobj === null)
-  {
-      this.ahwalMapping_Add_status_label = 'لم يتم العثور على الدورية';
-      return;
-
-    }
-  if(this.selectedCheckInOutHandHeld == null)
-  {
-    this.ahwalMapping_Add_status_label = 'يرجى اختيار الجهاز';
-    return;
-  }
-    let handheldobj:handhelds = new handhelds();
-    this.svc.GetHandHeldBySerialForUserForRole(this.selectedCheckInOutHandHeld,this.userid).subscribe(resp =>
-      {
-
-          if (resp !== [])
-          {
-            handheldobj = <handhelds>(resp);
-          }
-    });
-    let personMapping ;
-    this.svc.GetMappingByPersonID(this.selectedCheckInOutPerson,this.userid).subscribe(resp =>
-      {
-
-          if (resp !== [])
-          {
-            handheldobj = <handhelds>(resp);
-          }
-    });
-              if (personMapping == null)
-              {
-                  this.ahwalMapping_CheckInOut_StatusLabel = 'لم يتم العثور على الفرد في الكشف';
-                  return;
-              }
-               */
+    
 }
 
 checkhandheldexpr(item)

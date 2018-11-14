@@ -1,4 +1,21 @@
 export const handler_ahwalMapping = {
+
+      //Person States
+      PatrolPersonState_None : 10,
+      PatrolPersonState_SunRise : 20,
+      PatrolPersonState_Sea : 30,
+      PatrolPersonState_Back : 40,
+      PatrolPersonState_BackFromWalking : 74,
+      PatrolPersonState_SunSet : 50,
+      PatrolPersonState_Away : 60,
+      PatrolPersonState_Land : 70,
+      PatrolPersonState_WalkingPatrol : 72,
+      PatrolPersonState_Absent : 80,
+      PatrolPersonState_Off : 90,
+      PatrolPersonState_Sick : 100,
+  
+      CheckInState : 10,
+      CheckOutState : 20,
     //Roles
     PatrolRole_None: 0,
      PatrolRole_CaptainAllSectors:10,
