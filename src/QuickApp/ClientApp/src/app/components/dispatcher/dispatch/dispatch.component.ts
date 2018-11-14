@@ -547,14 +547,26 @@ updatePersonState(selmenu:string)
 console.log(this.selahwalmappingid);
   if(this.selahwalmappingid !== null)
   {
-    this.svc.DeleteAhwalMapping(this.selahwalmappingid,this.userid).toPromise().then(resp =>
+    let rqhdr:object = {
+        
+        AhwalMappingId:this.selahwalmappingid,
+        userid:this.userid
+      };
+
+      this.svc.DeleteAhwalMapping(rqhdr).toPromise().then(resp =>
+        {
+         
+          notify( resp, 'success', 600);
+          this.bindAhwalMappingGrid();
+      });
+   /*  this.svc.DeleteAhwalMapping(this.selahwalmappingid,this.userid).toPromise().then(resp =>
     {
       let olog:operationLog = new operationLog();
       olog= <operationLog>resp;
       notify( olog.text, 'success', 600);
       this.bindAhwalMappingGrid();
 
-  });
+  }); */
 
   }
 }

@@ -565,6 +565,96 @@ namespace Core
             }
         }
 
+        public  Operationlogs DeleteMapping(Users u, long mappingID)
+        {
+            try
+            {
+                var result = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Ahwalmappingid == mappingID);
+                if (result == null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Update;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "لم يتم العثور على التوزيع: " + mappingID.ToString();
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                //first we have to check if this user is authorized to perform this transaction
+                if (!_user.isAuthorized(u.Userid, result.Ahwalid, Handler_User.User_Role_Ahwal))
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Remove;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+
+                var GetPerson = _context.Persons.FirstOrDefault<Persons>(e => e.Personid.Equals(result.Personid));
+                if (GetPerson == null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Update;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "لم يتم العثور على الفرد: " + result.Personid; //todo, change it actual person name
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                //if he has devices, we cannot remove him
+
+                //I'll disable this check for now, we still can delete a user even if he has devices
+                if (Convert.ToBoolean(result.Hasdevices))
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Remove;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = ":هذا الفرد لم يسلم الاجهزة " + GetPerson.Milnumber + " " + GetPerson.Name;
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                //if he has someone associate to him,we cannot delete him, must delete the associate first
+
+                var hasAssociate = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Associtatepersonid == result.Personid);
+                if (hasAssociate != null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Remove;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "هذا المستخدم لديه مرافق" + GetPerson.Milnumber + " " + GetPerson.Name;//TODO: Add associate details
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                _context.Ahwalmapping.Remove(result);
+
+                _context.SaveChanges();
+
+                //we need to resort
+              //  Core.Handler_AhwalMapping.ReSortMappings();
+                Operationlogs ol = new Operationlogs();
+                ol.Userid = u.Userid;
+                ol.Operationid = Handler_Operations.Opeartion_Mapping_Remove;
+                ol.Statusid = Handler_Operations.Opeartion_Status_Success;
+                ol.Text = "تم حذف الفرد: " + GetPerson.Milnumber.ToString() + " " + GetPerson.Name;
+                _oper.Add_New_Operation_Log(ol);
+                return ol;
+            }
+            catch (Exception ex)
+            {
+                Operationlogs ol_failed = new Operationlogs();
+                ol_failed.Userid = u.Userid;
+                ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Remove;
+                ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnKnownError;
+                ol_failed.Text = ex.Message;
+                _oper.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+
+        }
 
     }
 }

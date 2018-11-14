@@ -376,5 +376,19 @@ namespace MOI.Patrol.Controllers
            
             return Ok(result.Text);
         }
+
+        [HttpPost("deleteAhwalMapping")]
+        public IActionResult PostdeleteAhwalMapping([FromBody]JObject RqHdr)
+        {
+            var mappingid = Convert.ToInt64(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["AhwalMappingId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            Users user = new Users();
+            user.Userid = Convert.ToInt32(RqHdr["userid"]);
+
+            var result = _ahwalmapping.DeleteMapping(user, mappingid);
+            return Ok(result.Text);
+
+        }
+
+
     }
     }

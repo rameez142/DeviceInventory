@@ -210,12 +210,12 @@ export class CommonService extends EndpointFactory {
            CheckInOutPerson + '&userid=' + userid , { responseType: 'json' }) ;
 
         }
-        public DeleteAhwalMapping(ahwalmappingid:number,userid:number)
+       /*  public DeleteAhwalMapping(ahwalmappingid:number,userid:number)
         {
           return this.http.delete(this.api_url + '/api/dispatch/deleteAhwalMapping?ahwalmappingid=' +
           ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
 
-  }
+  } */
   //#endregion "Dispatch"
 
   public GetDeviceTypesList() {
@@ -252,10 +252,16 @@ export class CommonService extends EndpointFactory {
                 return this.http.post(this.api_url + '/api/dispatcher/addAhwalMapping',rqhdr  , { responseType: 'text' });
                 } */
 
-                public updatePersonState(rqhdr:object)
+        public updatePersonState(rqhdr:object)
         {
           return this.http.post(this.api_url + '/api/dispatcher/updatePersonState',rqhdr, { responseType: 'text' });
 
         }
+
+        public DeleteAhwalMapping(rqhdr:object)
+        {
+          return this.http.post(this.api_url + '/api/dispatcher/deleteAhwalMapping' , rqhdr,{ responseType: 'text' });
+        }
+  
               
 }
