@@ -52,10 +52,10 @@
             <dxi-column dataField="personname" caption="الاسم"></dxi-column>
             <dxi-column dataField="callerid" caption="النداء"></dxi-column>
             <dxi-column dataField="platenumber"  caption="الدورية"></dxi-column>
-            <dxi-column dataField="sunrisetimestamp" caption="شروق"></dxi-column>
-            <dxi-column dataField="sunsettimestamp" caption="غروب"></dxi-column>
+            <dxi-column dataField="sunrisetimestamp" caption="شروق" dataType="date"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="sunsettimestamp" caption="غروب" dataType="date" width= "180"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
             <dxi-column dataField="personmobile" caption="الجوال"></dxi-column>
-            <dxi-column dataField="laststatechangetimestamp" caption="وقت الحالة"></dxi-column>
+            <dxi-column dataField="laststatechangetimestamp" caption="وقت الحالة" dataType="date" width= "180"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
             <dxi-column dataField="personstate" caption="الحالة"></dxi-column>
             <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
             <div *dxTemplate="let data of 'maptemplate'">
@@ -364,8 +364,8 @@
 
           <dx-popup
           class="popup"
-          [width]="600"
-          [height]="350"
+          [width]="400"
+          [height]="400"
           [showTitle]="true"
           title=""
           [showCloseButton]= "true"
@@ -375,7 +375,7 @@
           <div *dxTemplate="let data of 'content'">
                 <dx-data-grid
                 [dataSource]="state_src"
-                [columns]="[{caption:'الحالة',dataField:'name'},{caption:'الوقت',dataField:'timestamp'}]"
+                [columns]="[{caption:'الحالة',dataField:'name'},{caption:'الوقت',dataField:'timestamp',dataType:'date',format: 'dd/MM/yyyy hh:mm:ss a' }]"
                 [selection]="{ mode: 'single' }"
                 [hoverStateEnabled]="true"
                 [paging]="{ enabled: true, pageSize: 5 }"
