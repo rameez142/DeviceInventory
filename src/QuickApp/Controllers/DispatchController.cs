@@ -169,7 +169,7 @@ namespace Controllers
             }
 
             string person_mapping_exists = DAL.PostGre_ExScalar("select count(1) from AhwalMapping where personid = " + frm.personID);
-            if (person_mapping_exists == null || person_mapping_exists == "0")
+            if (person_mapping_exists != null && person_mapping_exists != "0")
             {
                 OperationLog ol_failed = new OperationLog();
                 ol_failed.userID = u.userID;

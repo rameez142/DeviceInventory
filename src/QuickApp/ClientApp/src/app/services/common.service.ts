@@ -177,8 +177,7 @@ export class CommonService extends EndpointFactory {
           return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping' ,
           myData,{ responseType: 'json' });
 
-  }
-
+  } 
 
         public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
@@ -228,12 +227,12 @@ export class CommonService extends EndpointFactory {
     return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
   }
 
-public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
+/* public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
         {
           return this.http.put(this.api_url + '/api/dispatch/updatePersonState?selmenu='+ selmenu + '&ahwalmappingid=' +
           ahwalmappingid + '&userid=' + userid , { responseType: 'json' });
 
-        }
+        } */
 
         public GetCheckinPatrolCarList(ahwalid:number,userid:number){
           return this.http.get(this.api_url + '/api/maintainence/checkinpatrolcarslist?ahwalid=' + ahwalid + '&userid=' + userid , { responseType: 'json' });
@@ -246,7 +245,17 @@ public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
             public CheckInAhwalMapping(rqhdr:object ){
 
 
-              return this.http.post(this.api_url + '/api/dispatcher/checkinahwalmapping',rqhdr  , { responseType: 'text' });
+              return this.http.post(this.api_url + '/api/dispatcher/checkInAhwalMapping',rqhdr  , { responseType: 'text' });
               }
 
+              /* public AddAhwalMapping(rqhdr:object ){
+                return this.http.post(this.api_url + '/api/dispatcher/addAhwalMapping',rqhdr  , { responseType: 'text' });
+                } */
+
+                public updatePersonState(rqhdr:object)
+        {
+          return this.http.post(this.api_url + '/api/dispatcher/updatePersonState',rqhdr, { responseType: 'text' });
+
+        }
+              
 }

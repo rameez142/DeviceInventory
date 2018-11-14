@@ -520,15 +520,26 @@ updatePersonState(selmenu:string)
 {
     if(this.selahwalmappingid !== null)
     {
-
-      this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
+        let rqhdr:object = {
+            Selmenu :selmenu,
+            AhwalMappingId:this.selahwalmappingid,
+            userid:this.userid
+          };
+          this.svc.updatePersonState(rqhdr).subscribe(resp =>
+            {
+              
+              notify( resp, 'success', 600);
+              this.bindAhwalMappingGrid();
+      
+          });
+     /*  this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
       {
         let olog:operationLog = new operationLog();
         olog= <operationLog>resp;
         notify( olog.text, 'success', 600);
         this.bindAhwalMappingGrid();
 
-    });
+    }); */
 
     }
 }
@@ -606,8 +617,27 @@ citySelection(e)
 this.selectedCity = e.value;
 }
 
-async AhwalMapping_Add_SubmitButton_Click(e)
+ async AhwalMapping_Add_SubmitButton_Click(e)
 {
+ /*    let rqhdr:object = {
+        PatrolRoleId :this.selectedRole,
+        Milnumber:this.selectPerson_Mno,
+        ShiftId:this.selectedShift,
+        SectorId:this.selectedSector,
+        CityGroupId:this.selectedCity,
+        AssociateAhwalMappingID:this.selectedAssociateMapId,
+        userid:this.userid
+      };
+
+    this.svc.AddAhwalMapping(rqhdr).subscribe(resp =>
+        {
+
+            
+                this.ahwalMapping_Add_status_label = resp;
+           this.bindAhwalMappingGrid();
+
+      });
+    } */
 
    if(this.selectedRole === null)
    {
@@ -621,7 +651,6 @@ async AhwalMapping_Add_SubmitButton_Click(e)
 }
 
 let personobj:persons = null;
-  //let myAdd = async function() {
      await this.svc.GetPersonForUserForRole(parseInt(this.selectPerson_Mno , 10),
    this.userid).toPromise().then(resp =>
     {
@@ -632,7 +661,7 @@ let personobj:persons = null;
         }
         console.log(personobj);
   });
-//};
+
 
 console.log(personobj);
 
@@ -845,7 +874,7 @@ else
     }
 }
 
-}
+} 
 
 clearpersonpopupvalues()
 {
