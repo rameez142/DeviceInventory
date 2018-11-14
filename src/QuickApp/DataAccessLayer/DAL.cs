@@ -50,7 +50,7 @@ namespace MOI.Patrol.DataAccessLayer
                 foreach (var typeProperty in typeProperties)
                 {
                     object value = row[typeProperty.PropertyInfo.Name];
-                    object safeValue = value == "" || DBNull.Value.Equals(value)
+                    object safeValue = value == null || DBNull.Value.Equals(value)
                         ? null
                         : Convert.ChangeType(value, typeProperty.Type);
 

@@ -130,12 +130,12 @@ namespace Controllers
             DataTable dt = new DataTable();
             String Qry = "SELECT AhwalMappingID, AhwalID, ShiftID, SectorID, PatrolRoleID, CityGroupID,(Select MilNumber From Persons where PersonID = AhwalMapping.PersonID) as MilNumber,";
             Qry = Qry + " (Select RankID From Persons where PersonID = AhwalMapping.PersonID) as RankID, (Select Name From Persons where PersonID = AhwalMapping.PersonID) as PersonName, CallerID,  ";
-            Qry = Qry + " HasDevices, '' as Serial,  (Select plateNumber From patrolcars where patrolid = AhwalMapping.patrolid) as PlateNumber, ";
-            Qry = Qry + " PatrolPersonStateID, SunRiseTimeStamp, SunSetTimeStamp,(Select Mobile From Persons where PersonID = AhwalMapping.PersonID) as PersonMobile,IncidentID,";
-            Qry = Qry + " LastStateChangeTimeStamp,(Select ShortName From sectors where SectorID=AhwalMapping.SectorID) as SectorDesc , (Select (select Name from Ranks where rankid = persons.rankid) From Persons where PersonID=AhwalMapping.PersonID) as RankDesc,(SELECT  Name FROM PatrolPersonStates PS ";
-            Qry = Qry + " where PS.PatrolPersonStateID in (select PatrolPersonStateID from PatrolPersonStateLog where PatrolPersonStateLog.PersonID = AhwalMapping.PersonID ";
+            Qry = Qry + " HasDevices, (Select Serial From HandHelds where HandHeldID = AhwalMapping.HandHeldID) as Serial,  (Select plateNumber From patrolcars where patrolid = AhwalMapping.patrolid) as PlateNumber, ";
 
-            Qry = Qry + " order by TimeStamp desc  FETCH FIRST ROW ONLY ) ) as PersonState FROM AhwalMapping ";
+            Qry = Qry + " PatrolPersonStateID, SunRiseTimeStamp, SunSetTimeStamp,SortingIndex,(Select Mobile From Persons where PersonID = AhwalMapping.PersonID) as PersonMobile,IncidentID,";
+            Qry = Qry + " LastStateChangeTimeStamp,(Select ShortName From sectors where SectorID=AhwalMapping.SectorID) as SectorDesc , (Select (select Name from Ranks where rankid = persons.rankid) From Persons where PersonID=AhwalMapping.PersonID) as RankDesc,(SELECT  Name FROM PatrolPersonStates PS ";
+            Qry = Qry + " where PS.PatrolPersonStateID = AhwalMapping.PatrolPersonStateID ) as PersonState FROM AhwalMapping Order by SortingIndex";
+               
 
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
             da.Fill(dt);
@@ -164,7 +164,7 @@ namespace Controllers
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
 
                 ol_failed.text = "لم يتم العثور على الفرد: " + frm.personID; //todo, change it actual person name
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -176,7 +176,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "هذا الفرد موجود مسبقا، لايمكن اضافته مرة اخرى: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
             frm.sortingIndex = 10000;
@@ -239,7 +239,7 @@ namespace Controllers
                 ol.operationID = Handler_Operations.Opeartion_Mapping_AddNew;
                 ol.statusID = Handler_Operations.Opeartion_Status_Success;
                 ol.text = "تم اضافة الفرد: " + GetPerson.milnumber.ToString() + " " + GetPerson.name;
-                Handler_Operations.Add_New_Operation_Log(ol);
+               // Handler_Operations.Add_New_Operation_Log(ol);
             return ol;
 
             
@@ -341,7 +341,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "لم يتم العثور على التوزيع";
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -355,7 +355,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "لم يتم العثور على الفرد: " + person_mapping_exists.personID; //todo, change it actual person name
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+              //  Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 
@@ -369,7 +369,7 @@ namespace Controllers
                 ol_failed.operationID = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
                 ol_failed.statusID = Handler_Operations.Opeartion_Status_Failed;
                 ol_failed.text = "هذا المستخدم يملك حاليا اجهزة";
-                Handler_Operations.Add_New_Operation_Log(ol_failed);
+               // Handler_Operations.Add_New_Operation_Log(ol_failed);
                 return ol_failed;
             }
 

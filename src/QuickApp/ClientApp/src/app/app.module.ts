@@ -85,6 +85,7 @@ import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
 import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 
+
 @NgModule({
   imports: [
     BrowserModule,
