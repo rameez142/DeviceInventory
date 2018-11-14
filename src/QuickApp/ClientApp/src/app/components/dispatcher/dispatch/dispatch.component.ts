@@ -515,6 +515,58 @@ WingSelected2(e)
   }
 }
 
+onStatesRowPrepared(e)
+{
+    if(e.rowType ==='data')
+    {
+      console.log(e);
+    //set default to white first
+     e.rowElement.bgColor = "White";
+    // e.rowElement.font = "Italic";
+     //e.rowElement.css('background', 'green');
+    // e.cells[0].cellElement.css("color", "red");
+    // e.rowElement.color="red";
+     //e.rowElement.Font.Bold = false;
+
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
+             e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back || 
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
+        {
+            e.rowElement.bgColor='LightGreen';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Land )
+        {
+            e.rowElement.bgColor='LightGray';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Away )
+        {
+            e.rowElement.bgColor='Yellow';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sick || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Absent || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Off )
+        {
+            e.rowElement.bgColor='PaleVioletRed';
+
+        }
+        if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_WalkingPatrol  )
+        {
+            e.rowElement.bgColor='CadetBlue';
+
+        }
+        if(e.key.patrolroleid === handler_ahwalMapping.PatrolRole_Associate  )
+        {
+            e.rowElement.bgColor='SandyBrown';
+
+        }
+    
+
+       
+
+    }
+}
 show_States_PopUp(){
 console.log(this.selahwalmappingid);
     this.statesPopupVisible = true; 

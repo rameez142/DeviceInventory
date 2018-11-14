@@ -371,7 +371,9 @@
           [showCloseButton]= "true"
           [dragEnabled]="true"
           [closeOnOutsideClick]="true"
-          [(visible)]="statesPopupVisible">
+          [(visible)]="statesPopupVisible"
+          
+          >
           <div *dxTemplate="let data of 'content'">
                 <dx-data-grid
                 [dataSource]="state_src"
@@ -382,6 +384,7 @@
                  [filterRow]="{ visible: true }"
                  [rtlEnabled]= "true"
                 [focusStateEnabled]="true"
+                (onRowPrepared)="onStatesRowPrepared($event)"
         >
         </dx-data-grid>
               </div>

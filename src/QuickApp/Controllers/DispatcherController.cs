@@ -406,7 +406,8 @@ namespace MOI.Patrol.Controllers
                            select new
                            {
                                Name = e.Name,
-                               Timestamp = ep.Timestamp
+                               Timestamp = ep.Timestamp,
+                               Patrolpersonstateid = ep.Patrolpersonstateid
                            }).OrderByDescending(e => e.Timestamp).Take(100);
 
             //var results = _context.Patrolpersonstatelog.Where<Patrolpersonstatelog>(e => e.Personid.Equals(personmapping.Personid)).OrderByDescending(e => e.Timestamp).Take(100);
