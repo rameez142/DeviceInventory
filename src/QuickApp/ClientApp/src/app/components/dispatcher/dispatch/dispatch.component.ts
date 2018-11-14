@@ -45,6 +45,7 @@ shiftssrc:shifts[];
 sectorssrc:sectors[];
 citysrc:citygroups[];
 associatesrc:associates[];
+state_src:any;
 sectorid:number;
 personsrc:persons[];
 shiftvisibile:boolean=false;
@@ -62,6 +63,7 @@ selectedSector:string=null;
 selectedAssociateMapId:string=null;
 selectedCity:string=null;
 checkInOutPopupVisible:any=false;
+statesPopupVisible:any=false;
 personname:string='';
 associatePersonMno:number = null;
 menuOpen:boolean=false;
@@ -73,7 +75,7 @@ AhwalMapping_CheckInOut_Method:any;
 selCheckInOutPersonMno: number =null;
 selCheckInOutPatrolPltNo:number = null;
 selCheckInOutHHeldSerialNo:number = null;
-
+selStatePersonid:number;
 patrolCarsrc:patrolcars[];
 selRowIndex:number;
   public options = {
@@ -514,6 +516,9 @@ WingSelected2(e)
 }
 
 show_States_PopUp(){
+console.log(this.selahwalmappingid);
+    this.statesPopupVisible = true; 
+    this.svc.GetAhwalPersonStates(this.selahwalmappingid).subscribe(resp =>{ this.state_src = resp;});
 
 }
 updatePersonState(selmenu:string)
@@ -931,7 +936,7 @@ else {
 
 Rwclick(e)
 {
-   // console.log(e);
+    console.log(e);
      var component = e.component,
     prevClickTime = component.lastClickTime;
     component.lastClickTime = new Date();
@@ -939,6 +944,7 @@ Rwclick(e)
         this.clearCheckInPopupValues();
         this.selahwalmappingid = e.key.ahwalmappingid;
         this.selCheckInOutPersonMno = e.key.milnumber;
+        //this.selStatePersonid = e.key.personid;
         this.options.defaultOpen = true;
         this.styleExp = 'inline';
     } 
@@ -1006,10 +1012,8 @@ AhwalMapping_CheckInButton_Click(e)
 
     this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
         {
-
-
-                this.ahwalMapping_CheckInOut_StatusLabel = resp;
-   this.bindAhwalMappingGrid();
+    this.ahwalMapping_CheckInOut_StatusLabel = resp;
+    this.bindAhwalMappingGrid();
 
       });
 

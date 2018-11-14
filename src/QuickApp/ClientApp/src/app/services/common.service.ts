@@ -262,6 +262,11 @@ export class CommonService extends EndpointFactory {
         {
           return this.http.post(this.api_url + '/api/dispatcher/deleteAhwalMapping' , rqhdr,{ responseType: 'text' });
         }
-  
+
+        public GetAhwalPersonStates(ahwalmappingid:number)
+        {
+          return this.http.post(this.api_url + '/api/dispatcher/ahwalPersonStates' , ahwalmappingid,{ responseType: 'json' });
+        }
+        
               
 }

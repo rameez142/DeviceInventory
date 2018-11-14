@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Core;
+using MOI.Patrol.DataAccessLayer;
+
 namespace MOI.Patrol.Controllers
 {
 
@@ -18,7 +20,8 @@ namespace MOI.Patrol.Controllers
         private Handler_AhwalMapping _ahwalmapping = new Handler_AhwalMapping();
         private patrolsContext _context = new patrolsContext();
 
-
+        private String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
+        private DataAccess DAL = new DataAccess();
 
 
 
@@ -388,7 +391,36 @@ namespace MOI.Patrol.Controllers
             return Ok(result.Text);
 
         }
+      
 
+        [HttpPost("ahwalPersonStates")]
+        public IActionResult PostahwalPersonStates([FromBody]Int32 mappingID)
+        {
 
-    }
+            //  string Qry = "SELECT top (100) [PatrolPersonStateLogID],[UserID],(select [AhwalID] from AhwalMapping where PersonID=[PatrolPersonStateLog].PersonID) as AhwalID,[PersonID],[PatrolPersonStateID],[TimeStamp] FROM [Patrols].[dbo].[PatrolPersonStateLog] WHERE PersonID=" + personid +" order by [TimeStamp] desc";
+            // return Ok(DAL.PostGre_GetData<Patrolpersonstatelog>(Qry));
+            var personmapping = _context.Ahwalmapping.FirstOrDefault(em => em.Ahwalmappingid == Convert.ToInt64(mappingID));
+            var results = (from ep in _context.Patrolpersonstatelog
+                           join e in _context.Patrolpersonstates on ep.Patrolpersonstateid equals e.Patrolpersonstateid
+                           where ep.Personid == personmapping.Personid
+                           select new
+                           {
+                               Name = e.Name,
+                               Timestamp = ep.Timestamp
+                           }).OrderByDescending(e => e.Timestamp).Take(100);
+
+            //var results = _context.Patrolpersonstatelog.Where<Patrolpersonstatelog>(e => e.Personid.Equals(personmapping.Personid)).OrderByDescending(e => e.Timestamp).Take(100);
+            if (results != null)
+            {
+                return Ok(results);
+            }
+            else
+            {
+                return Ok(null);
+            }
+
+          
+        }
+
+        }
     }
