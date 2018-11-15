@@ -423,5 +423,55 @@ namespace MOI.Patrol.Controllers
           
         }
 
+
+
+        [HttpPost("dispatchList")]
+        public IActionResult Postdispatchlist([FromBody]JObject RqHdr)
+        {
+
+            var ahwalid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["AhwalId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var shiftid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["ShiftId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            String Qry = "SELECT AhwalMappingID, AhwalID, ShiftID, SectorID, PatrolRoleID, CityGroupID,(Select MilNumber From Persons where PersonID = AhwalMapping.PersonID) as MilNumber,";
+            Qry = Qry + " (Select RankID From Persons where PersonID = AhwalMapping.PersonID) as RankID, (Select Name From Persons where PersonID = AhwalMapping.PersonID) as PersonName, CallerID,  ";
+            Qry = Qry + " HasDevices, (Select Serial From HandHelds where HandHeldID = AhwalMapping.HandHeldID) as Serial,  (Select plateNumber From patrolcars where patrolid = AhwalMapping.patrolid) as PlateNumber, ";
+
+            Qry = Qry + " PatrolPersonStateID,(select name from patrolroles where patrolroleid = AhwalMapping.PatrolRoleID) as patrolrolename,SunRiseTimeStamp, SunSetTimeStamp,SortingIndex,(Select Mobile From Persons where PersonID = AhwalMapping.PersonID) as PersonMobile,IncidentID,";
+            Qry = Qry + " LastStateChangeTimeStamp,(Select ShortName From sectors where SectorID=AhwalMapping.SectorID and Disabled<>1 ) as SectorDesc , (Select (select Name from Ranks where rankid = persons.rankid) From Persons where PersonID=AhwalMapping.PersonID) as RankDesc,(SELECT  Name FROM PatrolPersonStates PS ";
+            Qry = Qry + " where PS.PatrolPersonStateID = AhwalMapping.PatrolPersonStateID ) as PersonState,(select ShortName from CityGroups where CityGroups.Disabled<>1 and CityGroups.CityGroupID =AhwalMapping.CityGroupID ) as CityGroupName   FROM AhwalMapping where ahwalid =" + ahwalid + " and shiftid=" + shiftid + " Order by SortingIndex";
+
+
+
+            //JObject parameters[] = new JObject()[];
+            List<List<JObject>> parameters = new List<List<JObject>>();
+           // List<JObject> parameters1 = new List<JObject>{new JObject(new JProperty("name", "ahwalid")), new JObject(new JProperty("value", ahwalid)) };
+            parameters.Add(new List<JObject> { new JObject(new JProperty("name", "ahwalid")), new JObject(new JProperty("value", ahwalid)) });
+            parameters.Add(new List<JObject> { new JObject(new JProperty("name", "shiftid")), new JObject(new JProperty("value", shiftid)) });
+
+            //List<JObject> parameters = new List<JObject>();
+            //List<List<JObject>> parameters = new List<List<JObject>>(); ;
+            // var list = new List<JObject>();
+            //  list.Add(new JObject { "name", "ahwalid" });
+            // list.Add(p.email);
+
+            //List<List<JObject>> parameters = new List<List<JObject>>();
+            //parameters.Add(new List<JObject> { new JObject { "name", "ahwalid" }, new JObject { "value", ahwalid } });
+            //parameters.Add(new List<JObject> { new JObject { "name", "shiftid" }, new JObject { "value", shiftid } });
+
+            //List<JProperty> parameters = new List<JProperty>();
+            //parameters.Add(new <JProperty> ({ "name", "ahwalid" }));
+            //parameters.Add(parameters1);
+
+            //List<JProperty> parameters1 = new List<JProperty>{
+            //     new JProperty{"name", "ahwalid"},
+            //       new JProperty{"value", ahwalid }
+            //       };
+
+
+            // [{ "name":"ahwalid", "value": ahwalid },{ "shiftid", shiftid } ];
+
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+
         }
     }
+}

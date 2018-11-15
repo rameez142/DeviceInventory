@@ -115,20 +115,14 @@ export class CommonService extends EndpointFactory {
 
   //#region "Dispatch"
 
-  public GetDispatchList() {
-    return this.http.get(this.api_url + '/api/dispatch/dispatchList', { responseType: 'json' })
-  }
+  
 
   public GetPersonList(userid: number) {
     return this.http.get(this.api_url + '/api/dispatch/personsList?userid=' + userid, { responseType: 'json' })
 
   }
 
-  public GetShiftsList() {
-    return this.http.get(this.api_url + '/api/dispatch/shiftsList', { responseType: 'json' })
-
-  }
-
+  
 
 
   public GetResponsibiltyList() {
@@ -179,10 +173,10 @@ export class CommonService extends EndpointFactory {
 
   } 
 
-        public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
+      /*   public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
           return this.http.post(this.api_url + '/api/dispatch/updateAhwalMapping' , ahwalmappingobj , { responseType: 'text' });
-        }
+        } */
         public GetMappingByID(AssociateMapId:number,userid:number)
         {
           return this.http.get(this.api_url + '/api/dispatch/mappingByID?associateMapID=' + AssociateMapId
@@ -223,9 +217,7 @@ export class CommonService extends EndpointFactory {
     return this.http.post(this.api_url + '/api/maintainence/devicetypeslist', null, { responseType: 'text' })
   }
 
-  public GetOrganizationList(userid: number) {
-    return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
-  }
+
 
 /* public updatePersonState(selmenu:string,ahwalmappingid:number,userid:number)
         {
@@ -268,5 +260,24 @@ export class CommonService extends EndpointFactory {
           return this.http.post(this.api_url + '/api/dispatcher/ahwalPersonStates' , ahwalmappingid,{ responseType: 'json' });
         }
         
-              
+        public GetDispatchList(rqhdr:object) {
+          return this.http.post(this.api_url + '/api/dispatcher/dispatchList',rqhdr, { responseType: 'json' })
+        }
+        //#endregion "Dispatch"
+
+        //#region "Generic"
+        public GetAhwalList(userid: number) {
+          return this.http.post(this.api_url + '/api/generic/ahwalList', userid, { responseType: 'text' })
+        }
+
+        public GetOrganizationList(userid: number) {
+          return this.http.post(this.api_url + '/api/maintainence/organizationlist', userid, { responseType: 'text' })
+        } 
+
+        public GetShiftsList() {
+          return this.http.get(this.api_url + '/api/generic/shiftsList', { responseType: 'json' })
+      
+        }
+      
+           //#endregion "Generic"
 }

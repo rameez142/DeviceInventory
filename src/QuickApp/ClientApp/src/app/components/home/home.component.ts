@@ -33,6 +33,19 @@ export class HomeComponent implements AfterViewInit {
       error => {
       });
 
+      this.svc.GetShiftsList().toPromise().then(resp =>
+        { 
+           window.localStorage.setItem('Shifts',JSON.stringify(resp) );
+           console.log(window.localStorage.getItem('Shifts'));
+      });
+
+      this.svc.GetAhwalList(parseInt(window.localStorage.getItem('UserID'))).subscribe(resp =>{
+
+        window.localStorage.setItem('Ahwals',resp );
+        console.log(window.localStorage.getItem('Ahwals'));
+    },
+      error => {
+      });
 
   }
 

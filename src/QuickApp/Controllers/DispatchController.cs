@@ -39,35 +39,34 @@ namespace Controllers
             return DAL.PostGre_GetData<PatrolRoles>(Qry);
         }
 
-        [HttpGet("shiftsList")]
-        public List<Shifts> GetShiftsList()
-        {
-            String Qry = "SELECT ShiftID, Name, StartingHour, NumberOfHours FROM Shifts";
-            return DAL.PostGre_GetData<Shifts>(Qry);
-        }
-
+     
         [HttpGet("sectorsList")]
         public List<Sectors> GetSectorsList(int userid)
         {
-            String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where Disabled<>1  and (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+            String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where SectorID<>1 and Disabled<>1";
+            //String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where Disabled<>1  and (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
             return DAL.PostGre_GetData<Sectors>(Qry);
         }
 
         [HttpGet("cityList")]
         public List<CityGroups> GetCityList(int userid, int sectorid)
         {
-            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
+            // String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
+            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid;
             return DAL.PostGre_GetData<CityGroups>(Qry);
         }
 
         [HttpGet("associateList")]
         public List<Associates> GetAssociateList(int userid)
         {
-            String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE (AhwalMapping.PatrolRoleID <> 70) AND(AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+            // String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE (AhwalMapping.PatrolRoleID <> 70) AND(AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+            String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE AhwalMapping.PatrolRoleID <> 70 ";
             return DAL.PostGre_GetData<Associates>(Qry);
         }
 
         
+
+
         public AhwalMapping GetAhwal(int ahwalmappingid)
         {
             String Qry = "SELECT lastComeBackTimeStamp,lastAwayTimeStamp,incidentID,lastLandTimeStamp,hasFixedCallerID,handHeldID,sortingIndex,sunRiseTimeStamp,sunSetTimeStamp,patrolPersonStateID,hasDevices,callerID,cityGroupID,ahwalMappingID,sectorID,patrolRoleID," +
@@ -88,8 +87,8 @@ namespace Controllers
         [HttpGet("personForUserForRole")]
         public Persons GetPersonForUserForRole(int mno, int userid)
         {
-
-            String Qry = "SELECT PersonId, AhwalId, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) and MilNumber = " + mno;
+            String Qry = "SELECT PersonId, AhwalId, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE MilNumber = " + mno;
+            //String Qry = "SELECT PersonId, AhwalId, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) and MilNumber = " + mno;
             List <Persons> obj = DAL.PostGre_GetData<Persons>(Qry);
             
             if(obj.Count > 0)
@@ -114,37 +113,12 @@ namespace Controllers
         [HttpGet("personsList")]
         public List<Persons> GetPersonsList(int userid)
         {
-
-                String Qry = "SELECT PersonID, AhwalID, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " )";
+            String Qry = "SELECT PersonID, AhwalID, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons";
+            //   String Qry = "SELECT PersonID, AhwalID, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons WHERE AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " )";
             return DAL.PostGre_GetData<Persons>(Qry);
         }
 
-        [HttpGet("dispatchList")]
-        public DataTable Getdispatchlist()
-        {
-
-
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            DataTable dt = new DataTable();
-            String Qry = "SELECT AhwalMappingID, AhwalID, ShiftID, SectorID, PatrolRoleID, CityGroupID,(Select MilNumber From Persons where PersonID = AhwalMapping.PersonID) as MilNumber,";
-            Qry = Qry + " (Select RankID From Persons where PersonID = AhwalMapping.PersonID) as RankID, (Select Name From Persons where PersonID = AhwalMapping.PersonID) as PersonName, CallerID,  ";
-            Qry = Qry + " HasDevices, (Select Serial From HandHelds where HandHeldID = AhwalMapping.HandHeldID) as Serial,  (Select plateNumber From patrolcars where patrolid = AhwalMapping.patrolid) as PlateNumber, ";
-
-            Qry = Qry + " PatrolPersonStateID,(select name from patrolroles where patrolroleid = AhwalMapping.PatrolRoleID) as patrolrolename,SunRiseTimeStamp, SunSetTimeStamp,SortingIndex,(Select Mobile From Persons where PersonID = AhwalMapping.PersonID) as PersonMobile,IncidentID,";
-            Qry = Qry + " LastStateChangeTimeStamp,(Select ShortName From sectors where SectorID=AhwalMapping.SectorID) as SectorDesc , (Select (select Name from Ranks where rankid = persons.rankid) From Persons where PersonID=AhwalMapping.PersonID) as RankDesc,(SELECT  Name FROM PatrolPersonStates PS ";
-            Qry = Qry + " where PS.PatrolPersonStateID = AhwalMapping.PatrolPersonStateID ) as PersonState,(select ShortName from CityGroups where CityGroups.Disabled<>1 and CityGroups.CityGroupID =AhwalMapping.CityGroupID ) as CityGroupName   FROM AhwalMapping Order by SortingIndex";
-               
-
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
-            da.Fill(dt);
-            cont.Close();
-            cont.Dispose();
-
-
-            return dt;
-        }
+      
 
         [HttpPost("addAhwalMapping")]
         public OperationLog PostAddAhwalMapping([FromBody]JObject data)
@@ -245,37 +219,37 @@ namespace Controllers
             
         }
 
-        [HttpPost("updateAhwalMapping")]
-        public int PostUpDateAhwalMapping([FromBody]AhwalMapping frm)
-        {
-            int ret = 0;
-            string UpdateQry = "";
-            UpdateQry = "update AhwalMapping set ahwalid = " + frm.ahwalID + ",sectorid=" + frm.sectorID + ",citygroupid=" + frm.cityGroupID + ",shiftid=" + frm.shiftID + ",patrolroleid=" + frm.patrolRoleID + ",personid=" + frm.personID + " where ahwalmappingid = " + frm.ahwalMappingID;
-            ret = DAL.PostGre_ExNonQry(UpdateQry);
-            return ret;
-        }
+        //[HttpPost("updateAhwalMapping")]
+        //public int PostUpDateAhwalMapping([FromBody]AhwalMapping frm)
+        //{
+        //    int ret = 0;
+        //    string UpdateQry = "";
+        //    UpdateQry = "update AhwalMapping set ahwalid = " + frm.ahwalID + ",sectorid=" + frm.sectorID + ",citygroupid=" + frm.cityGroupID + ",shiftid=" + frm.shiftID + ",patrolroleid=" + frm.patrolRoleID + ",personid=" + frm.personID + " where ahwalmappingid = " + frm.ahwalMappingID;
+        //    ret = DAL.PostGre_ExNonQry(UpdateQry);
+        //    return ret;
+        //}
 
-        [HttpDelete("deleteAhwalMapping")]
-        public OperationLog DeleteAhwalMapping([FromQuery]int ahwalMappingID , [FromQuery]int userid)
-        {
-            //string ol_label = "";
-            OperationLog ol = new OperationLog();
-            int ret = 0;
-            string DelQry = "";
-            DelQry = "delete from AhwalMapping where ahwalMappingID = " + ahwalMappingID;
-            ret = DAL.PostGre_ExNonQry(DelQry);
-            if(ret > 0)
-            {
-                ol.userID = userid;
-                ol.operationID = Handler_Operations.Opeartion_Mapping_Remove;
-                ol.statusID = Handler_Operations.Opeartion_Status_Success;
-                ol.text = "تم حذف الفرد ";  
-                return ol;
-            }
-            ol.statusID = Handler_Operations.Opeartion_Status_Failed;
-            ol.text = "Failed";
-            return ol;
-        }
+        //[HttpDelete("deleteAhwalMapping")]
+        //public OperationLog DeleteAhwalMapping([FromQuery]int ahwalMappingID , [FromQuery]int userid)
+        //{
+        //    //string ol_label = "";
+        //    OperationLog ol = new OperationLog();
+        //    int ret = 0;
+        //    string DelQry = "";
+        //    DelQry = "delete from AhwalMapping where ahwalMappingID = " + ahwalMappingID;
+        //    ret = DAL.PostGre_ExNonQry(DelQry);
+        //    if(ret > 0)
+        //    {
+        //        ol.userID = userid;
+        //        ol.operationID = Handler_Operations.Opeartion_Mapping_Remove;
+        //        ol.statusID = Handler_Operations.Opeartion_Status_Success;
+        //        ol.text = "تم حذف الفرد ";  
+        //        return ol;
+        //    }
+        //    ol.statusID = Handler_Operations.Opeartion_Status_Failed;
+        //    ol.text = "Failed";
+        //    return ol;
+        //}
 
 
         [HttpGet("cityGroupforAhwal")]
@@ -290,8 +264,8 @@ namespace Controllers
         [HttpGet("mappingByID")]
         public AhwalMapping GetMappingByID(int associateMapID, int userid)
         {
-            string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") and  ahwalmappingid = " + associateMapID; 
-          
+            // string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") and  ahwalmappingid = " + associateMapID; 
+            string Qry = "SELECT AhwalMapping.AhwalID, AhwalMapping.PersonID, AhwalMapping.SectorID , AhwalMapping.CityGroupID ,AhwalMapping.ShiftID  FROM AhwalMapping  WHERE   ahwalmappingid = " + associateMapID;
             List<AhwalMapping> obj = DAL.PostGre_GetData<AhwalMapping>(Qry);
 
             if (obj.Count > 0)

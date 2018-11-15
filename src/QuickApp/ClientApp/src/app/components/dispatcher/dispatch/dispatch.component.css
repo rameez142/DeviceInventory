@@ -34,4 +34,6 @@
     font-weight: bold;
     }
 
-    
+    .dx-datagrid-headers {
+      white-space: normal;
+    }

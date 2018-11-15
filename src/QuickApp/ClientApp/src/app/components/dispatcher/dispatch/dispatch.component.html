@@ -1,9 +1,6 @@
 <div class="container">
   <form method="post" enctype="multipart/form-data">
 
-<header class="pageHeader">
-  <h3><i class="fa fa-handshake-o fa-lg page-caption" aria-hidden="true"></i> الأحوال</h3>
-</header>
 
                 <dx-data-grid
                 id="gridContainer"
@@ -14,7 +11,9 @@
                 [selectedRowKeys]="[]"
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
+                (onEditorPreparing)="onEditorPreparing($event)"
                 (onRowClick)="Rwclick($event)"
+                wordWrapEnabled ="true"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
                 <dxo-pager
@@ -26,12 +25,11 @@
 
             <dxo-export [enabled]="true" fileName="Vehicle"></dxo-export>
 
-            <dxo-header-filter
-            [visible]="true"></dxo-header-filter>
+           
             <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
 
             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-            <dxo-filter-row [visible]="true" ></dxo-filter-row>
+            <dxo-filter-row [visible]="true"  [filterOperations]="['contains', '=']" ></dxo-filter-row>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
 
             <dx-load-panel
@@ -47,24 +45,27 @@
             </dx-load-panel>
 
             <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
-            <dxi-column dataField="milnumber" caption="الرقم العسكري"></dxi-column>
-            <dxi-column dataField="rankdesc" caption="الرتبه"></dxi-column>
-            <dxi-column dataField="personname" caption="الاسم"></dxi-column>
-            <dxi-column dataField="patrolrolename" caption="المسؤولية"></dxi-column>
+            <dxi-column dataField="milnumber" caption="الرقم العسكري" width= "70"></dxi-column>
+            <dxi-column dataField="rankdesc" caption="الرتبه" [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="personname" caption="الاسم" width= "150" >
+            </dxi-column>
+            <dxi-column dataField="patrolrolename" caption="المسؤولية" [allowFiltering]="false" width= "150"></dxi-column>
             <dxi-column dataField="citygroupname" [groupIndex]="1" caption="المنطقة"></dxi-column>
 
-            <dxi-column dataField="callerid" caption="النداء"></dxi-column>
-            <dxi-column dataField="platenumber"  caption="الدورية"></dxi-column>
-            <dxi-column dataField="sunrisetimestamp" caption="شروق" dataType="date"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="sunsettimestamp" caption="غروب" dataType="date" width= "180"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="callerid" width= "100" caption="النداء"></dxi-column>
+            <dxi-column dataField="platenumber" width= "100" caption="الدورية"></dxi-column>
+            <dxi-column dataField="serial" width= "100" caption="الجهاز"></dxi-column>
+            
+            <dxi-column dataField="sunrisetimestamp" caption="شروق" dataType="date" width= "100" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="sunsettimestamp" caption="غروب" dataType="date" width= "100"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="personstate" caption="الحالة" width= "50" [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="laststatechangetimestamp" [allowFiltering]="false" caption="وقت الحالة" dataType="date" width= "100"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            
             <dxi-column dataField="personmobile" caption="الجوال"></dxi-column>
-            <dxi-column dataField="laststatechangetimestamp" caption="وقت الحالة" dataType="date" width= "180"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="personstate" caption="الحالة"></dxi-column>
-            <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
+           <!--  <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
             <div *dxTemplate="let data of 'maptemplate'">
                  <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
-               <!-- <a  routerLink="/map" > <img src="../../../../assets/images/haritayikaydir_r_glow.png"  /></a> -->
-                </div>
+                </div> -->
 
               </dx-data-grid>
 
@@ -83,7 +84,10 @@
               <!-- <dx-popup  [(visible)]="mappopupVisible">
 
               </dx-popup> -->
-
+       <!--   <dxo-lookup
+            [dataSource]="sectorssrc"
+            valueExpr="sectorid" 
+            displayExpr="name">  -->
               <dx-popup
               class="popup"
               [width]="600"
@@ -147,13 +151,13 @@
 
                         </tr>
 
-                 <tr>
+               <!--   <tr>
                      <td><label >الشفت</label></td>
                      <td>
                             <dx-select-box
                             [dataSource]="shiftssrc"
                             displayExpr="name"
-                            valueExpr="shiftID"
+                            valueExpr="shiftid"
                             [visible]="shiftvisibile"
                             [searchEnabled]="true"
                             [(value)]="selectedShift"
@@ -161,7 +165,7 @@
                         </dx-select-box>
                      </td>
                      <td></td>
-                     </tr>
+                     </tr> -->
                      <tr>
                      <td><label>القطاع</label></td>
                      <td>  <dx-select-box

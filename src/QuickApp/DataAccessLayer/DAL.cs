@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Data;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace MOI.Patrol.DataAccessLayer
 {
@@ -89,6 +90,39 @@ namespace MOI.Patrol.DataAccessLayer
             return rcdcnt;
         }
 
-       
+        public DataTable PostGre_GetDataTable (string Qry) 
+        {
+
+            DataTable table = new DataTable();
+
+            NpgsqlConnection cont = new NpgsqlConnection();
+            cont.ConnectionString = constr;
+            cont.Open();
+            //NpgsqlCommand cmd = new NpgsqlCommand();
+            //cmd.CommandText = Qry;
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
+
+            //for (int i = 0; i<parameters.Count-1; i++)
+            //{
+            //    NpgsqlParameter paramt = new NpgsqlParameter();
+            //    paramt.Direction = ParameterDirection.Input;
+            //    paramt.ParameterName = parameters[i][0].Property("name").Value.ToString();
+            //    paramt.Value = Convert.ToInt32(parameters[i][1].Property("value").Value.ToString());
+            //    paramt.Direction = ParameterDirection.Input;
+            //    paramt.NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Bigint;
+
+            //    da.SelectCommand.Parameters.Add(paramt);
+               
+                   
+            //}
+
+            da.Fill(table);
+            cont.Close();
+            cont.Dispose();
+
+
+           
+            return table;
+        }
     }
 }
