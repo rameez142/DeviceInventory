@@ -395,31 +395,28 @@ shiftChanged(e) {
 } */
 
 onEditorPreparing (e) { 
-    console.log('editor' + JSON.stringify(e.editorOptions));
-    //if (e.dataField == "personname") {
-      //  e.editorName = "dxTextBox"; 
-        e.editorOptions.showClearButton = true;
+    e.editorOptions.showClearButton = true;
+   // console.log('editor' + JSON.stringify(e.editorOptions));
+    if (e.dataField == "sunrisetimestamp") {
+        e.displayFormat="dd/MM/yyyy";
+        console.log('editor' + JSON.stringify(e.editorOptions));
+    }
+    //  e.editorName = "dxTextBox"; 
+     // e.editorOptions.dataSource = this.sectorssrc;
         /* e.editorOptions.onValueChanged = (event) => {
             let value = event.value;
             e.setValue(value.toLowerCase()); 
         } */
-    //}
+   // }
+   // if (e.parentType == 'filterRow' && e.editorName == 'dxSelectBox')
+   // e.editorName = "dxTextBox";
+
+   
 }
 
 onRowPrepared(e)
 {
-   /*  if (e.parentType == "filterRow") {
-        e.editorOptions.onEnterKey = "Equals";
-    }
-
-    if (e.parentType == 'filterRow' && e.editorName == 'dxSelectBox')
-    e.editorName = "dxTextBox";
- */
-    //if(e.RowType)
-    /*  if(e.parentType == "filterRow" && e.dataField == "personname") {
-    e.editorName = "dxTextBox"
-    e.editorOptions.dataSource = this.sectorssrc;
-     } */
+   
     if(e.rowType ==='data')
     {
        
@@ -499,7 +496,18 @@ onRowPrepared(e)
 
 
         }
-
+/*  if (e.parentType == "filterRow") {
+        e.editorOptions.onEnterKey = "Equals";
+    }
+ */
+    //if (e.parentType == 'filterRow' && e.editorName == 'dxSelectBox')
+   // e.editorName = "dxTextBox";
+ 
+    //if(e.RowType)
+    /*  if(e.parentType == "filterRow" && e.dataField == "personname") {
+    e.editorName = "dxTextBox"
+    e.editorOptions.dataSource = this.sectorssrc;
+     } */
     }
 }
 

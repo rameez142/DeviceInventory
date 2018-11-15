@@ -29,7 +29,7 @@
             <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
 
             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-            <dxo-filter-row [visible]="true"  [filterOperations]="['contains', '=']" ></dxo-filter-row>
+            <dxo-filter-row [visible]="true"   ></dxo-filter-row>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
 
             <dx-load-panel
@@ -45,23 +45,24 @@
             </dx-load-panel>
 
             <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
-            <dxi-column dataField="milnumber" caption="الرقم العسكري" width= "70"></dxi-column>
+            <dxi-column dataField="milnumber" caption="الرقم العسكري" [filterOperations]="['contains', '=']" width= "70"></dxi-column>
             <dxi-column dataField="rankdesc" caption="الرتبه" [allowFiltering]="false"></dxi-column>
-            <dxi-column dataField="personname" caption="الاسم" width= "150" >
+            <dxi-column dataField="personname" caption="الاسم" [filterOperations]="['contains', '=']" width= "150" >
+                 
             </dxi-column>
             <dxi-column dataField="patrolrolename" caption="المسؤولية" [allowFiltering]="false" width= "150"></dxi-column>
             <dxi-column dataField="citygroupname" [groupIndex]="1" caption="المنطقة"></dxi-column>
 
-            <dxi-column dataField="callerid" width= "100" caption="النداء"></dxi-column>
-            <dxi-column dataField="platenumber" width= "100" caption="الدورية"></dxi-column>
-            <dxi-column dataField="serial" width= "100" caption="الجهاز"></dxi-column>
+            <dxi-column dataField="callerid" width= "100" [filterOperations]="['contains', '=']" caption="النداء"></dxi-column>
+            <dxi-column dataField="platenumber" width= "100" [filterOperations]="['contains', '=']" caption="الدورية"></dxi-column>
+            <dxi-column dataField="serial" width= "100" [filterOperations]="['contains', '=']" caption="الجهاز"></dxi-column>
             
-            <dxi-column dataField="sunrisetimestamp" caption="شروق" dataType="date" width= "100" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="sunsettimestamp" caption="غروب" dataType="date" width= "100"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="personstate" caption="الحالة" width= "50" [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="sunrisetimestamp" [filterOperations]="[ '=']" caption="شروق" dataType="date" width= "100" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="sunsettimestamp" [filterOperations]="[ '=']" caption="غروب" dataType="date" width= "100"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="personstate" caption="الحالة"  width= "50" [allowFiltering]="false"></dxi-column>
             <dxi-column dataField="laststatechangetimestamp" [allowFiltering]="false" caption="وقت الحالة" dataType="date" width= "100"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
             
-            <dxi-column dataField="personmobile" caption="الجوال"></dxi-column>
+            <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="Equals"></dxi-column>
            <!--  <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
             <div *dxTemplate="let data of 'maptemplate'">
                  <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
