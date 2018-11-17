@@ -394,32 +394,33 @@ shiftChanged(e) {
 
 } */
 
-onEditorPreparing (e) { 
+onEditorPreparing (e) {
     e.editorOptions.showClearButton = true;
    // console.log('editor' + JSON.stringify(e.editorOptions));
-    if (e.dataField == "sunrisetimestamp") {
-        e.displayFormat="dd/MM/yyyy";
-        console.log('editor' + JSON.stringify(e.editorOptions));
+    if (e.dataField == "sunrisetimestamp" || e.dataField == "sunsettimestamp" ) {
+      e.editorOptions.displayFormat="dd/MM/yyyy";
+     // e.editorOptions.width=100;
+       // console.log('editor' + JSON.stringify(e.editorOptions));
     }
-    //  e.editorName = "dxTextBox"; 
+    //  e.editorName = "dxTextBox";
      // e.editorOptions.dataSource = this.sectorssrc;
         /* e.editorOptions.onValueChanged = (event) => {
             let value = event.value;
-            e.setValue(value.toLowerCase()); 
+            e.setValue(value.toLowerCase());
         } */
    // }
    // if (e.parentType == 'filterRow' && e.editorName == 'dxSelectBox')
    // e.editorName = "dxTextBox";
 
-   
+
 }
 
 onRowPrepared(e)
 {
-   
+
     if(e.rowType ==='data')
     {
-       
+
       console.log(e);
     //set default to white first
      e.rowElement.bgColor = "White";
@@ -431,7 +432,7 @@ onRowPrepared(e)
 
         if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
              e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
-          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back || 
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back ||
           e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
         {
             e.rowElement.bgColor='LightGreen';
@@ -462,7 +463,7 @@ onRowPrepared(e)
             e.rowElement.bgColor='SandyBrown';
 
         }
-    
+
 
         if(e.key.incidentid !== null &&  e.key.incidentid !== '' )
         {
@@ -475,7 +476,7 @@ onRowPrepared(e)
             var lastTimeStamp = <Date>(e.key.laststatechangetimestamp);
             if (e.key.personState === handler_ahwalMapping.PatrolPersonState_Land) //max 1 hour
             {
-            
+
 
                /*  var hours = (DateTime.Now - lastTimeStamp).TotalHours;
                 if (hours >= 1)
@@ -502,7 +503,7 @@ onRowPrepared(e)
  */
     //if (e.parentType == 'filterRow' && e.editorName == 'dxSelectBox')
    // e.editorName = "dxTextBox";
- 
+
     //if(e.RowType)
     /*  if(e.parentType == "filterRow" && e.dataField == "personname") {
     e.editorName = "dxTextBox"
@@ -526,8 +527,8 @@ WingSelected2(e)
     if(e.title ==='حذف')
   {
     this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
-    
-    
+
+
   }
   else if(e.title ==='غياب')
   {
@@ -581,7 +582,7 @@ onStatesRowPrepared(e)
 
         if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
              e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
-          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back || 
+          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back ||
           e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
         {
             e.rowElement.bgColor='LightGreen';
@@ -612,15 +613,15 @@ onStatesRowPrepared(e)
             e.rowElement.bgColor='SandyBrown';
 
         }
-    
 
-       
+
+
 
     }
 }
 show_States_PopUp(){
 console.log(this.selahwalmappingid);
-    this.statesPopupVisible = true; 
+    this.statesPopupVisible = true;
     this.svc.GetAhwalPersonStates(this.selahwalmappingid).subscribe(resp =>{ this.state_src = resp;});
 
 }
@@ -635,10 +636,10 @@ updatePersonState(selmenu:string)
           };
           this.svc.updatePersonState(rqhdr).subscribe(resp =>
             {
-              
+
               notify( resp, 'success', 600);
               this.bindAhwalMappingGrid();
-      
+
           });
      /*  this.svc.updatePersonState(selmenu,this.selahwalmappingid,this.userid).toPromise().then(resp =>
       {
@@ -656,14 +657,14 @@ console.log(this.selahwalmappingid);
   if(this.selahwalmappingid !== null)
   {
     let rqhdr:object = {
-        
+
         AhwalMappingId:this.selahwalmappingid,
         userid:this.userid
       };
 
       this.svc.DeleteAhwalMapping(rqhdr).toPromise().then(resp =>
         {
-         
+
           notify( resp, 'success', 600);
           this.bindAhwalMappingGrid();
       });
@@ -710,7 +711,7 @@ console.log(this.selahwalmappingid);
   }
 ];
 
-  } 
+  }
 } */
 
 refreshDataGrid() {
@@ -752,7 +753,7 @@ this.selectedCity = e.value;
     this.svc.AddAhwalMapping(rqhdr).subscribe(resp =>
         {
 
-            
+
                 this.ahwalMapping_Add_status_label = resp;
            this.bindAhwalMappingGrid();
 
@@ -823,7 +824,7 @@ if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainA
         ahwalmappingobj.cityGroupID = citygroupsobj[0].cityGroupID;
         ahwalmappingobj.shiftID = this.selhdrShiftId ;
         ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole , 10);
-      
+
             this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
@@ -832,7 +833,7 @@ if(parseInt(this.selectedRole , 10) === handler_ahwalMapping.PatrolRole_CaptainA
                     this.ahwalMapping_Add_status_label = olog.text;
                  this.bindAhwalMappingGrid();
               });
-        
+
 }
 else if (parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_CaptainSector ||
 parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSector)
@@ -865,7 +866,7 @@ parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSec
         //ahwalmappingobj.shiftID = parseInt(this.selectedShift,10);
         ahwalmappingobj.shiftID = this.selhdrShiftId;
         ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole,10);
-       
+
             this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
                 {
                     this.clearpersonpopupvalues();
@@ -874,7 +875,7 @@ parseInt(this.selectedRole,10) === handler_ahwalMapping.PatrolRole_SubCaptainSec
                     this.ahwalMapping_Add_status_label = ol.text;
                  this.bindAhwalMappingGrid();
               });
-       
+
 }
 else if(parseInt(this.selectedRole, 10 ) === handler_ahwalMapping.PatrolRole_Associate)
 {
@@ -946,7 +947,7 @@ else
     ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole,10);
     ahwalmappingobj.personID =  personobj.personID;
     console.log(this.ahwalMappingAddMethod );
-   
+
         console.log('insert');
         console.log(ahwalmappingobj );
         this.svc.AddAhwalMapping(ahwalmappingobj,this.userobj).subscribe(resp =>
@@ -957,10 +958,10 @@ else
                 this.ahwalMapping_Add_status_label = ol.text;
              this.bindAhwalMappingGrid();
           });
-    
+
 }
 
-} 
+}
 
 clearpersonpopupvalues()
 {
@@ -981,7 +982,7 @@ clearpersonpopupvalues()
 
     this.selectedSector = null;
    this.selectedRole = null;
-   
+
 }
 
 
@@ -992,7 +993,7 @@ RwPopupClick(e)
     prevClickTime = component.lastClickTime;
     component.lastClickTime = new Date();
 if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-    
+
 
 }
 else {
@@ -1016,8 +1017,8 @@ Rwclick(e)
         //this.selStatePersonid = e.key.personid;
         this.options.defaultOpen = true;
         this.styleExp = 'inline';
-    } 
-   
+    }
+
 }
 
 RwAssociatePopupClick(e)
@@ -1051,7 +1052,7 @@ this.selCheckInOutHHeldSerialNo =  e.data.serial;
 
 ShowCheckInoutPopup()
 {
-    
+
     this.checkInOutPopupVisible=true;
     this.AhwalMapping_CheckInOut_ID = this.selahwalmappingid;
    // this.ShowCheckInOutPopdtls();
@@ -1071,7 +1072,7 @@ CloseCheckInoutPopup(){
 }
 AhwalMapping_CheckInButton_Click(e)
 {
-   
+
     let rqhdr:object = {
         personMno :this.selCheckInOutPersonMno,
         plateNumber:this.selCheckInOutPatrolPltNo,
@@ -1086,7 +1087,7 @@ AhwalMapping_CheckInButton_Click(e)
 
       });
 
-    
+
 }
 
 checkhandheldexpr(item)

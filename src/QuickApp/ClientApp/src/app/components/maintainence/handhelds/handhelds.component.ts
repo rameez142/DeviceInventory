@@ -20,12 +20,13 @@ export class HandheldsComponent implements OnInit {
   typesrc:any;
   dataSource: any;
   devicetypesrc:any;
-
+   userid: string;
 
   public handheldobj:handhelds = new handhelds();
 
 
-  constructor(private svc:CommonService) {
+  constructor ( public svc:CommonService) {
+    this.userid = window.localStorage.getItem('UserID');
 
     this.showLoadPanel();
    // this.typesrc = JSON.parse(window.localStorage.getItem("devicetypes"));
@@ -53,10 +54,16 @@ export class HandheldsComponent implements OnInit {
 
 LoadData()
 {
-  this.svc.GethandheldsList().subscribe(resp =>
+   let rqhdr:object;
+rqhdr = {
+  ahwalid:this.selahwalid,
+  userid:this.userid
+};
+
+  this.svc.GethandheldsList(rqhdr).subscribe(resp =>
     {
 
-       this.dataSource = JSON.parse(resp);
+       this.dataSource = resp;
       console.log('resp' + resp);
       this.dataGrid.dataSource = this.dataSource;
       this.dataGrid.instance.refresh();
@@ -198,15 +205,27 @@ RowAdd(e)
 {
 
   this.cleardata();
+  let rqhdr:object;
+  rqhdr = {
+    ahwalid:this.selahwalid,
+    userid:this.userid,
+    barcode:e.data.barcode,
+    defective:this.defectchk,
+    serial:e.data.serial,
+    transmode:'ADD'
+  };
+/*
   this.handheldobj.ahwalid =  this.selahwalid;
   this.handheldobj.barcode =  e.data.barcode;
   this.handheldobj.defective =  this.defectchk;
   this.handheldobj.serial =  e.data.serial;
+ */
 
-
-  this.svc.Addhandhelds(this.handheldobj).subscribe(resp =>
+  this.svc.Addhandhelds(rqhdr).subscribe(resp =>
     {
-      console.log('resp' + resp);
+      //console.log('resp' + resp);
+      notify(resp, 'success', 600);
+
      this.LoadData();
   },
     error => {
@@ -215,7 +234,6 @@ RowAdd(e)
     this.cleardata();
     this.cleardefaultvalues();
 
-  notify(' Record Added SuccessFully', 'success', 600);
 }
 
 
@@ -224,13 +242,25 @@ RowAdd(e)
 RowUpdate(e)
 {
   console.log('update' + e.data);
-  this.handheldobj.ahwalid =  this.selahwalid;
+ /*  this.handheldobj.ahwalid =  this.selahwalid;
   this.handheldobj.barcode =  e.data.barcode;
   this.handheldobj.defective =  this.defectchk;
   this.handheldobj.serial =  e.data.serial;
-  this.handheldobj.handheldid = e.data.handheldid;
-  this.svc.Updatehandhelds(this.handheldobj).subscribe(resp =>
+  this.handheldobj.handheldid = e.data.handheldid; */
+  let rqhdr:object;
+  rqhdr = {
+    ahwalid:this.selahwalid,
+    userid:this.userid,
+    barcode:e.data.barcode,
+    defective:this.defectchk,
+    serial:e.data.serial,
+    transmode:'UPDATE',
+    handheldid : e.data.handheldid
+  };
+
+  this.svc.Updatehandhelds(rqhdr).subscribe(resp =>
     {
+      notify(resp, 'success', 600);
 
      this.LoadData();
   },
@@ -242,13 +272,15 @@ RowUpdate(e)
 RowDelete(e)
 {
   this.cleardata();
-
-  this.handheldobj.handheldid =  e.data.handheldid;
- console.log('delete' + e.data);
-  this.svc.Deletehandhelds(this.handheldobj).subscribe(resp =>
+  let rqhdr:object;
+  rqhdr = {
+    handheldid : e.data.handheldid,
+    userid:this.userid
+  };
+  this.svc.Deletehandhelds(rqhdr).subscribe(resp =>
     {
 
-      console.log('resp' + resp);
+      notify(resp, 'success', 600);
      this.LoadData();
   },
     error => {

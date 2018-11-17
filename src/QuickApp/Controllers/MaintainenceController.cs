@@ -18,6 +18,7 @@ using Npgsql;
 using MOI.Patrol.DataAccessLayer;
 using CustomModels;
 using Core;
+using Newtonsoft.Json.Linq;
 
 namespace Controllers
 {
@@ -207,106 +208,28 @@ namespace Controllers
 
         /*Hand Helds*/
         #region Hand Helds
-        [HttpPost("addhandheld")]
-        public int PostAddHandhelds([FromBody]HandHelds frm)
-        {
-            int ret = 0;
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd.Connection = cont;
-            cmd.CommandText = "insert into handhelds(AhwalID,serial,defective,barcode) values (" + frm.ahwalid + ",'" + frm.serial + "'," + frm.defective + ",'" + frm.barcode + "')";
-            ret = cmd.ExecuteNonQuery();
-            cont.Close();
-            cont.Dispose();
+      
+
+        //[HttpPost("updatehandheld")]
+        //public int PostUpdateHandhelds([FromBody] HandHelds frm)
+        //{
+        //    int ret = 0;
+        //    NpgsqlConnection cont = new NpgsqlConnection();
+        //    cont.ConnectionString = constr;
+        //    cont.Open();
+        //    NpgsqlCommand cmd = new NpgsqlCommand();
+        //    cmd.Connection = cont;
+        //    cmd.CommandText = "update handhelds set AhwalID = " + frm.ahwalid + ",serial = '" + frm.serial + "',defective = " + frm.defective + ",barcode = '" + frm.barcode + "' where handheldid=" + frm.handheldid;
+        //    ret = cmd.ExecuteNonQuery();
+        //    cont.Close();
+        //    cont.Dispose();
 
 
-            return ret;
-        }
-
-        [HttpPost("updatehandheld")]
-        public int PostUpdateHandhelds([FromBody] HandHelds frm)
-        {
-            int ret = 0;
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd.Connection = cont;
-            cmd.CommandText = "update handhelds set AhwalID = " + frm.ahwalid + ",serial = '" + frm.serial + "',defective = " + frm.defective + ",barcode = '" + frm.barcode + "' where handheldid=" + frm.handheldid;
-            ret = cmd.ExecuteNonQuery();
-            cont.Close();
-            cont.Dispose();
-
-
-            return ret;
-        }
-
-
-        [HttpPost("delhandheld")]
-        public int PostDeletehandheld([FromBody] HandHelds frm)
-        {
-            int ret = 0;
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd.Connection = cont;
-            cmd.CommandText = "delete from handhelds  where handheldid=" + frm.handheldid;
-            ret = cmd.ExecuteNonQuery();
-            cont.Close();
-            cont.Dispose();
-            return ret;
-        }
+        //    return ret;
+        //}
 
 
 
-
-        [HttpGet("handheldlist")]
-        public DataTable GetHandHeldList(int ahwalid, int userid)
-        {
-            string subqry = "";
-            if (ahwalid != -1)
-            {
-                subqry = " and d.AhwalID = " + ahwalid;
-            }
-
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            DataTable dt = new DataTable();
-            //            NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,t.name as type,d.Defective,d.Rental,d.BarCode,a.Name from Devices d INNER JOIN Ahwal a ON a.AhwalID = d.AhwalID inner join devicetypes t on t.devicetypeid = d.devicetypeid ", cont);
-            //NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,(select dt.name from devicetypes dt where dt.devicetypeid = d.devicetypeid)  as type,d.Defective,d.Rental,d.BarCode,'jjjj' as Name from Devices d", cont);
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.handheldid,d.serial,d.Defective,d.BarCode,d.AhwalID,(select a.name from ahwal a where a.ahwalid = d.ahwalid ) ahwalname from handhelds d where d.serial is not null AND AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ", cont);
-
-            // NpgsqlDataAdapter da = new NpgsqlDataAdapter("select d.deviceid,d.DeviceNumber,d.Model,'1'  as type,d.Defective,d.Rental,d.BarCode,'jjjj' as Name from Devices d", cont);
-            da.Fill(dt);
-            cont.Close();
-            cont.Dispose();
-
-
-            return dt;
-        }
-
-
-        
-
-        [HttpGet("checkinhandheldslist")]
-        public List<HandHelds> GetCheckinHandHeldList([FromQuery] int ahwalid, [FromQuery] int userid)
-        {
-
-            string subqry = "";
-            subqry = " and d.ahwalid in (select ahwalid from UsersRolesMap where UserID= " + userid + " )";
-            if (ahwalid != -1)
-            {
-                subqry = subqry + " and d.ahwalid = " + ahwalid;
-            }
-            String Qry = "select d.handheldid,d.serial,d.Defective,d.BarCode,d.AhwalID,(select a.name from ahwal a where a.ahwalid = d.ahwalid ) ahwalname from handhelds d where d.serial is not null AND AhwalID IN(SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + ") ";
-            List<HandHelds> ptc = DAL.PostGre_GetData<HandHelds>(Qry);
-            return ptc;
-
-        }
 
 
         #endregion
