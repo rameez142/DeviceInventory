@@ -85,8 +85,8 @@
 
                 <dx-popup
                 class="popup"
-                [width]="600"
-                [height]="500"
+                [width]="500"
+                [height]="300"
                 [showTitle]="false"
                 title=""
                 [showCloseButton]= "true"
@@ -102,34 +102,22 @@
                                 <td>
                                     <input name="txtserial" [(ngModel)]="serial">
                                     </td>
-
-                           <td>
-                                    <label>رقم الباركود</label>
-                                </td>
-                                <td>
-    <input [(ngModel)]="barcode" name="txtbarcode" />
+                                    <td>  <label>رقم الجهاز</label>
                                     </td>
-</tr>
-
-                            <tr>
-
                                     <td>  <label>غير صالحة؟</label>
                                       </td>
                                       <td>
-
                         <input type="checkbox" id="chkdefective" name="chkdefective"
                         [ngModel]="defectchk" (ngModelChange)="chkdeftoggle($event)">
-
-
                                           </td>
+                                        </tr>
 
+                                        <tr>
                                 <td> <label>ايجار؟</label>
                                 </td>
                                 <td>
-
                 <input type="checkbox" id="chkrental" name="chkrental"
                 [ngModel]="rentalchk" (ngModelChange)="checkBoxToggled($event)">
-
                                     </td>
                                   </tr>
                                   <tr>

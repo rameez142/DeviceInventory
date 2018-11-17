@@ -26,12 +26,16 @@ export class HandheldsComponent implements OnInit {
    rental: number = 0;
    handheldid: number = 0;
    barcode: string = '';
+   ahwalsrc:any;
+   selhdrAhwalId:number;
 
 //  public handheldobj:handhelds = new handhelds();
 
 
-  constructor (private svc: CommonService, private modalService: ModalService, public svc:CommonService) {
+  constructor ( private modalService: ModalService, public svc:CommonService) {
     this.userid = window.localStorage.getItem('UserID');
+    this.ahwalsrc= JSON.parse(window.localStorage.getItem('Ahwals'));
+    this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
 
     this.showLoadPanel();
    }
@@ -81,8 +85,7 @@ rqhdr = {
 
 }
 onToolbarPreparing(e) {
-  let AhwalLst: any = [];
-  AhwalLst = JSON.parse(window.localStorage.getItem('Orgs'));
+
   e.toolbarOptions.items.unshift({
     location: 'before',
     template: 'الأحوال'
@@ -91,11 +94,11 @@ onToolbarPreparing(e) {
       widget: 'dxSelectBox',
       options: {
         width: 200,
-        items: AhwalLst,
-        displayExpr: 'text',
-        valueExpr: 'value',
-        value: 1,
-        onValueChanged: this.groupChanged.bind(this)
+        dataSource: this.ahwalsrc,
+        displayExpr: 'name',
+        valueExpr: 'ahwalid',
+        value:this.ahwalsrc[0].ahwalid,
+        onValueChanged: this.ahwalChanged.bind(this)
       }
     }, {
       location: 'after',
@@ -115,10 +118,12 @@ onToolbarPreparing(e) {
     });
 }
 
-groupChanged(e) {
-  this.selahwalid = e.value;
- this.LoadData();
+ahwalChanged(e) {
+  this.selhdrAhwalId = e.value;
+  this.LoadData();
 }
+
+
 
 /* ContextMenuprepare(e)
 {
@@ -212,6 +217,17 @@ chkdeftoggle(e)
   }
 
 }
+
+checkBoxToggled(e) {
+  //console.log(e.value);
+  if (e === true) {
+    this.rentalchk = 1;
+  }
+  else {
+    this.rentalchk = 0;
+  }
+
+}
 RowAdd(e)
 {
 
@@ -220,7 +236,6 @@ RowAdd(e)
   rqhdr = {
     ahwalid:this.selahwalid,
     userid:this.userid,
-    barcode:e.data.barcode,
     defective:this.defectchk,
     serial:e.data.serial,
     transmode:'ADD'
@@ -262,7 +277,6 @@ RowUpdate(e)
   rqhdr = {
     ahwalid:this.selahwalid,
     userid:this.userid,
-    barcode:e.data.barcode,
     defective:this.defectchk,
     serial:e.data.serial,
     transmode:'UPDATE',
