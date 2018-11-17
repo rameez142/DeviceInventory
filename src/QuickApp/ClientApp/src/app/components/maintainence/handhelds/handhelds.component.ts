@@ -2,8 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { DxDataGridComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
-import {handhelds} from '../../../models/handhelds';
-
+import { ModalService } from '../../../services/modalservice';
 
 @Component({
   selector: 'app-handhelds',
@@ -21,15 +20,20 @@ export class HandheldsComponent implements OnInit {
   dataSource: any;
   devicetypesrc:any;
    userid: string;
+   popupVisible: any = false;
+   hdntrans: string = '';
+   defective: number = 0;
+   rental: number = 0;
+   handheldid: number = 0;
+   barcode: string = '';
 
-  public handheldobj:handhelds = new handhelds();
+//  public handheldobj:handhelds = new handhelds();
 
 
-  constructor ( public svc:CommonService) {
+  constructor (private svc: CommonService, private modalService: ModalService, public svc:CommonService) {
     this.userid = window.localStorage.getItem('UserID');
 
     this.showLoadPanel();
-   // this.typesrc = JSON.parse(window.localStorage.getItem("devicetypes"));
    }
 
 
@@ -77,30 +81,38 @@ rqhdr = {
 
 }
 onToolbarPreparing(e) {
-  let strt :any=[];
-strt =JSON.parse(window.localStorage.getItem("Orgs"));
+  let AhwalLst: any = [];
+  AhwalLst = JSON.parse(window.localStorage.getItem('Orgs'));
   e.toolbarOptions.items.unshift({
-      location: 'before',
-      template: 'الأحوال'
-  }, {
     location: 'before',
-    widget: 'dxSelectBox',
-    options: {
+    template: 'الأحوال'
+  }, {
+      location: 'before',
+      widget: 'dxSelectBox',
+      options: {
         width: 200,
-        items: strt,
+        items: AhwalLst,
         displayExpr: 'text',
         valueExpr: 'value',
-        value:'1',
+        value: 1,
         onValueChanged: this.groupChanged.bind(this)
-          }
-      }, {
-          location: 'after',
-          widget: 'dxButton',
-          options: {
-              icon: 'refresh',
-              onClick: this.refreshDataGrid.bind(this)
-          }
-      });
+      }
+    }, {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+        icon: 'plus',
+        onClick: this.ShowAddPopup.bind(this)
+      }
+    }
+    , {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+        icon: 'refresh',
+        onClick: this.refreshDataGrid.bind(this)
+      }
+    });
 }
 
 groupChanged(e) {
@@ -108,27 +120,27 @@ groupChanged(e) {
  this.LoadData();
 }
 
-ContextMenuprepare(e)
+/* ContextMenuprepare(e)
 {
-   if (e.row.rowType === "data") {
+   if (e.row.rowType === 'data') {
     e.items = [{
-      text: "جديد",
+      text: 'جديد',
       value:e.row.rowIndex,
       onItemClick: this.ContextMenuClick.bind(this)
   },
   {
-      text: "تعديل",
+      text: 'تعديل',
       value:e.row.rowIndex,
       onItemClick:this.ContextMenuClick.bind(this)
   },
   {
-      text: "حذف",
+      text: 'حذف',
       value:e.row.rowIndex,
       onItemClick: this.ContextMenuClick.bind(this)
   },
   {
-    text: "تقرير",
-    items:[{ text: "Excel",
+    text: 'تقرير',
+    items:[{ text: 'Excel',
   value:e.row.rowIndex,
   onItemClick: this.ContextMenuClick.bind(this)
 }]
@@ -159,7 +171,7 @@ ContextMenuClick(e)
   {
     this.dataGrid.instance.exportToExcel(false);
   }
-}
+} */
 
 
 refreshDataGrid() {
@@ -169,8 +181,8 @@ refreshDataGrid() {
 
 cleardata()
 {
-  this.handheldobj = null;
-  this.handheldobj= new handhelds();
+  //this.handheldobj = null;
+  //this.handheldobj= new handhelds();
 }
 
 PopupInitialize(e)
@@ -181,7 +193,7 @@ PopupInitialize(e)
   if (e.parentType === 'dataRow' && e.dataField === 'barcode')
   {
   e.cancel = true;
-  e.component.columnOption("barcode", "formItem", "{visible: false}");
+  e.component.columnOption('barcode', 'formItem', '{visible: false}');
     }
 }
 cleardefaultvalues()
@@ -191,7 +203,6 @@ cleardefaultvalues()
 }
 chkdeftoggle(e)
 {
-  //console.log(e.value);
   if( e.value === true)
   {
     this.defectchk = 1;
@@ -214,6 +225,7 @@ RowAdd(e)
     serial:e.data.serial,
     transmode:'ADD'
   };
+
 /*
   this.handheldobj.ahwalid =  this.selahwalid;
   this.handheldobj.barcode =  e.data.barcode;
@@ -223,7 +235,6 @@ RowAdd(e)
 
   this.svc.Addhandhelds(rqhdr).subscribe(resp =>
     {
-      //console.log('resp' + resp);
       notify(resp, 'success', 600);
 
      this.LoadData();
@@ -288,6 +299,22 @@ RowDelete(e)
     });
 }
 
+ShowAddPopup() {
+  this.hdntrans = 'I';
 
+  this.cleardefaultvalues();
+  this.popupVisible = true;
+}
+
+ShowUpdatePopup(e, dt) {
+}
+
+DelRecord(e, rindex) {
+  this.dataGrid.instance.deleteRow(rindex);
+}
+
+ClosePopup() {
+  this.popupVisible = false;
+}
 
 }

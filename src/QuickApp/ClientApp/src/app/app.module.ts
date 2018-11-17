@@ -84,7 +84,7 @@ import { LayoutModule,BoxModule  } from '../../node_modules/angular-admin-lte';
 import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
 import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -112,7 +112,7 @@ import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
      DxTabPanelModule,DxCheckBoxModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
-   ,FanMenuModule
+   ,FanMenuModule,  ReactiveFormsModule
   ],
   declarations: [
     AppComponent,

@@ -307,14 +307,10 @@ export class PatrolcarsComponent implements OnInit {
 
     this.modaltitle = 'Add Patrol Car';
     this.cleardefaultvalues();
-    //this.modalService.open('custom-modal-1');
     this.popupVisible = true;
-
-
   }
 
   ShowUpdatePopup(e, dt) {
-    //this.cd.detectChanges();
     console.log(dt.rental);
     this.hdntrans = 'U';
     this.pltnumber = dt.platenumber;
@@ -326,11 +322,6 @@ export class PatrolcarsComponent implements OnInit {
     this.seltypelist = dt.typecode;
     this.modaltitle = 'Update Patrol Car';
     this.popupVisible = true;
-    //this.modalService.open('custom-modal-1');
-    //this.cd.detectChanges();
-
-    //this.cd.detectChanges();
-
 
   }
 
@@ -341,7 +332,6 @@ export class PatrolcarsComponent implements OnInit {
 
   ClosePopup() {
     this.popupVisible = false;
-    //this.modalService.close('custom-modal-1');
   }
 
 }

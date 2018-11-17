@@ -10,7 +10,7 @@ using MOI.Patrol.DataAccessLayer;
 namespace MOI.Patrol.Controllers
 {
     [Route("api/[controller]")]
-    public class MaintainController : Controller
+    public class MaintainencehandheldController : Controller
     {
         private Handler_Person _person = new Handler_Person();
         private Handler_User _user = new Handler_User();

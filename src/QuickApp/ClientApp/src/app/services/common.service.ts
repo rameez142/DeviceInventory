@@ -249,7 +249,7 @@ export class CommonService extends EndpointFactory {
           }
 
           public GetCheckinHandHeldList(ahwalid:number,userid:number){
-            return this.http.get(this.api_url + '/api/maintainence/checkinhandheldslist?ahwalid=' + ahwalid +
+            return this.http.get(this.api_url + '/api/maintainencehandheld/checkinhandheldslist?ahwalid=' + ahwalid +
              '&userid=' + userid , { responseType: 'json' });
             }
 
