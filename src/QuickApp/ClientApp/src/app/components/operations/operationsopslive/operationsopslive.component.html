@@ -1,0 +1,88 @@
+<div class="container">
+  <form method="post" enctype="multipart/form-data">
+    <table>
+      <tr>
+          <td style="width: 65%; vertical-align: top;">
+                <dx-data-grid
+                id="gridContainer"
+                [dataSource]="dataSource"
+                [showBorders]="true"
+                [rtlEnabled]="true"
+                [hoverStateEnabled]="false"
+                [selectedRowKeys]="[]"
+                (onToolbarPreparing)="onToolbarPreparing($event)"
+                (onRowPrepared)="onRowPrepared($event)"
+                wordWrapEnabled ="true"
+              >
+                <dxo-paging [pageSize]="80"></dxo-paging>
+                <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[80, 50, 10]"
+                [showInfo]="true">
+            </dxo-pager>
+            <!-- onContextMenuPreparing)= "onContextMenuprepare($event)"  -->
+
+            <dxo-export [enabled]="true" fileName="Operations"></dxo-export>
+
+
+            <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
+
+            <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+            <dxo-filter-row [visible]="true"   ></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+            <dx-load-panel
+                #loadPanel
+                shadingColor="rgba(0,0,0,0.4)"
+                [position]="{ of: '#gridContainer' }"
+                [(visible)]="loadingVisible"
+                [showIndicator]="true"
+                [showPane]="true"
+                [shading]="true"
+                [closeOnOutsideClick]="false"
+                (onShown)="onShown()">
+            </dx-load-panel>
+
+            <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
+            <dxi-column dataField="milnumber" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="rankdesc" caption="الرتبه"  [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="personname" caption="الاسم" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'">
+
+            </dxi-column>
+            <dxi-column dataField="patrolrolename" caption="المسؤولية" [allowFiltering]="false" ></dxi-column>
+            <dxi-column dataField="citygroupname" [groupIndex]="1" caption="المنطقة"></dxi-column>
+
+            <dxi-column dataField="callerid"  [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" caption="النداء" ></dxi-column>
+            <dxi-column dataField="platenumber"[filterOperations]="['contains', '=']" caption="الدورية" [selectedFilterOperation] ="'contains'"></dxi-column>
+            <dxi-column dataField="serial"[filterOperations]="['contains', '=']" caption="الجهاز" [selectedFilterOperation] ="'contains'"></dxi-column>
+
+            <dxi-column dataField="sunrisetimestamp" [filterOperations]="[ '=']" caption="شروق" dataType="date"[selectedFilterOperation] ="'='" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="sunsettimestamp" [filterOperations]="[ '=']" caption="غروب" dataType="date"[selectedFilterOperation] ="'='" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+            <dxi-column dataField="personstate" caption="الحالة"   [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="laststatechangetimestamp" [allowFiltering]="false" caption="وقت الحالة" dataType="date" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+
+            <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="100" [selectedFilterOperation] ="'contains'"></dxi-column>
+              </dx-data-grid>
+            </td>
+            <td style="width: 35%; vertical-align: top;">
+                <dx-data-grid
+                id="gridIncidents"
+                [dataSource]="incidentsrc"
+                [showBorders]="true"
+                [rtlEnabled]="true"
+                [hoverStateEnabled]="false"
+                wordWrapEnabled ="true"
+              >
+              <dxi-column dataField="incidentsourceid"  caption="جهة البلاغ"></dxi-column>
+              <dxi-column dataField="incidentstypename"  caption="البلاغ"></dxi-column>
+              <dxi-column dataField="place"  caption="المكان"></dxi-column>
+              <dxi-column dataField="timeStamp"  caption="وقت البلاغ"></dxi-column>
+              <dxi-column dataField="lastupdate"  caption="آخر تحديث"></dxi-column>
+              <dxi-column dataField="incidentid"  ></dxi-column>
+
+              </dx-data-grid>
+              </td>
+            </tr>
+        </table>
+          </form>
+</div>

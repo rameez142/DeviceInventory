@@ -300,4 +300,8 @@ export class CommonService extends EndpointFactory {
           return this.http.post(this.api_url + '/api/generic/checkinoutstates',null, { responseType: 'json' });
         }
            //#endregion "Generic"
+
+           public GetIncidentsList() {
+            return this.http.post(this.api_url + '/api/operations/operationslist',null, { responseType: 'json' });
+          }
 }

@@ -14,9 +14,15 @@ export const adminLteConf = {
         {label: 'كشف التوزيع', route: 'dispatcher/dispatcher',iconClasses:'fa fa-calendar'},
         {label: 'الأفراد', route: 'dispatcher/persons',iconClasses:'fa fa-user-secret'}
       ]},
+      {label: 'العمليات', iconClasses: 'fa fa-eye', children: [
+        {label: 'الكشف', route: 'operations/operationsopslive',iconClasses:'fa fa-calendar'},
+        {label: 'البلاغات', route: '',iconClasses:'fa fa-user-secret'},
+        {label: 'اعدادات - نوع البلاغ', route: '',iconClasses:'fa fa-user-secret'}
+
+      ]},
     {label: 'Map Viewer', route: 'map', iconClasses:'fa fa-globe'},
     {label: 'Settings', route: 'settings', iconClasses: 'fa fa-gear'}
 
-    
+
   ]
 };

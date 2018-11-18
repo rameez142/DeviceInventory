@@ -1,0 +1,569 @@
+import { ElementRef,Component, OnInit ,ViewChild} from '@angular/core';
+import { CommonService } from '../../../services/common.service';
+import { DxDataGridComponent, DxSelectBoxComponent } from 'devextreme-angular'
+import notify from 'devextreme/ui/notify';
+import { confirm } from 'devextreme/ui/dialog';
+import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
+import { ModalService } from '../../../services/modalservice';
+import { handler_ahwalMapping } from '../../../../environments/handler_ahwalMapping';
+import {ahwalmapping} from '../../../models/ahwalmapping';
+import {citygroups} from '../../../models/citygroups';
+import {persons} from '../../../models/persons';
+import { patrolcars } from '../../../models/patrolcars';
+import { handhelds } from '../../../models/handhelds';
+import { associates } from '../../../models/associates';
+import { sectors } from '../../../models/sectors';
+
+import { patrolroles } from '../../../models/patrolroles';
+import { user } from '../../../models/user';
+import { operationLog } from '../../../models/operationLog';
+
+import { handler_operations } from '../../../../environments/handler_operations';
+import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
+import { Timestamp } from '../../../../../node_modules/rxjs';
+
+@Component({
+  selector: 'app-operationsopslive',
+  templateUrl: './operationsopslive.component.html',
+  styleUrls: ['./operationsopslive.component.css']
+})
+export class OperationsopsliveComponent implements OnInit {
+
+  @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  @ViewChild('gridIncidents') incidentGrid: DxDataGridComponent;
+
+
+
+  loadingVisible:boolean = false;
+  selhdrAhwalId:number;
+  selhdrShiftId:number;
+
+ahwalMapping_CheckInOut_StatusLabel:string;
+ahwalsrc:any;
+responsibilitysrc:patrolroles[];
+shiftssrc:any;
+sectorssrc:sectors[];
+citysrc:citygroups[];
+associatesrc:associates[];
+state_src:any;
+sectorid:number;
+personsrc:persons[];
+shiftvisibile:boolean=false;
+sectorvisibile:boolean=false;
+cityvisibile:boolean=false;
+associatevisibile:boolean=false;
+userid:number = null;
+selectedRole:string = null;
+selectedShift:string = null;
+ahwalMapping_Add_status_label:string ='';
+selectPerson_Mno:string =null;
+ahwalMappingAddMethod:string ='';
+selahwalmappingid:number=null;
+selectedSector:string=null;
+selectedAssociateMapId:string=null;
+selectedCity:string=null;
+checkInOutPopupVisible:any=false;
+statesPopupVisible:any=false;
+personname:string='';
+associatePersonMno:number = null;
+menuOpen:boolean=false;
+userobj:user = new user();
+dataSource: any;
+styleExp:string='none';
+AhwalMapping_CheckInOut_ID:any;
+AhwalMapping_CheckInOut_Method:any;
+selCheckInOutPersonMno: number =null;
+selCheckInOutPatrolPltNo:number = null;
+selCheckInOutHHeldSerialNo:number = null;
+selStatePersonid:number;
+patrolCarsrc:patrolcars[];
+selRowIndex:number;
+  public options = {
+    spinable: true,
+    buttonWidth: 40,
+    defaultOpen:true
+};
+handHeldsrc:handhelds[];
+incidentsrc:any;
+constructor(private svc:CommonService, private modalService: ModalService,private alertService: AlertService) {
+  this.userid = parseInt(window.localStorage.getItem('UserID'),10);
+  this.userobj.userID = this.userid;
+
+  this.ahwalsrc= JSON.parse(window.localStorage.getItem('Ahwals'));
+ this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
+ this.shiftssrc= JSON.parse(window.localStorage.getItem('Shifts'));
+this.selhdrShiftId = this.shiftssrc[0].shiftid;
+this.showLoadPanel();
+}
+
+onShown() {
+setTimeout(() => {
+    this.loadingVisible = false;
+}, 3000);
+}
+
+
+showLoadPanel() {
+this.loadingVisible = true;
+}
+
+
+
+
+
+ngOnInit() {
+
+this.bindAhwalMappingGridSources();
+this.bindAhwalMappingGrid();
+this.bindIncidentGrid();
+}
+
+roleSelection(e)
+{
+console.log(e);
+this.selectedRole = (e.value);
+
+if(e.value !== null)
+{
+if(parseInt(e.value, 10) === handler_ahwalMapping.PatrolRole_CaptainAllSectors ||
+parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_CaptainShift)
+{
+//this.shiftvisibile = true;
+this.sectorvisibile = false;
+this.cityvisibile = false;
+// this.searchInput.nativeElement.visible = false;
+this.associatevisibile = false;
+}
+else if(parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_CaptainSector ||
+parseInt(e.value,10) === handler_ahwalMapping.PatrolRole_SubCaptainSector)
+{
+// this.shiftvisibile = true;
+this.sectorvisibile = true;
+this.cityvisibile = false;
+//this.searchInput.nativeElement.visible = false;
+this.associatevisibile = false;
+}
+else if( parseInt(e.value , 10) === handler_ahwalMapping.PatrolRole_Associate)
+{
+// this.shiftvisibile = false;
+this.sectorvisibile = false;
+this.cityvisibile = false;
+// this.searchInput.nativeElement.visible = false;
+this.associatevisibile = true;
+}
+else if (parseInt(e.value , 10) != -1 && parseInt(e.value ,10) != null)
+{
+// this.shiftvisibile = true;
+this.sectorvisibile = true;
+this.cityvisibile = true;
+// this.searchInput.nativeElement.visible = true;
+this.associatevisibile = false;
+}
+}
+
+}
+
+bindAhwalMappingGridSources()
+{
+
+
+     this.svc.GetResponsibiltyList().toPromise().then(resp =>
+    {
+        console.log(resp);
+           this.responsibilitysrc = <patrolroles[]>resp;
+           console.log(this.responsibilitysrc);
+    },
+    error => {
+    });
+
+     this.svc.GetSectorsList(this.userid).toPromise().then(resp =>
+    {
+        console.log(resp);
+               this.sectorssrc = <sectors[]>resp;
+               console.log(this.sectorssrc);
+     });
+
+
+
+      this.svc.GetAssociateList(this.userid).toPromise().then(resp =>
+     {
+     this.associatesrc = <associates[]>resp;
+      });
+
+       this.svc.GetPersonList(this.userid).toPromise().then(resp =>
+       {
+
+        this.personsrc = <persons[]> resp;
+        });
+
+        this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
+            {
+
+             this.patrolCarsrc = <patrolcars[]> resp;
+             });
+
+             this.svc.GetCheckinHandHeldList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
+                {
+
+                 this.handHeldsrc = <handhelds[]> resp;
+                 });
+
+}
+
+
+
+sectorSelection(e)
+{
+
+if(e.value !== null)
+{
+this.selectedSector = e.value;
+this.svc.GetCityList(this.userid,parseInt(this.selectedSector , 10)).subscribe(resp =>
+    {
+               this.citysrc = <citygroups[]>resp;
+     });
+}
+else
+{
+    this.citysrc = [];
+}
+}
+
+
+
+bindAhwalMappingGrid()
+{
+let rqhr:object ={
+    AhwalId:this.selhdrAhwalId,
+    ShiftId:this.selhdrShiftId
+};
+
+this.svc.GetDispatchList(rqhr).subscribe(resp =>
+{
+
+   this.dataSource = resp;
+ // console.log('resp' + resp);
+  this.dataGrid.dataSource = this.dataSource;
+  this.dataGrid.instance.refresh();
+
+},
+error => {
+
+});
+}
+
+onToolbarPreparing(e) {
+
+e.toolbarOptions.items.unshift({
+  location: 'before',
+  template: 'الأحوال'
+}, {
+      location: 'before',
+      widget: 'dxSelectBox',
+      options: {
+          width: 200,
+          dataSource: this.ahwalsrc,
+          displayExpr: 'name',
+          valueExpr: 'ahwalid',
+          value:this.ahwalsrc[0].ahwalid,
+          onValueChanged: this.ahwalChanged.bind(this)
+      }
+  },{
+    location: 'before',
+    template: 'الشفت'
+},{
+    location: 'before',
+    widget: 'dxSelectBox',
+    options: {
+        width: 200,
+        dataSource: this.shiftssrc,
+        displayExpr: 'name',
+        valueExpr: 'shiftid',
+        value: this.shiftssrc[0].shiftid,
+        onValueChanged: this.shiftChanged.bind(this)
+
+    }
+}, {
+    location: 'before',
+    widget: 'dxButton',
+    options: {
+        icon: 'glyphicon glyphicon-user',
+        onClick: this.showInfo.bind(this)
+    }
+}
+, {
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+          icon: 'refresh',
+          onClick: this.refreshDataGrid.bind(this)
+      }
+  });
+}
+
+ahwalChanged(e) {
+this.selhdrAhwalId = e.value;
+this.bindAhwalMappingGrid();
+
+}
+
+shiftChanged(e) {
+this.selhdrShiftId = e.value;
+this.bindAhwalMappingGrid();
+
+}
+
+
+onEditorPreparing (e) {
+e.editorOptions.showClearButton = true;
+// console.log('editor' + JSON.stringify(e.editorOptions));
+if (e.dataField == "sunrisetimestamp" || e.dataField == "sunsettimestamp" ) {
+  e.editorOptions.displayFormat="dd/MM/yyyy";
+
+}
+}
+
+onRowPrepared(e)
+{
+
+if(e.rowType ==='data')
+{
+
+  console.log(e);
+//set default to white first
+ e.rowElement.bgColor = "White";
+// e.rowElement.font = "Italic";
+ //e.rowElement.css('background', 'green');
+// e.cells[0].cellElement.css("color", "red");
+// e.rowElement.color="red";
+ //e.rowElement.Font.Bold = false;
+
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
+         e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
+      e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back ||
+      e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
+    {
+        e.rowElement.bgColor='LightGreen';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Land )
+    {
+        e.rowElement.bgColor='LightGray';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Away )
+    {
+        e.rowElement.bgColor='Yellow';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sick ||
+       e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Absent ||
+        e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Off )
+    {
+        e.rowElement.bgColor='PaleVioletRed';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_WalkingPatrol  )
+    {
+        e.rowElement.bgColor='CadetBlue';
+
+    }
+    if(e.key.patrolroleid === handler_ahwalMapping.PatrolRole_Associate  )
+    {
+        e.rowElement.bgColor='SandyBrown';
+
+    }
+
+
+    if(e.key.incidentid !== null &&  e.key.incidentid !== '' )
+    {
+        e.rowElement.bgColor='Red';
+
+    }
+
+    if (e.key.laststatechangetimestamp != null )
+    {
+        var lastTimeStamp = <Date>(e.key.laststatechangetimestamp);
+        if (e.key.personState === handler_ahwalMapping.PatrolPersonState_Land) //max 1 hour
+        {
+
+
+           /*  var hours = (DateTime.Now - lastTimeStamp).TotalHours;
+            if (hours >= 1)
+            {
+                e.Row.ForeColor = System.Drawing.Color.PaleVioletRed;
+                e.Row.Font.Bold = true;
+            } */
+        }
+        else if (e.key.personState  == handler_ahwalMapping.PatrolPersonState_Away) //max 10 minues
+        {
+            /* var minutes = (DateTime.Now - lastTimeStamp).TotalMinutes;
+            if (minutes >= 11)
+            {
+                e.Row.ForeColor = System.Drawing.Color.PaleVioletRed;
+                e.Row.Font.Bold = true;
+            } */
+        }
+
+
+    }
+
+}
+}
+
+
+
+onStatesRowPrepared(e)
+{
+if(e.rowType ==='data')
+{
+  console.log(e);
+//set default to white first
+ e.rowElement.bgColor = "White";
+// e.rowElement.font = "Italic";
+ //e.rowElement.css('background', 'green');
+// e.cells[0].cellElement.css("color", "red");
+// e.rowElement.color="red";
+ //e.rowElement.Font.Bold = false;
+
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
+         e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
+      e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back ||
+      e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_BackFromWalking)
+    {
+        e.rowElement.bgColor='LightGreen';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Land )
+    {
+        e.rowElement.bgColor='LightGray';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Away )
+    {
+        e.rowElement.bgColor='Yellow';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sick || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Absent || e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Off )
+    {
+        e.rowElement.bgColor='PaleVioletRed';
+
+    }
+    if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_WalkingPatrol  )
+    {
+        e.rowElement.bgColor='CadetBlue';
+
+    }
+    if(e.key.patrolroleid === handler_ahwalMapping.PatrolRole_Associate  )
+    {
+        e.rowElement.bgColor='SandyBrown';
+
+    }
+
+
+
+
+}
+}
+show_States_PopUp(){
+console.log(this.selahwalmappingid);
+this.statesPopupVisible = true;
+this.svc.GetAhwalPersonStates(this.selahwalmappingid).subscribe(resp =>{ this.state_src = resp;});
+
+}
+updatePersonState(selmenu:string)
+{
+if(this.selahwalmappingid !== null)
+{
+    let rqhdr:object = {
+        Selmenu :selmenu,
+        AhwalMappingId:this.selahwalmappingid,
+        userid:this.userid
+      };
+      this.svc.updatePersonState(rqhdr).subscribe(resp =>
+        {
+
+          notify( resp, 'success', 600);
+          this.bindAhwalMappingGrid();
+
+      });
+
+
+}
+}
+deleteMapping() {
+console.log(this.selahwalmappingid);
+if(this.selahwalmappingid !== null)
+{
+let rqhdr:object = {
+
+    AhwalMappingId:this.selahwalmappingid,
+    userid:this.userid
+  };
+
+  this.svc.DeleteAhwalMapping(rqhdr).toPromise().then(resp =>
+    {
+
+      notify( resp, 'success', 600);
+      this.bindAhwalMappingGrid();
+  });
+
+
+}
+}
+
+refreshDataGrid() {
+// this.dataGrid.instance.refresh();
+this.bindAhwalMappingGrid();
+}
+
+popupVisible:any = false;
+showInfo() {
+//this.clearpersonpopupvalues();
+this.ahwalMappingAddMethod ='ADD';
+this.popupVisible = true;
+}
+
+mappopupVisible:any = false;
+
+showmapInfo() {
+this.modalService.open('custom-modal-1');
+}
+
+citySelection(e)
+{
+this.selectedCity = e.value;
+}
+
+
+
+
+
+Rwclick(e)
+{
+console.log(e);
+ var component = e.component,
+prevClickTime = component.lastClickTime;
+component.lastClickTime = new Date();
+if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
+    this.selahwalmappingid = e.key.ahwalmappingid;
+    this.selCheckInOutPersonMno = e.key.milnumber;
+    this.options.defaultOpen = true;
+    this.styleExp = 'inline';
+}
+
+}
+
+bindIncidentGrid()
+{
+this.svc.GetIncidentsList().subscribe(resp =>
+{
+
+   this.incidentsrc = resp;
+  this.incidentGrid.dataSource = this.incidentsrc;
+  this.incidentGrid.instance.refresh();
+
+});
+}
+
+}

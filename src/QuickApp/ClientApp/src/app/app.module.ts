@@ -3,18 +3,18 @@
 // Email: support@ebenmonney.com
 // ====================================================
 
-import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { FormsModule } from "@angular/forms";
+import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ToastaModule } from 'ngx-toasta';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { TooltipModule } from "ngx-bootstrap/tooltip";
-import { PopoverModule } from "ngx-bootstrap/popover";
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { AppRoutingModule } from './app-routing.module';
@@ -41,25 +41,25 @@ import { BootstrapDatepickerDirective } from './directives/bootstrap-datepicker.
 import { ModalComponentDirective } from './directives/modal.component.directive';
 import { GroupByPipe } from './pipes/group-by.pipe';
 
-import { AppComponent } from "./components/app.component";
-import { LoginComponent } from "./components/login/login.component";
-import { HomeComponent } from "./components/home/home.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { NotFoundComponent } from "./components/not-found/not-found.component";
-import { NotificationsViewerComponent } from "./components/controls/notifications-viewer.component";
-import { SearchBoxComponent } from "./components/controls/search-box.component";
-import { UserInfoComponent } from "./components/controls/user-info.component";
-import { UserPreferencesComponent } from "./components/controls/user-preferences.component";
-import { UsersManagementComponent } from "./components/controls/users-management.component";
-import { RolesManagementComponent } from "./components/controls/roles-management.component";
-import { ViewDefinitionComponent } from "./components/controls/view-definition.component";
-import { ProgramSettingComponent } from "./components/controls/program-setting.component";
-import { RoleEditorComponent } from "./components/controls/role-editor.component";
-import { DxTreeViewModule } from "../../node_modules/devextreme-angular";
+import { AppComponent } from './components/app.component';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { NotificationsViewerComponent } from './components/controls/notifications-viewer.component';
+import { SearchBoxComponent } from './components/controls/search-box.component';
+import { UserInfoComponent } from './components/controls/user-info.component';
+import { UserPreferencesComponent } from './components/controls/user-preferences.component';
+import { UsersManagementComponent } from './components/controls/users-management.component';
+import { RolesManagementComponent } from './components/controls/roles-management.component';
+import { ViewDefinitionComponent } from './components/controls/view-definition.component';
+import { ProgramSettingComponent } from './components/controls/program-setting.component';
+import { RoleEditorComponent } from './components/controls/role-editor.component';
+import { DxTreeViewModule } from '../../node_modules/devextreme-angular';
 
 import {DxLookupModule, DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
   DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,
-  DxCheckBoxModule,DxDropDownBoxModule } from "devextreme-angular";
+  DxCheckBoxModule,DxDropDownBoxModule } from 'devextreme-angular';
 
 
 import { DispatchComponent } from './components/dispatcher/dispatch/dispatch.component';
@@ -85,6 +85,7 @@ import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
 import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 import { ReactiveFormsModule } from '@angular/forms';
+import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
 
 @NgModule({
   imports: [
@@ -147,7 +148,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MapLeftNavDemoComponent,
     SidenavComponent,
     TopnavComponent,
-    LayoutComponent
+    LayoutComponent,
+    OperationsopsliveComponent
   ],
   providers: [
     { provide: 'BASE_URL', useFactory: getBaseUrl },
