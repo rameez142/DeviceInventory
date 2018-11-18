@@ -35,6 +35,7 @@ export class OperationsopsliveComponent implements OnInit {
 
 
   loadingVisible:boolean = false;
+  incidentloadingVisible:boolean = false;
   selhdrAhwalId:number;
   selhdrShiftId:number;
 
@@ -94,17 +95,28 @@ constructor(private svc:CommonService, private modalService: ModalService,privat
  this.shiftssrc= JSON.parse(window.localStorage.getItem('Shifts'));
 this.selhdrShiftId = this.shiftssrc[0].shiftid;
 this.showLoadPanel();
+
+
 }
 
 onShown() {
 setTimeout(() => {
     this.loadingVisible = false;
+    this.incidentloadingVisible = false;
+
 }, 3000);
 }
 
+onIncidentShown()
+{
+  setTimeout(() => {
+    this.incidentloadingVisible = false;
+}, 3000);
+}
 
 showLoadPanel() {
 this.loadingVisible = true;
+this.incidentloadingVisible = true;
 }
 
 

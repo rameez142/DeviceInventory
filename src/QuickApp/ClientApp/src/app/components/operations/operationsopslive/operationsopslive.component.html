@@ -23,10 +23,6 @@
             <!-- onContextMenuPreparing)= "onContextMenuprepare($event)"  -->
 
             <dxo-export [enabled]="true" fileName="Operations"></dxo-export>
-
-
-            <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
-
             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
             <dxo-filter-row [visible]="true"   ></dxo-filter-row>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -65,7 +61,7 @@
               </dx-data-grid>
             </td>
             <td style="width: 35%; vertical-align: top;">
-                <dx-data-grid
+                <dx-data-grid #gridIncidents
                 id="gridIncidents"
                 [dataSource]="incidentsrc"
                 [showBorders]="true"
@@ -73,12 +69,37 @@
                 [hoverStateEnabled]="false"
                 wordWrapEnabled ="true"
               >
+              <dx-load-panel
+              #incidentloadPanel
+              shadingColor="rgba(0,0,0,0.4)"
+              [position]="{ of: '#gridIncidents' }"
+              [(visible)]="incidentloadingVisible"
+              [showIndicator]="true"
+              [showPane]="true"
+              [shading]="true"
+              [closeOnOutsideClick]="false"
+              (onShown)="onIncidentShown()">
+          </dx-load-panel>
+
               <dxi-column dataField="incidentsourceid"  caption="جهة البلاغ"></dxi-column>
               <dxi-column dataField="incidentstypename"  caption="البلاغ"></dxi-column>
               <dxi-column dataField="place"  caption="المكان"></dxi-column>
               <dxi-column dataField="timeStamp"  caption="وقت البلاغ"></dxi-column>
               <dxi-column dataField="lastupdate"  caption="آخر تحديث"></dxi-column>
               <dxi-column dataField="incidentid"  ></dxi-column>
+              <dxo-paging [pageSize]="80"></dxo-paging>
+              <dxo-pager
+              [showPageSizeSelector]="true"
+              [allowedPageSizes]="[80, 50, 10]"
+              [showInfo]="true">
+          </dxo-pager>
+          <dxo-export [enabled]="true" fileName="Operations"></dxo-export>
+
+
+
+          <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+          <dxo-filter-row [visible]="true"   ></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
 
               </dx-data-grid>
               </td>
