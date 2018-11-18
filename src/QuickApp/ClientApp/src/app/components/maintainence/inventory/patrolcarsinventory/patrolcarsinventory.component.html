@@ -1,9 +1,6 @@
 <div class="container">
   <form  method="post" enctype="multipart/form-data">
 
-<header class="pageHeader">
-  <h3><i class="fa fa-handshake-o fa-lg page-caption" aria-hidden="true"></i> </h3>
-</header>
 
                 <dx-data-grid
                 id="gridContainer"
@@ -43,14 +40,13 @@
                 [closeOnOutsideClick]="false"
                 (onShown)="onShown()">
             </dx-load-panel>
-            <dxi-column dataField="timestamp" caption="الوقت والتاريخ"  dataType="date" width= "180"  [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }" ></dxi-column>
-            <dxi-column dataField="statename" caption="الحالة"  width= "180"></dxi-column>
-            <dxi-column dataField="ahwalname" caption="الأحوال" width= "150"></dxi-column>
-            <dxi-column dataField="platenumber" caption="رقم الدورية"width= "150"></dxi-column>
-            <dxi-column dataField="model" caption="موديل" width= "100"></dxi-column>
-            <dxi-column dataField="milnumber" class="tdcenter" caption="الرقم العسكري" width= "100"></dxi-column>
-            <dxi-column dataField="personrank" caption="الرتبه" width= "150"></dxi-column>
-            <dxi-column dataField="personname" caption="الاسم" width= "300"></dxi-column>
+            <dxi-column dataField="timestamp" caption="الوقت والتاريخ"  dataType="date" width= "200" [allowFiltering]="false" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }" ></dxi-column>
+            <dxi-column dataField="statename" caption="الحالة" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  width= "200"></dxi-column>
+           <dxi-column dataField="platenumber" caption="رقم الدورية"width= "150" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="model" caption="موديل" width= "100" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="milnumber" class="tdcenter" caption="الرقم العسكري" width= "100" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="personrank" caption="الرتبه" width= "200" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="personname" caption="الاسم" width= "300" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
               </dx-data-grid>
           </form>
 </div>

@@ -5,6 +5,7 @@ import notify from 'devextreme/ui/notify';
 import { patrolcars } from '../../../models/patrolcars';
 import SelectBox from 'devextreme/ui/select_box';
 import { ModalService } from '../../../services/modalservice';
+import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-patrolcars',
@@ -19,7 +20,6 @@ export class PatrolcarsComponent implements OnInit {
   data: any;
 
   loadingVisible = false;
-  selahwalid: number = -1;
   rentalchk: number = 0;
   defectchk: number = 0;
   typesrc: any;
@@ -40,11 +40,19 @@ export class PatrolcarsComponent implements OnInit {
   modaltitle: string = '';
   hdntrans: string = '';
   patrolid: number = 0;
+  userid:number;
+  ahwalsrc:any;
+  selhdrAhwalId:number;
+
   public patrolcarobj: patrolcars = new patrolcars();
 
 
-  constructor(private svc: CommonService, private modalService: ModalService, private cd: ChangeDetectorRef) {
+  constructor(private svc: CommonService, private modalService: ModalService, private cd: ChangeDetectorRef,private alertService: AlertService) {
     console.log('constructor');
+    this.userid = parseInt(window.localStorage.getItem('UserID'),10);
+    this.ahwalsrc= JSON.parse(window.localStorage.getItem('Ahwals'));
+    this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
+
     this.populatetypelist();
     this.showLoadPanel();
 
@@ -61,13 +69,7 @@ export class PatrolcarsComponent implements OnInit {
       });
   }
 
-  ContentReady2(e) {
-    if (!e.component.__isInitialized) {
-      e.component.__isInitialized = true;
-
-    }
-  }
-
+  
 
   onValueChangeOfSelectbox(e) {
 
@@ -85,6 +87,12 @@ export class PatrolcarsComponent implements OnInit {
     }
 
   }
+
+  ahwalChanged(e) {
+    this.selhdrAhwalId = e.value;
+    this.LoadData();
+
+}
 
   onShown() {
     setTimeout(() => {
@@ -106,16 +114,10 @@ export class PatrolcarsComponent implements OnInit {
 
   LoadData() {
     let userid: string = window.localStorage.getItem('UserID');
-    this.svc.GetPatrolCarList(this.selahwalid, parseInt(userid)).subscribe(resp => {
+    this.svc.GetPatrolCarList(this.selhdrAhwalId, parseInt(userid)).subscribe(resp => {
 
       this.dataSource = JSON.parse(resp);
-      //console.log('resp' + this.dataSource);
-      //this.dataGrid.dataSource = this.dataSource;
-
-
-      //this.dataGrid.instance.refresh();
-      //this.populatetypelist();
-      //this.dataGrid.instance.refresh();
+     
     },
       error => {
 
@@ -124,8 +126,7 @@ export class PatrolcarsComponent implements OnInit {
   }
 
   onToolbarPreparing(e) {
-    let AhwalLst: any = [];
-    AhwalLst = JSON.parse(window.localStorage.getItem('Orgs'));
+   
     e.toolbarOptions.items.unshift({
       location: 'before',
       template: 'الأحوال'
@@ -134,11 +135,11 @@ export class PatrolcarsComponent implements OnInit {
         widget: 'dxSelectBox',
         options: {
           width: 200,
-          items: AhwalLst,
-          displayExpr: 'text',
-          valueExpr: 'value',
-          value: 1,
-          onValueChanged: this.groupChanged.bind(this)
+          dataSource: this.ahwalsrc,
+          displayExpr: 'name',
+          valueExpr: 'ahwalid',
+          value:this.ahwalsrc[0].ahwalid,
+          onValueChanged: this.ahwalChanged.bind(this)
         }
       }, {
         location: 'after',
@@ -159,7 +160,7 @@ export class PatrolcarsComponent implements OnInit {
   }
 
   groupChanged(e) {
-    this.selahwalid = e.value;
+    this.selhdrAhwalId = e.value;
     this.LoadData();
   }
 
@@ -206,7 +207,7 @@ export class PatrolcarsComponent implements OnInit {
   RowAdd(e) {
 
     this.cleardata();
-    this.patrolcarobj.ahwalid = this.selahwalid;
+    this.patrolcarobj.ahwalid = this.selhdrAhwalId;
     this.patrolcarobj.barcode = 'PAT' + this.pltnumber;
     this.patrolcarobj.defective = this.defectchk;
     this.patrolcarobj.platenumber = this.pltnumber;
@@ -261,7 +262,7 @@ export class PatrolcarsComponent implements OnInit {
     console.log('update' + this.defectchk);
 
     this.cleardata();
-    this.patrolcarobj.ahwalid = this.selahwalid;
+    this.patrolcarobj.ahwalid = this.selhdrAhwalId;
     this.patrolcarobj.barcode = 'PAT' + this.pltnumber;
     this.patrolcarobj.defective = this.defectchk;
     this.patrolcarobj.platenumber = this.pltnumber;
@@ -284,12 +285,12 @@ export class PatrolcarsComponent implements OnInit {
 
   }
 
-  RowDelete(e) {
-    this.cleardata();
-    this.patrolcarobj.patrolid = e.data.patrolid;
+  RowDelete() {
+    //this.cleardata();
+    this.patrolcarobj.patrolid = this.patrolid;
     this.svc.DeletePatrolCar(this.patrolcarobj).subscribe(resp => {
 
-      console.log('resp' + resp);
+      notify(' Record Deleted  SuccessFully', 'success', 1000);
       this.LoadData();
     },
       error => {
@@ -326,8 +327,13 @@ export class PatrolcarsComponent implements OnInit {
   }
 
 
-  DelRecord(e, rindex) {
-    this.dataGrid.instance.deleteRow(rindex);
+  DelRecord(e, data) {
+   // this.dataGrid.instance.deleteRow(rindex);
+   this.cleardata();
+  this.patrolid = data.patrolid;
+  this.pltnumber = data.pltnumber;
+  this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.RowDelete());
+
   }
 
   ClosePopup() {

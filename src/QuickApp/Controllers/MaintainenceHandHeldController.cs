@@ -35,7 +35,7 @@ namespace MOI.Patrol.Controllers
             var serial = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["serial"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
             var userid = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
 
-            var transmode = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["transmode"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+            var transmode = rqhdr["transmode"].ToString();
             var handheldid = Convert.ToInt64(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["handheldid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
 
 
@@ -94,6 +94,8 @@ namespace MOI.Patrol.Controllers
         public ActionResult PostDeletehandheld([FromBody] JObject rqhdr)
         {
             var selectedHandheldid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["handheldid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var serial = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(rqhdr["serial"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
             Users user = new Users();
             user.Userid = Convert.ToInt32(rqhdr["userid"]);
 
@@ -104,10 +106,24 @@ namespace MOI.Patrol.Controllers
                 ol_failed.Userid = user.Userid;
                 ol_failed.Operationid = Handler_Operations.Opeartion_DeleteHandHeld;
                 ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
-                ol_failed.Text = "لم يتم العثور على لاسلكي بالرقم: " + selectedHandheldid.ToString();
+                ol_failed.Text = "لم يتم العثور على لاسلكي بالرقم: " + serial.ToString();
                 _oper.Add_New_Operation_Log(ol_failed);
                 return Ok(ol_failed.Text);
             }
+
+            var ahwal_mapping_exists = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Handheldid == selectedHandheldid && e.Hasdevices == 1);
+            if (ahwal_mapping_exists != null)
+            {
+                Operationlogs ol_failed = new Operationlogs();
+                ol_failed.Userid = user.Userid;
+                ol_failed.Operationid = Handler_Operations.Opeartion_DeleteHandHeld;
+                ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                ol_failed.Text = "جهاز لاسلكي قيد الاستخدام: " + serial;
+                _oper.Add_New_Operation_Log(ol_failed);
+                return Ok(ol_failed.Text);
+            }
+            
+          
             _context.Handhelds.Remove(result);
 
             _context.SaveChanges();
@@ -127,7 +143,7 @@ namespace MOI.Patrol.Controllers
 
 
         [HttpGet("checkinhandheldslist")]
-        public List<Handhelds> GetCheckinHandHeldList([FromQuery] int ahwalid, [FromQuery] int userid)
+        public ActionResult GetCheckinHandHeldList([FromQuery] int ahwalid, [FromQuery] int userid)
         {
 
             string subqry = "";
@@ -137,11 +153,49 @@ namespace MOI.Patrol.Controllers
                 subqry = subqry + " and d.ahwalid = " + ahwalid;
             }
             String Qry = "select d.handheldid,d.serial,d.Defective,d.BarCode,d.AhwalID,(select a.name from ahwal a where a.ahwalid = d.ahwalid ) ahwalname from handhelds d where d.serial is not null AND AhwalID IN(SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + ") ";
-            List<Handhelds> ptc = DAL.PostGre_GetData<Handhelds>(Qry);
-            return ptc;
+             
+            return Ok(DAL.PostGre_GetDataTable(Qry));
 
         }
 
+        #region Hand Held Invenory
+        [HttpPost("handheldinventory")]
+        public ActionResult PostHandHeldInventoryList([FromBody] JObject rqhdr)
+        {
+            string subqry = "";
+            var ahwalid = Convert.ToInt32(rqhdr["ahwalid"]);
+            var stateid = Convert.ToInt32(rqhdr["stateid"]);
 
+           subqry = " where HandHelds.AhwalID = " + ahwalid;
+            
+
+            //if (stateid != -1)
+            //{
+            //    subqry = " and HandHeldsCheckInOut.CheckInOutStateID = " + stateid;
+            //}
+
+
+            string Qry = "SELECT        HandHeldsCheckInOut.HandHeldCheckInOutID,HandHeldsCheckInOut.TimeStamp, CheckInOutStates.CheckInOutStateID,CheckInOutStates.Name AS StateName, HandHelds.AhwalID, HandHelds.Serial, Ranks.Name as PersonRank, Persons.MilNumber, Persons.Name AS PersonName ";
+
+            Qry = Qry + " ,Ahwal.Name as ahwalname FROM Ahwal INNER JOIN";
+
+            Qry = Qry + " HandHelds  ON Ahwal.AhwalID = HandHelds.AhwalID INNER JOIN";
+
+            Qry = Qry + " HandHeldsCheckInOut ON HandHelds.HandHeldID = HandHeldsCheckInOut.HandHeldID INNER JOIN";
+
+            Qry = Qry + " CheckInOutStates ON HandHeldsCheckInOut.CheckInOutStateID = CheckInOutStates.CheckInOutStateID INNER JOIN";
+            Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND HandHeldsCheckInOut.PersonID = Persons.PersonID INNER JOIN";
+            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID  " + subqry ;
+
+            Qry = Qry + "  ORDER BY HandHeldsCheckInOut.timestamp";
+
+          
+
+
+
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        #endregion
     }
 }

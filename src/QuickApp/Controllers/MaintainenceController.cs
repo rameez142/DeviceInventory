@@ -77,21 +77,18 @@ namespace Controllers
 
 
 
-        [HttpGet("patrolcarsinventory")]
-        public DataTable PostPatrolCarsInventoryList(int ahwalid, int userid)
+        [HttpPost("patrolcarsinventory")]
+        public ActionResult PostPatrolCarsInventoryList([FromBody] JObject rqhdr)
         {
 
             string subqry = "";
-
+            var ahwalid = Convert.ToInt32(rqhdr["ahwalid"]);
             if (ahwalid != -1)
             {
-                subqry = subqry + " and Ahwal.AhwalID = " + ahwalid;
+                subqry = subqry + " where patrolcars.AhwalID = " + ahwalid;
             }
 
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            DataTable dt = new DataTable();
+           
             string Qry = "SELECT        patrolcheckinoutid, CheckInOutStates.Name AS StateName, Ahwal.AhwalID, Ahwal.Name AS AhwalName, patrolcars.platenumber, patrolcars.Model,'' as Type, Persons.MilNumber, ";
             Qry = Qry + " Ranks.Name AS PersonRank, Persons.Name AS PersonName, patrolCheckInOut.timestamp, CheckInOutStates.CheckInOutStateID";
 
@@ -105,31 +102,13 @@ namespace Controllers
 
             Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND patrolCheckInOut.PersonID = Persons.PersonID INNER JOIN";
 
-            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID";
-            Qry = Qry + " where Ahwal.AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ";
+            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID " ;
+           // Qry = Qry + " where Ahwal.AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ";
             Qry = Qry + subqry;
             Qry = Qry + "  ORDER BY patrolCheckInOut.timestamp";
 
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
-            dt.Columns.Add("patrolcheckinoutid");
-            dt.Columns.Add("statename");
-            dt.Columns.Add("ahwalid");
-            dt.Columns.Add("ahwalname");
-            dt.Columns.Add("platenumber");
-            dt.Columns.Add("model");
-
-            dt.Columns.Add("type");
-            dt.Columns.Add("milnumber");
-            dt.Columns.Add("personrank");
-            dt.Columns.Add("personname");
-            dt.Columns.Add("timestamp");
-            dt.Columns.Add("checkinoutstateid");
-            da.Fill(dt);
-            cont.Close();
-            cont.Dispose();
-
-
-            return dt;
+          
+            return Ok(DAL.PostGre_GetDataTable(Qry));
         }
 
 
@@ -391,56 +370,7 @@ namespace Controllers
 
         #endregion
 
-        #region Hand Held Invenory
-        [HttpGet("handheldinventory")]
-        public DataTable PostHandHeldInventoryList(int ahwalid, int userid)
-        {
-            string subqry = "";
-            if (ahwalid != -1)
-            {
-                subqry = " and d.AhwalID = " + ahwalid;
-            }
-
-            NpgsqlConnection cont = new NpgsqlConnection();
-            cont.ConnectionString = constr;
-            cont.Open();
-            DataTable dt = new DataTable();
-            string Qry = "SELECT        HandHeldsCheckInOut.HandHeldCheckInOutID,HandHeldsCheckInOut.TimeStamp, CheckInOutStates.CheckInOutStateID,CheckInOutStates.Name AS StateName, HandHelds.AhwalID, HandHelds.Serial, Ranks.Name as PersonRank, Persons.MilNumber, Persons.Name AS PersonName ";
-
-            Qry = Qry + " ,Ahwal.Name as ahwalname FROM Ahwal INNER JOIN";
-
-            Qry = Qry + " HandHelds  ON Ahwal.AhwalID = HandHelds.AhwalID INNER JOIN";
-
-            Qry = Qry + " HandHeldsCheckInOut ON HandHelds.HandHeldID = HandHeldsCheckInOut.HandHeldID INNER JOIN";
-
-            Qry = Qry + " CheckInOutStates ON HandHeldsCheckInOut.CheckInOutStateID = CheckInOutStates.CheckInOutStateID INNER JOIN";
-            Qry = Qry + " Persons ON Ahwal.AhwalID = Persons.AhwalID AND HandHeldsCheckInOut.PersonID = Persons.PersonID INNER JOIN";
-            Qry = Qry + " Ranks ON Persons.RankID = Ranks.RankID where  Ahwal.AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE UserID = " + userid + " ) ";
-
-            Qry = Qry + "  ORDER BY HandHeldsCheckInOut.timestamp";
-
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(Qry, cont);
-            dt.Columns.Add("patrolcheckinoutid");
-            dt.Columns.Add("statename");
-            dt.Columns.Add("ahwalid");
-            dt.Columns.Add("ahwalname");
-            dt.Columns.Add("platenumber");
-            dt.Columns.Add("model");
-            dt.Columns.Add("milnumber");
-            dt.Columns.Add("personrank");
-            dt.Columns.Add("personname");
-            dt.Columns.Add("timestamp");
-            dt.Columns.Add("checkinoutstateid");
-            da.Fill(dt);
-            cont.Close();
-            cont.Dispose();
-
-
-
-            return dt;
-        }
-
-        #endregion
+    
 
         #region Accessory Inventory
         [HttpPost("accessoryinventory")]

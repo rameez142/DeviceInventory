@@ -54,5 +54,20 @@ namespace MOI.Patrol.Controllers
             }
         }
 
+        [HttpPost("checkinoutstates")]
+        public IActionResult GetCheckInOutStates()
+        {
+            // String Qry = "SELECT ShiftID, Name, StartingHour, NumberOfHours FROM Shifts";
+            var results = _context.Checkinoutstates.ToList();
+            if (results != null)
+            {
+                return Ok(results);
+            }
+            else
+            {
+                return Ok(null);
+            }
+        }
+
     }
 }

@@ -9,10 +9,7 @@
                   [rtlEnabled]="true"
                   [hoverStateEnabled]="true"
                   [selectedRowKeys]="[]"
-                  (onRowRemoved)="RowDelete($event)"
                   (onToolbarPreparing)="onToolbarPreparing($event)"
-                  (onEditorPreparing)="PopupInitialize($event)"
-                  (onContentReady)="ContentReady2($event)"
                keyexpr="patrolid"
                 >
                   <dxo-paging   [pageSize]="50"></dxo-paging>
@@ -48,8 +45,8 @@
                   [closeOnOutsideClick]="false"
                   (onShown)="onShown()">
               </dx-load-panel>
-              <dxi-column dataField="ahwalname" caption="الأحوال"  [allowEditing] ="true" ></dxi-column>
-              <dxi-column dataField="platenumber" caption="رقم الدورية"  [allowEditing] ="true" ></dxi-column>
+              <!-- <dxi-column dataField="ahwalname" caption="الأحوال"  [allowEditing] ="true" ></dxi-column> -->
+              <dxi-column dataField="platenumber" caption="رقم الدورية" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  [allowEditing] ="true" ></dxi-column>
               <dxi-column dataField="type" [allowEditing] ="true" caption="النوع"  [allowFiltering]="false" editCellTemplate="typeCellTemplate"></dxi-column>
               <div *dxTemplate="let data of 'typeCellTemplate'">
                 <dx-select-box
@@ -60,10 +57,10 @@
                 (onValueChanged)="seltypechange($event)"></dx-select-box>
                 </div>
 
-               <dxi-column dataField="model"  caption="موديل"></dxi-column>
+               <dxi-column dataField="model" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  caption="موديل"></dxi-column>
 
               <dxi-column dataField="barcode"  caption="رقم الباركود"  [allowFiltering]="false"></dxi-column>
-              <dxi-column dataField="vinnumber" caption="رقم الشاصي"></dxi-column>
+              <dxi-column dataField="vinnumber" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  caption="رقم الشاصي"></dxi-column>
               <dxi-column dataField="defective" caption="غير صالحة؟"  [allowFiltering]="false" cellTemplate="defchecktemplate"></dxi-column>
 
                 <div *dxTemplate="let data of 'defchecktemplate'">
@@ -82,7 +79,7 @@
     <div *dxTemplate="let data of 'btncelltemplate'">
 
 <i class="fa fa-edit" (click) = 'ShowUpdatePopup($event,data.data)'></i>
-<i class="fa fa-trash" (click)='DelRecord($event,data.rowIndex)'></i>
+<i class="fa fa-trash" (click)='DelRecord($event,data.data)'></i>
 
         </div>
 

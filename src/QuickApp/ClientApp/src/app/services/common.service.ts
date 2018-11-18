@@ -46,9 +46,8 @@ export class CommonService extends EndpointFactory {
      null, { responseType: 'text' });
   }
 
-  public GetpatrolcarsInventoryList(ahwalid: number, userid: number) {
-    return this.http.get(this.api_url + '/api/maintainence/patrolcarsinventory?ahwalid='
-    + ahwalid + '&userid=' + userid, { responseType: 'text' });
+  public GetpatrolcarsInventoryList(rqhdr:object) {
+    return this.http.post(this.api_url + '/api/maintainence/patrolcarsinventory',rqhdr, { responseType: 'json' });
   }
 
   //#endregion "PatrolCars"
@@ -58,20 +57,19 @@ export class CommonService extends EndpointFactory {
     rqhdr, { responseType: 'json' });
   }
   public Addhandhelds(rqhdr: object) {
-    return this.http.post(this.api_url + '/api/maintainencehandheld/addhandheld', rqhdr, { responseType: 'json' });
+    return this.http.post(this.api_url + '/api/maintainencehandheld/addhandheld', rqhdr, { responseType: 'text' });
   }
 
   public Updatehandhelds(rqhdr: object) {
-    return this.http.post(this.api_url + '/api/maintainencehandheld/addhandheld', rqhdr, { responseType: 'json' });
+    return this.http.post(this.api_url + '/api/maintainencehandheld/addhandheld', rqhdr, { responseType: 'text' });
   }
 
  public Deletehandhelds(rqhdr: object) {
-      return this.http.post(this.api_url + '/api/maintainencehandheld/delhandheld', rqhdr, { responseType: 'json' });
+      return this.http.post(this.api_url + '/api/maintainencehandheld/delhandheld', rqhdr, { responseType: 'text' });
   }
 
-  public GetHandHeldsInventoryList(ahwalid:number,userid:number){
-        return this.http.get(this.api_url + '/api/maintainence/handheldinventory?ahwalid='
-         + ahwalid + '&userid=' + userid, { responseType: 'text' });
+  public GetHandHeldsInventoryList(rqhdr: object){
+        return this.http.post(this.api_url + '/api/maintainencehandheld/handheldinventory',rqhdr, { responseType: 'json' });
   }
 //#endregion "Hand Held"
 
@@ -298,5 +296,8 @@ export class CommonService extends EndpointFactory {
 
         }
 
+        public GetCheckInOutStatesList() {
+          return this.http.post(this.api_url + '/api/generic/checkinoutstates',null, { responseType: 'json' });
+        }
            //#endregion "Generic"
 }

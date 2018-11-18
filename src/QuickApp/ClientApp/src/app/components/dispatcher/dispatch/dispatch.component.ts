@@ -519,7 +519,7 @@ if(e === false)
 {
   this.styleExp = 'none';
 }
-
+e = true;
 }
 WingSelected2(e)
 {

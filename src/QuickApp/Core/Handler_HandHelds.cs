@@ -79,16 +79,16 @@ namespace Core
             try
             {
                 //first we have to check if this Users is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, h.Ahwalid, Handler_User.User_Role_Maintenance))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid  = Handler_Operations.Opeartion_AddHandHeld;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, h.Ahwalid, Handler_User.User_Role_Maintenance))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid  = Handler_Operations.Opeartion_AddHandHeld;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
                 //next we need to search if there is a Handhelds with same serial
                 Handhelds HandHeld_exists =  _context.Handhelds.FirstOrDefault(e => e.Serial.Equals(h.Serial));
                 if (HandHeld_exists != null)
@@ -102,10 +102,14 @@ namespace Core
                     return ol_failed;
                 }
                 h.Barcode = "HAN" + h.Serial;
-                _context.Handhelds.Add(h);
+              //  var handhelds = _context.Set<Handhelds>();
+              //  handhelds.Add(h);
+
+               _context.Handhelds.Add(h);
                  _context.SaveChanges();
 
             }
+
             catch (Exception ex)
             {
                 Operationlogs ol_failed = new Operationlogs();
@@ -129,16 +133,16 @@ namespace Core
             try
             {
                 //first we have to check if this Users is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, h.Ahwalid, Handler_User.User_Role_Maintenance))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid  = Handler_Operations.Opeartion_UpdateHandHeld;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, h.Ahwalid, Handler_User.User_Role_Maintenance))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid  = Handler_Operations.Opeartion_UpdateHandHeld;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
                 //next we need to search if there is a Handhelds car with same serial
                 Handhelds HandHeld_exists =  _context.Handhelds.FirstOrDefault(e => e.Handheldid.Equals(h.Handheldid));
                 if (HandHeld_exists == null)
