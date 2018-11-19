@@ -327,34 +327,47 @@ this.bindAhwalMappingGrid();
 onEditorPreparing (e) {
 e.editorOptions.showClearButton = true;
 // console.log('editor' + JSON.stringify(e.editorOptions));
-if (e.dataField == "sunrisetimestamp" || e.dataField == "sunsettimestamp" ) {
-  e.editorOptions.displayFormat="dd/MM/yyyy";
 
-}
 }
 
 onCellPrepared(e)
 {
-    //console.log(e); 
+    //console.log(e);
 }
 
 checkvisibility(obj:any,personstateid:number)
 {
-console.log(obj);
-return false;
+//console.log(obj);
+//return false;
+}
+customBtnclick(personstate:any,ahwalmappingId:number)
+{
+  console.log(JSON.stringify(personstate));
+  let rqhr:object ={
+    personstate:personstate,
+    ahwalmappingId:ahwalmappingId,
+    userid:this.userid
+};
+
+this.svc.ChangeOpsPersonState(rqhr).subscribe(resp =>
+{
+  notify(JSON.parse(resp).text,'success',900);
+if(JSON.parse(resp).statusid === handler_operations.Opeartion_Status_Success)
+{
+
+  this.bindAhwalMappingGrid();
 }
 
+});
+}
 onRowPrepared(e)
 {
-   
+
 if(e.rowType ==='data')
 {
-    if(e.columnIndex == 0)
-    {
-        
+   // console.log(e.Row);
+    //console.log(e.rowElement.nativeElement);
 
-    }
-    
     //console.log(e.cells[0]);
    // console.log(e.rowElement);
     //let searchbtn = $( e.data.ID).dxButton("instance");
@@ -617,14 +630,14 @@ if(e.rowType ==='data')
         e.rowElement.bgColor='Yellow';
 
     }
-   
+
   }
  }
 
- async  getIncidentImg(incidentId:number) 
+ async  getIncidentImg(incidentId:number)
  {
     return "../../../../assets/img/NewUpdate.png";
 
-   
+
   }
  }

@@ -39,17 +39,17 @@
                 [closeOnOutsideClick]="false"
                 (onShown)="onShown()">
             </dx-load-panel>
-               
+
             <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
-            <dxi-column type="buttons" dataField="patrolpersonstateid" caption=""  [width]="110" cellTemplate="customButtonTemplate">
+            <dxi-column type="buttons" dataField="ahwalmappingid" caption=""  [width]="110" cellTemplate="customButtonTemplate">
             </dxi-column>
             <div *dxTemplate="let data of 'customButtonTemplate'">
-              <dxi-button id="Away" [visible]="checkvisibility(this,data.value)" > <img tooltip="بعيد عن الجهاز"  src="../../../../assets/img/Away.png"/>  </dxi-button>    
-              <dxi-button id="Land"> <img tooltip="بر" src="../../../../assets/img/Land.png"/>  </dxi-button>    
-              <dxi-button id="BackFromAway"> <img tooltip="معاك على الخط" src="../../../../assets/img/Back.png"/>  </dxi-button>    
-              <dxi-button id="BackFromLand"> <img   tooltip="بحر" src="../../../../assets/img/Back.png"/>  </dxi-button>    
-              <dxi-button id="WalkingPatrol"> <img  tooltip="مترجله" src="../../../../assets/img/WalkingPatrol.png"/>  </dxi-button>    
-              <dxi-button id="BackFromWalking"> <img  tooltip="عودة من مترجله" src="../../../../assets/img/Back.png"/>  </dxi-button>    
+              <dxi-button id="Away" (click)="customBtnclick('Away',data.value)" [visible]="checkvisibility(this,data.value)" > <img tooltip="بعيد عن الجهاز"  src="../../../../assets/img/Away.png"/>  </dxi-button>
+              <dxi-button id="Land" (click)="customBtnclick('Land',data.value)"> <img tooltip="بر" src="../../../../assets/img/Land.png"/>  </dxi-button>
+              <dxi-button id="BackFromAway" (click)="customBtnclick('BackFromAway',data.value)"> <img tooltip="معاك على الخط" src="../../../../assets/img/Back.png"/>  </dxi-button>
+              <dxi-button id="BackFromLand" (click)="customBtnclick('BackFromLand',data.value)"> <img tooltip="بحر" src="../../../../assets/img/Back.png"/>  </dxi-button>
+              <dxi-button id="WalkingPatrol" (click)="customBtnclick('WalkingPatrol',data.value)"> <img  tooltip="مترجله" src="../../../../assets/img/WalkingPatrol.png"/>  </dxi-button>
+              <dxi-button id="BackFromWalking" (click)="customBtnclick('BackFromWalking',data.value)"> <img  tooltip="عودة من مترجله" src="../../../../assets/img/Back.png"/>  </dxi-button>
 
             </div>
             <dxi-column dataField="milnumber" width="60" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
@@ -89,7 +89,7 @@
               [closeOnOutsideClick]="false"
               (onShown)="onIncidentShown()">
           </dx-load-panel>
-         
+
           <dxi-column dataField="incidentid" caption="" [allowFiltering]="false"></dxi-column>
               <dxi-column dataField="incidentsourceid" [allowFiltering]="false" width="70"  caption="جهة البلاغ">
                   <dxo-lookup
@@ -106,7 +106,7 @@
               <div *dxTemplate="let data of 'incidentTemplate'">
                   <img   src="../../../../assets/img/NewUpdate.png"  />
                   </div>
-                 
+
               <dxo-paging [pageSize]="80"></dxo-paging>
               <dxo-pager
               [showPageSizeSelector]="true"

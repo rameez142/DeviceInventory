@@ -103,16 +103,16 @@ namespace Core
             try
             {
                 //first we have to check if this user is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, p.Ahwalid, Handler_User.User_Role_Ahwal))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_CheckOutPatrolAndHandHeld;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, p.Ahwalid, Handler_User.User_Role_Ahwal))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_CheckOutPatrolAndHandHeld;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
                 //we have to check first that this person doesn't exists before in mapping
                 var person_mapping_exists = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Ahwalmappingid.Equals(m.Ahwalmappingid));
                 if (person_mapping_exists == null)
@@ -251,16 +251,16 @@ namespace Core
             try
             {
                 //first we have to check if this user is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, p.Ahwalid, Handler_User.User_Role_Ahwal))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_CheckInPatrolAndHandHeld;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, p.Ahwalid, Handler_User.User_Role_Ahwal))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_CheckInPatrolAndHandHeld;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
                 //we have to check first that this person doesn't exists before in mapping
 
                 var person_mapping_exists = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Ahwalmappingid.Equals(m.Ahwalmappingid));
@@ -358,16 +358,16 @@ namespace Core
             try
             {
                 //first we have to check if this user is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, m.Ahwalid, Handler_User.User_Role_Ahwal))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_AddNew;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, m.Ahwalid, Handler_User.User_Role_Ahwal))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_AddNew;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
                 //we have to check first that this person doesn't exists before in mapping
                 var GetPerson = _context.Persons.FirstOrDefault<Persons>(e => e.Personid.Equals(m.Personid));
                 if (GetPerson == null)
@@ -397,15 +397,15 @@ namespace Core
                 m.Patrolid = null;
                 m.Handheldid = null;
                 ////force Sector to Public and CityGroup to None for PatrolRole_CaptainAllSectors and PatrolRole_CaptainShift
-                //if (m.PatrolRoleID == Core.Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||
-                //m.PatrolRoleID == Core.Handler_AhwalMapping.PatrolRole_CaptainShift)
+                //if (m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||
+                //m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_CaptainShift)
                 //{
                 //    m.SectorID = Core.Handler_AhwalMapping.Sector_Public;
                 //    m.CityGroupID = Core.Handler_AhwalMapping.CityGroup_None;
                 //}
                 ////force citygroup to be None for Sector Captain and SubCaptain
-                //if (m.PatrolRoleID == Core.Handler_AhwalMapping.PatrolRole_CaptainSector ||
-                //    m.PatrolRoleID == Core.Handler_AhwalMapping.PatrolRole_SubCaptainSector)
+                //if (m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_CaptainSector ||
+                //    m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_SubCaptainSector)
                 //    m.CityGroupID = Core.Handler_AhwalMapping.CityGroup_None;
                 
                 if (GetPerson.Fixedcallerid.Trim() != "" && GetPerson.Fixedcallerid != null)
@@ -485,24 +485,24 @@ namespace Core
                     _oper.Add_New_Operation_Log(ol_failed);
                     return ol_failed;
                 }
-                //a bit different here, for ahwalmapping, allowed states are only for sick,leave,sunrise,sunset
+                //a bit different here, for Ahwalmapping, allowed states are only for sick,leave,sunrise,sunset
                 int[] allowedState = {Core.Handler_AhwalMapping.PatrolPersonState_SunRise,
                 Core.Handler_AhwalMapping.PatrolPersonState_SunSet,
                 Core.Handler_AhwalMapping.PatrolPersonState_Off,
                 Core.Handler_AhwalMapping.PatrolPersonState_Sick,
                 Core.Handler_AhwalMapping.PatrolPersonState_Absent};
                 //first we have to check if this user is authorized to perform this transaction
-                if (!_user.isAuthorized(u.Userid, person_mapping_exists.Ahwalid, Handler_User.User_Role_Ahwal)
-                    && !allowedState.Contains(s.Patrolpersonstateid))
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (!_user.isAuthorized(u.Userid, person_mapping_exists.Ahwalid, Handler_User.User_Role_Ahwal)
+                //    && !allowedState.Contains(s.Patrolpersonstateid))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
 
                 var GetPerson = _context.Persons.FirstOrDefault<Persons>(e => e.Personid.Equals(person_mapping_exists.Personid));
                 if (GetPerson == null)
@@ -656,5 +656,97 @@ namespace Core
 
         }
 
+        public  Operationlogs Ops_ChangePersonState(Users u, long mappingID, Patrolpersonstates s)
+        {
+            try
+            {
+                //we have to check first that this person doesn't exists before in mapping
+                var person_mapping_exists = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(e => e.Ahwalmappingid.Equals(mappingID));
+                if (person_mapping_exists == null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ops_ChangePersonState;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "لم يتم العثور على التوزيع";
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                //a bit different here, for Ahwalmapping, allowed states are only for sick,leave,sunrise,sunset
+                int[] allowedState = {Core.Handler_AhwalMapping.PatrolPersonState_Sea,
+                Core.Handler_AhwalMapping.PatrolPersonState_Land,
+                Core.Handler_AhwalMapping.PatrolPersonState_Back,
+                Core.Handler_AhwalMapping.PatrolPersonState_Away,
+                Core.Handler_AhwalMapping.PatrolPersonState_WalkingPatrol,
+                Core.Handler_AhwalMapping.PatrolPersonState_BackFromWalking};
+                //first we have to check if this user is authorized to perform this transaction
+                //if (!_user.isAuthorized(u.Userid, person_mapping_exists.Ahwalid, Handler_User.User_Role_Ops)
+                //    && !allowedState.Contains(s.Patrolpersonstateid))
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ops_ChangePersonState;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
+
+                var GetPerson =_context.Persons.FirstOrDefault<Persons>(e => e.Personid.Equals(person_mapping_exists.Personid));
+                if (GetPerson == null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ops_ChangePersonState;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "لم يتم العثور على الفرد: " + person_mapping_exists.Personid; //todo, change it actual person name
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                //for operations, we cannot change person state sea land or anythinf for associate
+                if (person_mapping_exists.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_Associate)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ops_ChangePersonState;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_Failed;
+                    ol_failed.Text = "المرافق لايمكن تغيير حالته: " + person_mapping_exists.Personid; //todo, change it actual person name
+                                                                                                      // Handler_Operations.Add_New_Operation_Log(ol_failed); //no need to record this
+                    return ol_failed;
+                }
+                person_mapping_exists.Patrolpersonstateid = s.Patrolpersonstateid;
+                person_mapping_exists.Laststatechangetimestamp = DateTime.Now;
+               _context.SaveChanges();
+                //log it
+                //record this in personstatechangelog
+                var personStateLog = new Patrolpersonstatelog();
+                personStateLog.Userid = u.Userid;
+                personStateLog.Patrolpersonstateid = s.Patrolpersonstateid;
+                personStateLog.Timestamp = DateTime.Now;
+                personStateLog.Personid = person_mapping_exists.Personid;
+                LogPersonStateChange(personStateLog);
+
+
+
+                Operationlogs ol = new Operationlogs();
+                ol.Userid = u.Userid;
+                ol.Operationid = Handler_Operations.Opeartion_Mapping_Ops_ChangePersonState;
+                ol.Statusid = Handler_Operations.Opeartion_Status_Success;
+                ol.Text = "عمليات تغيير حالة الفرد: " + GetPerson.Milnumber + " " + GetPerson.Name;
+                _oper.Add_New_Operation_Log(ol);
+
+                return ol;
+            }
+            catch (Exception ex)
+            {
+                Operationlogs ol_failed = new Operationlogs();
+                ol_failed.Userid = u.Userid;
+                ol_failed.Operationid = Handler_Operations.Opeartion_Mapping_Ahwal_ChangePersonState;
+                ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnKnownError;
+                ol_failed.Text = ex.Message;
+                _oper.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+        }
     }
 }

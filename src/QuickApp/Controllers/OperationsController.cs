@@ -62,7 +62,7 @@ namespace MOI.Patrol.Controllers
             var shiftid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["ShiftId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
 
             String Qry = "SELECT  AhwalMapping.AhwalMappingID, AhwalMapping.AhwalID, AhwalMapping.ShiftID, AhwalMapping.SectorID, AhwalMapping.PatrolRoleID, AhwalMapping.CityGroupID, AhwalMapping.PersonID, AhwalMapping.CallerID, ";
-            Qry = Qry + "   AhwalMapping.HasDevices, AhwalMapping.IncidentID, AhwalMapping.PatrolPersonStateID, AhwalMapping.LastStateChangeTimeStamp, Ranks.Name AS RankName, Ahwal.Name AS AhwalName, ";
+            Qry = Qry + "   AhwalMapping.HasDevices, AhwalMapping.IncidentID, AhwalMapping.Patrolpersonstateid, AhwalMapping.LastStateChangeTimeStamp, Ranks.Name AS RankName, Ahwal.Name AS AhwalName, ";
             Qry = Qry + "     Sectors.ShortName AS SectorName, Shifts.Name AS ShiftName, Persons.MilNumber, Persons.Name AS PersonName, Persons.Mobile AS PersonMobile, HandHelds.Serial, PatrolCars.PlateNumber, ";
             Qry = Qry + "     PatrolRoles.Name AS PatrolRoleName, CityGroups.ShortName AS CityGroupName, PatrolPersonStates.Name as PatrolPersonStateName ";
             Qry = Qry + "    FROM AhwalMapping LEFT JOIN ";
@@ -75,11 +75,65 @@ namespace MOI.Patrol.Controllers
             Qry = Qry + "     PatrolCars ON AhwalMapping.PatrolID = PatrolCars.PatrolID AND Ahwal.AhwalID = PatrolCars.AhwalID LEFT JOIN ";
             Qry = Qry + "    PatrolRoles ON AhwalMapping.PatrolRoleID = PatrolRoles.PatrolRoleID LEFT JOIN ";
             Qry = Qry + "    CityGroups ON AhwalMapping.CityGroupID = CityGroups.CityGroupID AND Ahwal.AhwalID = CityGroups.AhwalID AND Sectors.SectorID = CityGroups.SectorID LEFT JOIN ";
-            Qry = Qry + "    PatrolPersonStates ON AhwalMapping.PatrolPersonStateID = PatrolPersonStates.PatrolPersonStateID ";
+            Qry = Qry + "    PatrolPersonStates ON AhwalMapping.Patrolpersonstateid = PatrolPersonStates.Patrolpersonstateid ";
             Qry = Qry + "    where AhwalMapping.ahwalid =" + ahwalid + " and AhwalMapping.shiftid=" + shiftid + " Order by SortingIndex asc";
 
             return Ok(DAL.PostGre_GetDataTable(Qry));
 
+        }
+
+        [HttpPost("changeopspersonstate")]
+        public ActionResult PostChangeOpsPersonState([FromBody]JObject RqHdr)
+        {
+            var personstate = RqHdr["personstate"].ToString();
+            var ahwalmappingId = Convert.ToInt64(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["ahwalmappingId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var userid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+          //  var user = (Users)Session["User"];
+            Users user = new Users();
+            if (user == null)
+                return Ok(null);
+
+            var personState = new Patrolpersonstates();
+            if (personstate == "Away")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Away;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
+                return Ok(result);
+            }
+            else if (personstate == "Land")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Land;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId ,personState);
+                return Ok(result);
+
+            }
+            else if (personstate == "BackFromAway")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Back;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
+                return Ok(result);
+            }
+            else if (personstate == "BackFromLand")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Sea;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
+                return Ok(result);
+            }
+            else if (personstate == "WalkingPatrol")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_WalkingPatrol;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
+                return Ok(result);
+            }
+            else if (personstate == "BackFromWalking")
+            {
+                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_BackFromWalking;
+                var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
+                return Ok(result);
+            }
+            return Ok(null);
+            // return Ok(DAL.PostGre_GetDataTable(Qry));
         }
     }
 }
