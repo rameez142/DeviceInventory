@@ -32,5 +32,54 @@ namespace MOI.Patrol.Controllers
 
             return Ok(DAL.PostGre_GetDataTable(Qry));
         }
+
+        [HttpPost("incidentview")]
+        public ActionResult PostIncidentView([FromBody]JObject RqHdr)
+        {
+            var incidentID = Convert.ToDouble(RqHdr["incidentid"]);
+            Users user = new Users();
+            user.Userid = Convert.ToInt32(RqHdr["userid"]);
+
+            //var isInIncidentview = _context.Incidentsview.FirstOrDefault<Incidentsview>(a => a.Userid == user.Userid && a.Incidentid == incidentID);
+            var isInIncidentview = _context.Incidentsview.FirstOrDefault<Incidentsview>(a => a.Incidentid == incidentID);
+            return Ok(isInIncidentview);
+        }
+
+        [HttpPost("incidentsources")]
+        public ActionResult PostIncidentSourcesList()
+        {
+
+            string Qry = "SELECT IncidentSourceID, Name, MainExtraInfoNumber, ExtraInfo1, ExtraInfo2, ExtraInfo3, RequiresExtraInfo1, RequiresExtraInfo2, RequiresExtraInfo3 FROM IncidentSources";
+
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("opslivelist")]
+        public IActionResult Postdispatchlist([FromBody]JObject RqHdr)
+        {
+
+            var ahwalid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["AhwalId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var shiftid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["ShiftId"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            String Qry = "SELECT  AhwalMapping.AhwalMappingID, AhwalMapping.AhwalID, AhwalMapping.ShiftID, AhwalMapping.SectorID, AhwalMapping.PatrolRoleID, AhwalMapping.CityGroupID, AhwalMapping.PersonID, AhwalMapping.CallerID, ";
+            Qry = Qry + "   AhwalMapping.HasDevices, AhwalMapping.IncidentID, AhwalMapping.PatrolPersonStateID, AhwalMapping.LastStateChangeTimeStamp, Ranks.Name AS RankName, Ahwal.Name AS AhwalName, ";
+            Qry = Qry + "     Sectors.ShortName AS SectorName, Shifts.Name AS ShiftName, Persons.MilNumber, Persons.Name AS PersonName, Persons.Mobile AS PersonMobile, HandHelds.Serial, PatrolCars.PlateNumber, ";
+            Qry = Qry + "     PatrolRoles.Name AS PatrolRoleName, CityGroups.ShortName AS CityGroupName, PatrolPersonStates.Name as PatrolPersonStateName ";
+            Qry = Qry + "    FROM AhwalMapping LEFT JOIN ";
+            Qry = Qry + "    Persons ON AhwalMapping.PersonID = Persons.PersonID LEFT JOIN ";
+            Qry = Qry + "    Ahwal ON Persons.AhwalID = Ahwal.AhwalID LEFT JOIN ";
+            Qry = Qry + "     Ranks ON Persons.RankID = Ranks.RankID LEFT JOIN ";
+            Qry = Qry + "     Sectors ON AhwalMapping.SectorID = Sectors.SectorID AND Ahwal.AhwalID = Sectors.AhwalID LEFT JOIN ";
+            Qry = Qry + "      Shifts ON AhwalMapping.ShiftID = Shifts.ShiftID LEFT JOIN ";
+            Qry = Qry + "    HandHelds ON AhwalMapping.HandHeldID = HandHelds.HandHeldID AND Ahwal.AhwalID = HandHelds.AhwalID LEFT JOIN ";
+            Qry = Qry + "     PatrolCars ON AhwalMapping.PatrolID = PatrolCars.PatrolID AND Ahwal.AhwalID = PatrolCars.AhwalID LEFT JOIN ";
+            Qry = Qry + "    PatrolRoles ON AhwalMapping.PatrolRoleID = PatrolRoles.PatrolRoleID LEFT JOIN ";
+            Qry = Qry + "    CityGroups ON AhwalMapping.CityGroupID = CityGroups.CityGroupID AND Ahwal.AhwalID = CityGroups.AhwalID AND Sectors.SectorID = CityGroups.SectorID LEFT JOIN ";
+            Qry = Qry + "    PatrolPersonStates ON AhwalMapping.PatrolPersonStateID = PatrolPersonStates.PatrolPersonStateID ";
+            Qry = Qry + "    where AhwalMapping.ahwalid =" + ahwalid + " and AhwalMapping.shiftid=" + shiftid + " Order by SortingIndex asc";
+
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+
+        }
     }
 }

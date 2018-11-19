@@ -304,4 +304,18 @@ export class CommonService extends EndpointFactory {
            public GetIncidentsList() {
             return this.http.post(this.api_url + '/api/operations/operationslist',null, { responseType: 'json' });
           }
+
+          public GetIncident_View(rqhdr:object) {
+            return this.http.post(this.api_url + '/api/operations/incidentview',rqhdr, { responseType: 'json' });
+          }
+          public GetIncidentSourceList()
+          {
+            return this.http.post(this.api_url + '/api/operations/incidentsources',null, { responseType: 'json' });
+
+          }
+
+          public GetOpsLiveList(rqhr:object)
+          {
+            return this.http.post(this.api_url + '/api/operations/opslivelist',rqhr, { responseType: 'json' });
+          }
 }

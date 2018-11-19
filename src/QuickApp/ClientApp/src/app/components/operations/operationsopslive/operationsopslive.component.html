@@ -12,6 +12,7 @@
                 [selectedRowKeys]="[]"
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
+                (onCellPrepared)="onCellPrepared($event)"
                 wordWrapEnabled ="true"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
@@ -38,26 +39,34 @@
                 [closeOnOutsideClick]="false"
                 (onShown)="onShown()">
             </dx-load-panel>
-
+               
             <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
-            <dxi-column dataField="milnumber" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
-            <dxi-column dataField="rankdesc" caption="الرتبه"  [allowFiltering]="false"></dxi-column>
-            <dxi-column dataField="personname" caption="الاسم" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'">
+            <dxi-column type="buttons" dataField="patrolpersonstateid" caption=""  [width]="110" cellTemplate="customButtonTemplate">
+            </dxi-column>
+            <div *dxTemplate="let data of 'customButtonTemplate'">
+              <dxi-button id="Away" [visible]="checkvisibility(this,data.value)" > <img tooltip="بعيد عن الجهاز"  src="../../../../assets/img/Away.png"/>  </dxi-button>    
+              <dxi-button id="Land"> <img tooltip="بر" src="../../../../assets/img/Land.png"/>  </dxi-button>    
+              <dxi-button id="BackFromAway"> <img tooltip="معاك على الخط" src="../../../../assets/img/Back.png"/>  </dxi-button>    
+              <dxi-button id="BackFromLand"> <img   tooltip="بحر" src="../../../../assets/img/Back.png"/>  </dxi-button>    
+              <dxi-button id="WalkingPatrol"> <img  tooltip="مترجله" src="../../../../assets/img/WalkingPatrol.png"/>  </dxi-button>    
+              <dxi-button id="BackFromWalking"> <img  tooltip="عودة من مترجله" src="../../../../assets/img/Back.png"/>  </dxi-button>    
+
+            </div>
+            <dxi-column dataField="milnumber" width="60" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
+            <dxi-column dataField="rankdesc" width="60" caption="الرتبه"  [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="personname" width="60" caption="الاسم" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'">
 
             </dxi-column>
-            <dxi-column dataField="patrolrolename" caption="المسؤولية" [allowFiltering]="false" ></dxi-column>
+            <dxi-column dataField="patrolrolename" width="60" caption="المسؤولية" [allowFiltering]="false" ></dxi-column>
             <dxi-column dataField="citygroupname" [groupIndex]="1" caption="المنطقة"></dxi-column>
 
-            <dxi-column dataField="callerid"  [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" caption="النداء" ></dxi-column>
-            <dxi-column dataField="platenumber"[filterOperations]="['contains', '=']" caption="الدورية" [selectedFilterOperation] ="'contains'"></dxi-column>
-            <dxi-column dataField="serial"[filterOperations]="['contains', '=']" caption="الجهاز" [selectedFilterOperation] ="'contains'"></dxi-column>
+            <dxi-column dataField="callerid" width="50"  [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" caption="النداء" ></dxi-column>
+            <dxi-column dataField="platenumber" width="70" [filterOperations]="['contains', '=']" caption="الدورية" [selectedFilterOperation] ="'contains'"></dxi-column>
+            <dxi-column dataField="serial" width="70" [filterOperations]="['contains', '=']" caption="الجهاز" [selectedFilterOperation] ="'contains'"></dxi-column>
+            <dxi-column dataField="personstate" width="50" caption="الحالة"   [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="laststatechangetimestamp" width="100" [allowFiltering]="false" caption="وقت الحالة" dataType="date" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
 
-            <dxi-column dataField="sunrisetimestamp" [filterOperations]="[ '=']" caption="شروق" dataType="date"[selectedFilterOperation] ="'='" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="sunsettimestamp" [filterOperations]="[ '=']" caption="غروب" dataType="date"[selectedFilterOperation] ="'='" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-            <dxi-column dataField="personstate" caption="الحالة"   [allowFiltering]="false"></dxi-column>
-            <dxi-column dataField="laststatechangetimestamp" [allowFiltering]="false" caption="وقت الحالة" dataType="date" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-
-            <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="100" [selectedFilterOperation] ="'contains'"></dxi-column>
+            <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="50" [selectedFilterOperation] ="'contains'"></dxi-column>
               </dx-data-grid>
             </td>
             <td style="width: 35%; vertical-align: top;">
@@ -68,7 +77,7 @@
                 [rtlEnabled]="true"
                 [hoverStateEnabled]="false"
                 wordWrapEnabled ="true"
-              >
+                (onRowPrepared)="onIncidentRowPrepared($event)">
               <dx-load-panel
               #incidentloadPanel
               shadingColor="rgba(0,0,0,0.4)"
@@ -80,13 +89,24 @@
               [closeOnOutsideClick]="false"
               (onShown)="onIncidentShown()">
           </dx-load-panel>
-
-              <dxi-column dataField="incidentsourceid"  caption="جهة البلاغ"></dxi-column>
-              <dxi-column dataField="incidentstypename"  caption="البلاغ"></dxi-column>
-              <dxi-column dataField="place"  caption="المكان"></dxi-column>
-              <dxi-column dataField="timeStamp"  caption="وقت البلاغ"></dxi-column>
-              <dxi-column dataField="lastupdate"  caption="آخر تحديث"></dxi-column>
-              <dxi-column dataField="incidentid"  ></dxi-column>
+         
+          <dxi-column dataField="incidentid" caption="" [allowFiltering]="false"></dxi-column>
+              <dxi-column dataField="incidentsourceid" [allowFiltering]="false" width="70"  caption="جهة البلاغ">
+                  <dxo-lookup
+                  [dataSource]="incidentsources"
+                  valueExpr="incidentsourceid"
+                  displayExpr="name">
+                  </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="incidentstypename" width="70" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  caption="البلاغ"></dxi-column>
+              <dxi-column dataField="place" width="70" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" caption="المكان"></dxi-column>
+              <dxi-column dataField="timeStamp"  caption="وقت البلاغ" width="80" [allowFiltering]="false" dataType="date" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
+              <dxi-column dataField="lastupdate" dataType="date" width="80" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }" caption="آخر تحديث" [allowFiltering]="false"></dxi-column>
+              <dxi-column dataField="incidentid" caption="" width="40" [allowFiltering]="false" cellTemplate="incidentTemplate"></dxi-column>
+              <div *dxTemplate="let data of 'incidentTemplate'">
+                  <img   src="../../../../assets/img/NewUpdate.png"  />
+                  </div>
+                 
               <dxo-paging [pageSize]="80"></dxo-paging>
               <dxo-pager
               [showPageSizeSelector]="true"
@@ -94,9 +114,6 @@
               [showInfo]="true">
           </dxo-pager>
           <dxo-export [enabled]="true" fileName="Operations"></dxo-export>
-
-
-
           <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
           <dxo-filter-row [visible]="true"   ></dxo-filter-row>
           <dxo-header-filter [visible]="true"></dxo-header-filter>

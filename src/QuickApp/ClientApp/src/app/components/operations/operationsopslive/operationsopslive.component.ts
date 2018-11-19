@@ -21,7 +21,7 @@ import { operationLog } from '../../../models/operationLog';
 import { handler_operations } from '../../../../environments/handler_operations';
 import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
 import { Timestamp } from '../../../../../node_modules/rxjs';
-
+import {handler_incident} from '../../../../environments/handler_incidents';
 @Component({
   selector: 'app-operationsopslive',
   templateUrl: './operationsopslive.component.html',
@@ -86,6 +86,7 @@ selRowIndex:number;
 };
 handHeldsrc:handhelds[];
 incidentsrc:any;
+incidentsources:any;
 constructor(private svc:CommonService, private modalService: ModalService,private alertService: AlertService) {
   this.userid = parseInt(window.localStorage.getItem('UserID'),10);
   this.userobj.userID = this.userid;
@@ -219,7 +220,11 @@ bindAhwalMappingGridSources()
 
                  this.handHeldsrc = <handhelds[]> resp;
                  });
+this.svc.GetIncidentSourceList().toPromise().then(resp =>
+    {
 
+     this.incidentsources =  resp;
+     });
 }
 
 
@@ -250,7 +255,7 @@ let rqhr:object ={
     ShiftId:this.selhdrShiftId
 };
 
-this.svc.GetDispatchList(rqhr).subscribe(resp =>
+this.svc.GetOpsLiveList(rqhr).subscribe(resp =>
 {
 
    this.dataSource = resp;
@@ -295,13 +300,6 @@ e.toolbarOptions.items.unshift({
         onValueChanged: this.shiftChanged.bind(this)
 
     }
-}, {
-    location: 'before',
-    widget: 'dxButton',
-    options: {
-        icon: 'glyphicon glyphicon-user',
-        onClick: this.showInfo.bind(this)
-    }
 }
 , {
       location: 'after',
@@ -335,13 +333,33 @@ if (e.dataField == "sunrisetimestamp" || e.dataField == "sunsettimestamp" ) {
 }
 }
 
+onCellPrepared(e)
+{
+    //console.log(e); 
+}
+
+checkvisibility(obj:any,personstateid:number)
+{
+console.log(obj);
+return false;
+}
+
 onRowPrepared(e)
 {
-
+   
 if(e.rowType ==='data')
 {
+    if(e.columnIndex == 0)
+    {
+        
 
-  console.log(e);
+    }
+    
+    //console.log(e.cells[0]);
+   // console.log(e.rowElement);
+    //let searchbtn = $( e.data.ID).dxButton("instance");
+    //console.log(searchbtn);
+
 //set default to white first
  e.rowElement.bgColor = "White";
 // e.rowElement.font = "Italic";
@@ -530,11 +548,7 @@ this.bindAhwalMappingGrid();
 }
 
 popupVisible:any = false;
-showInfo() {
-//this.clearpersonpopupvalues();
-this.ahwalMappingAddMethod ='ADD';
-this.popupVisible = true;
-}
+
 
 mappopupVisible:any = false;
 
@@ -578,4 +592,39 @@ this.svc.GetIncidentsList().subscribe(resp =>
 });
 }
 
-}
+onIncidentRowPrepared(e)
+{
+
+if(e.rowType ==='data')
+{
+
+//set default to white first
+ e.rowElement.bgColor = "White";
+
+
+    if(e.key.incidentstateid === handler_incident.Incident_State_New )
+    {
+        e.rowElement.bgColor='Red';
+
+    }
+    if(e.key.incidentstateid === handler_incident.Incident_State_Closed )
+    {
+        e.rowElement.bgColor='LightGray';
+
+    }
+    if(e.key.incidentstateid === handler_incident.Incident_State_HasComments )
+    {
+        e.rowElement.bgColor='Yellow';
+
+    }
+   
+  }
+ }
+
+ async  getIncidentImg(incidentId:number) 
+ {
+    return "../../../../assets/img/NewUpdate.png";
+
+   
+  }
+ }
