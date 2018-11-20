@@ -138,9 +138,42 @@
                 <tr>
                     <td>البلاغ
                     </td>
-                    
+
                       <td>
-                         <dx-lookup [dataSource]="incidentsources"  width="300">
+                          <dx-select-box
+                          [dataSource]="incidentsources"
+                          showClearButton="true"
+                          valueExpr="incidentsourceid"
+                          displayExpr="name"
+                          [value]="selIncidentId"
+                          searchEnabled="true"
+                          placeholder="Select an Incident"
+                          rtlEnabled="true"
+                          searchExpr= "['incidentsourceid', 'name']"
+                          >
+                          <div *dxTemplate="let item of 'content'">
+                              <dx-data-grid width="300" height="400"
+                                      [dataSource]="incidentsources"
+                                      [columns]="[{caption:'الرقم ',dataField:'incidentsourceid'},{caption:'الاسم',dataField:'name'}]"
+                                      [selection]="{ mode: 'single' }"
+                                      [hoverStateEnabled]="true"
+                                      [paging]="{ enabled: true, pageSize: 10 }"
+                                      [filterRow]="{ visible: false }"
+                                      [rtlEnabled]= "true"
+                                      [focusStateEnabled]="true"
+                                      (onRowClick)="IncidentRwclick($event)"
+                                      >
+
+                              </dx-data-grid>
+                          </div>
+                      </dx-select-box>
+                      </td>
+                    </tr>
+                    </table>
+          </div>
+              <!-- <dx-autocomplete [dataSource]="incidentsources"   [valueExpr]="person_displayExpr" itemTemplate="item" openOnFieldClick="true" 
+                         rtlEnabled="true" dropDownButtonTemplate="item" showDropDownButton="true" 
+                         showClearButton="true"  placeholder="Select an Incident" maxItemCount="1" width="300">
                             <div *dxTemplate="let item of 'item'">
                                 <dx-data-grid width="300" height="400"
                                         [dataSource]="incidentsources"
@@ -155,12 +188,8 @@
 
                                 </dx-data-grid>
                             </div>
-                         </dx-lookup>
-                                  
-                      </td>
-                    </tr>
-                    </table>
-          </div>
+                         </dx-autocomplete>
+                                   -->
           <!-- <td>
                         
               <dx-lookup [dataSource]="incidentsources" 

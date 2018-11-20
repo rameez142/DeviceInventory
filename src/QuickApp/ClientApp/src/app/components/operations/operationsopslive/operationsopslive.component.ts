@@ -227,7 +227,6 @@ console.log(resp);
 }
 
 
-
 sectorSelection(e)
 {
 
@@ -660,9 +659,65 @@ if(e.rowType ==='data')
       this.contextPopupVisible = true
     }
 }
+selIncidentId:any;
+IncidentRwclick(e)
+{
+    console.log(e);
+     var component = e.component,
+    prevClickTime = component.lastClickTime;
+    component.lastClickTime = new Date();
+       
+        this.selIncidentId = e.key.incidentsourceid;
+       
+        console.log(e + 'click');
+        console.log( this.selIncidentId);
+        console.log(  e.key.incidentsourceid);
+
+    
+console.log( this.selIncidentId);
+}
 
   clearIncidentPopupValues()
   {
 
   }
+  person_displayExpr(item){
+     console.log('item' + JSON.stringify(item));
+ if(item !== undefined && item !==null)
+     { return  item.name ;
+     } 
+ }
+
+ person_displayExpr2(item){
+    console.log('item' + JSON.stringify(item));
+if(item !== undefined && item !==null)
+    { return  item.incidentsourceid ;
+    } 
+}
+_gridBoxValue: number[] = [3];
+getSelectedItemsKeys(items) {
+    var result = [],
+        that = this;
+
+    items.forEach(function(item) {
+        if(item.selected) {
+            result.push(item.key);
+        }
+        if(item.items.length) {
+            result = result.concat(that.getSelectedItemsKeys(item.items));
+        }
+    });
+    return result;
+}
+
+
+
+get gridBoxValue(): number[] {
+    return this._gridBoxValue;
+}
+
+set gridBoxValue(value: number[]) {
+    this._gridBoxValue = value || [];
+}
+
  }
