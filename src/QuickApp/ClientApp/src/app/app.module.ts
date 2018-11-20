@@ -59,7 +59,7 @@ import { DxTreeViewModule } from '../../node_modules/devextreme-angular';
 
 import {DxLookupModule, DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
   DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,
-  DxCheckBoxModule,DxDropDownBoxModule } from 'devextreme-angular';
+  DxCheckBoxModule,DxDropDownBoxModule,DxAutocompleteModule } from 'devextreme-angular';
 
 
 import { DispatchComponent } from './components/dispatcher/dispatch/dispatch.component';
@@ -110,7 +110,7 @@ import { OperationsopsliveComponent } from './components/operations/operationsop
    DxTreeViewModule,
     FormsModule,DxSelectBoxModule,DxContextMenuModule,DxMenuModule,DxDropDownBoxModule,
     DxPopupModule,DxDataGridModule,DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule,
-     DxTabPanelModule,DxCheckBoxModule,
+     DxTabPanelModule,DxCheckBoxModule,DxAutocompleteModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
    ,FanMenuModule,  ReactiveFormsModule

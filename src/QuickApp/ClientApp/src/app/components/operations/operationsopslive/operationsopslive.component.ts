@@ -22,6 +22,8 @@ import { handler_operations } from '../../../../environments/handler_operations'
 import { HandheldinventoryComponent } from '../../maintainence/inventory/handheldinventory/handheldinventory.component';
 import { Timestamp } from '../../../../../node_modules/rxjs';
 import {handler_incident} from '../../../../environments/handler_incidents';
+ import { FormGroup, FormControl } from '@angular/forms';
+
 @Component({
   selector: 'app-operationsopslive',
   templateUrl: './operationsopslive.component.html',
@@ -32,13 +34,12 @@ export class OperationsopsliveComponent implements OnInit {
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
   @ViewChild('gridIncidents') incidentGrid: DxDataGridComponent;
 
-
-
-  loadingVisible:boolean = false;
-  incidentloadingVisible:boolean = false;
-  selhdrAhwalId:number;
-  selhdrShiftId:number;
-
+ 
+  namet:any;
+loadingVisible:boolean = false;
+incidentloadingVisible:boolean = false;
+selhdrAhwalId:number;
+selhdrShiftId:number;
 ahwalMapping_CheckInOut_StatusLabel:string;
 ahwalsrc:any;
 responsibilitysrc:patrolroles[];
@@ -79,25 +80,23 @@ selCheckInOutHHeldSerialNo:number = null;
 selStatePersonid:number;
 patrolCarsrc:patrolcars[];
 selRowIndex:number;
-  public options = {
-    spinable: true,
-    buttonWidth: 40,
-    defaultOpen:true
-};
 handHeldsrc:handhelds[];
 incidentsrc:any;
 incidentsources:any;
+contextPopupVisible:any = false;
+mappopupVisible:any = false;
+myGroup = new FormGroup({
+    address: new FormGroup({debtor:new FormControl()})
+  });
 constructor(private svc:CommonService, private modalService: ModalService,private alertService: AlertService) {
   this.userid = parseInt(window.localStorage.getItem('UserID'),10);
   this.userobj.userID = this.userid;
 
   this.ahwalsrc= JSON.parse(window.localStorage.getItem('Ahwals'));
- this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
- this.shiftssrc= JSON.parse(window.localStorage.getItem('Shifts'));
-this.selhdrShiftId = this.shiftssrc[0].shiftid;
-this.showLoadPanel();
-
-
+  this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
+  this.shiftssrc= JSON.parse(window.localStorage.getItem('Shifts'));
+  this.selhdrShiftId = this.shiftssrc[0].shiftid;
+  this.showLoadPanel();
 }
 
 onShown() {
@@ -222,7 +221,7 @@ bindAhwalMappingGridSources()
                  });
 this.svc.GetIncidentSourceList().toPromise().then(resp =>
     {
-
+console.log(resp);
      this.incidentsources =  resp;
      });
 }
@@ -560,10 +559,7 @@ refreshDataGrid() {
 this.bindAhwalMappingGrid();
 }
 
-popupVisible:any = false;
 
-
-mappopupVisible:any = false;
 
 showmapInfo() {
 this.modalService.open('custom-modal-1');
@@ -586,9 +582,6 @@ prevClickTime = component.lastClickTime;
 component.lastClickTime = new Date();
 if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
     this.selahwalmappingid = e.key.ahwalmappingid;
-    this.selCheckInOutPersonMno = e.key.milnumber;
-    this.options.defaultOpen = true;
-    this.styleExp = 'inline';
 }
 
 }
@@ -650,13 +643,23 @@ if(e.rowType ==='data')
       if (e.row.rowType === 'data') {
       e.items = [{
         text: 'تسليم بلاغ',
-        value:e.row.rowIndex
+        value:e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
   
     }
   ];
   
     }
   }
+
+  ContextMenuClick(e)
+  {
+    //console.log(e);
+    if (e.itemData.text === 'تسليم بلاغ')
+    {
+      this.contextPopupVisible = true
+    }
+}
 
   clearIncidentPopupValues()
   {

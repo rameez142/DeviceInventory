@@ -123,5 +123,53 @@
               </td>
             </tr>
         </table>
+        <dx-popup
+        class="popup"
+        [width]="600"
+        [height]="350"
+        [showTitle]="true"
+        title=""
+        [showCloseButton]= "true"
+        [dragEnabled]="true"
+        [closeOnOutsideClick]="true"
+        [(visible)]="contextPopupVisible">
+        <div *dxTemplate="let data of 'content'">
+            <table>
+                <tr>
+                    <td>البلاغ
+                    </td>
+                    
+                      <td>
+                         <dx-lookup [dataSource]="incidentsources"  width="300">
+                            <div *dxTemplate="let item of 'item'">
+                                <dx-data-grid width="300" height="400"
+                                        [dataSource]="incidentsources"
+                                        [columns]="[{caption:'الرقم ',dataField:'incidentsourceid'},{caption:'الاسم',dataField:'name'}]"
+                                        [selection]="{ mode: 'single' }"
+                                        [hoverStateEnabled]="true"
+                                        [paging]="{ enabled: true, pageSize: 10 }"
+                                        [filterRow]="{ visible: false }"
+                                        [rtlEnabled]= "true"
+                                        [keyExpr] ="incidentsourceid"
+                                        [focusStateEnabled]="true">
+
+                                </dx-data-grid>
+                            </div>
+                         </dx-lookup>
+                                  
+                      </td>
+                    </tr>
+                    </table>
+          </div>
+          <!-- <td>
+                        
+              <dx-lookup [dataSource]="incidentsources" 
+              displayExpr = "name" width="200"
+              ></dx-lookup>
+          
+      </td>
+    </tr>
+    <tr> -->
+        </dx-popup>
           </form>
 </div>
