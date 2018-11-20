@@ -640,4 +640,26 @@ if(e.rowType ==='data')
 
 
   }
+
+  onContextMenuprepare(e) {
+    //this.menuOpen = true;
+    console.log(e);
+    this.clearIncidentPopupValues();
+    this.selahwalmappingid = e.row.key.ahwalmappingid;
+  
+      if (e.row.rowType === 'data') {
+      e.items = [{
+        text: 'تسليم بلاغ',
+        value:e.row.rowIndex
+  
+    }
+  ];
+  
+    }
+  }
+
+  clearIncidentPopupValues()
+  {
+
+  }
  }

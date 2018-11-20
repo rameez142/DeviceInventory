@@ -13,6 +13,7 @@
                 (onToolbarPreparing)="onToolbarPreparing($event)"
                 (onRowPrepared)="onRowPrepared($event)"
                 (onCellPrepared)="onCellPrepared($event)"
+                (onContextMenuPreparing)= "onContextMenuprepare($event)"
                 wordWrapEnabled ="true"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
@@ -53,7 +54,7 @@
 
             </div>
             <dxi-column dataField="milnumber" width="60" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" ></dxi-column>
-            <dxi-column dataField="rankdesc" width="60" caption="الرتبه"  [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="rankname" width="60" caption="الرتبه"  [allowFiltering]="false"></dxi-column>
             <dxi-column dataField="personname" width="60" caption="الاسم" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'">
 
             </dxi-column>
@@ -63,7 +64,7 @@
             <dxi-column dataField="callerid" width="50"  [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'" caption="النداء" ></dxi-column>
             <dxi-column dataField="platenumber" width="70" [filterOperations]="['contains', '=']" caption="الدورية" [selectedFilterOperation] ="'contains'"></dxi-column>
             <dxi-column dataField="serial" width="70" [filterOperations]="['contains', '=']" caption="الجهاز" [selectedFilterOperation] ="'contains'"></dxi-column>
-            <dxi-column dataField="personstate" width="50" caption="الحالة"   [allowFiltering]="false"></dxi-column>
+            <dxi-column dataField="patrolpersonstatename" width="50" caption="الحالة"   [allowFiltering]="false"></dxi-column>
             <dxi-column dataField="laststatechangetimestamp" width="100" [allowFiltering]="false" caption="وقت الحالة" dataType="date" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
 
             <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="50" [selectedFilterOperation] ="'contains'"></dxi-column>

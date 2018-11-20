@@ -320,7 +320,7 @@ export class CommonService extends EndpointFactory {
           }
           public ChangeOpsPersonState(rqhr:object)
           {
-            return this.http.post(this.api_url + '/api/operations/changeopspersonstate',rqhr, { responseType:'string' });
+            return this.http.post(this.api_url + '/api/operations/changeopspersonstate',rqhr, { responseType:'text' });
           }
 
 }

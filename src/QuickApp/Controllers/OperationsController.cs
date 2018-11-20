@@ -91,6 +91,7 @@ namespace MOI.Patrol.Controllers
 
           //  var user = (Users)Session["User"];
             Users user = new Users();
+            user.Userid = userid;
             if (user == null)
                 return Ok(null);
 
