@@ -19,7 +19,7 @@ namespace MOI.Patrol.Controllers
         private Handler_AhwalMapping _ahwalmapping = new Handler_AhwalMapping();
         private patrolsContext _context = new patrolsContext();
 
-        private String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
+        private String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
         private DataAccess DAL = new DataAccess();
         private Handler_Operations _oper = new Handler_Operations();
 

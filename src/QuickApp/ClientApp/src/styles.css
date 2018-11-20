@@ -7,9 +7,16 @@
 
 .container {
   width: 100% !important;
-  padding: 2px !important;
 }
-
+.content {
+  padding: 0px;
+  /* min-height: 250px; */
+  /* padding: 15px; */
+  /* margin-right: auto; */
+  /* margin-left: auto; */
+  /* padding-left: 15px; */
+  /* padding-right: 15px; */
+}
 .navbar .nav li a:hover,
 .navbar.nav li.toolbaritem a:hover,
 .nav.nav-tabsNOTUSE li a:hover {

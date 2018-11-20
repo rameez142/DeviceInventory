@@ -136,7 +136,7 @@ export class AuthService {
     let jwtHelper = new JwtHelper();
     let decodedIdToken = <IdToken>jwtHelper.decodeToken(response.id_token);
    // debugger
-    alert(12);
+ 
     console.log(decodedIdToken)
     let permissions: PermissionValues[] = Array.isArray(decodedIdToken.permission) ? decodedIdToken.permission : [decodedIdToken.permission];
 

@@ -75,7 +75,7 @@ namespace MOI.Patrol
             if (!optionsBuilder.IsConfigured)
             {
 
-                optionsBuilder.UseNpgsql("Host=localhost;Database=Patrols;Username=postgres;Password=admin;Pooling=true;");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=Patrols;Username=postgres;password=12345;Pooling=true;");
             }
         }
 

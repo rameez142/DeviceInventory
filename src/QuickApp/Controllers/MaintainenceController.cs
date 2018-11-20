@@ -26,7 +26,7 @@ namespace Controllers
     [ApiController]
     public class MaintainenceController : ControllerBase
     {
-        public String constr = "server=localhost;Port=5432;User Id=postgres;password=admin;Database=Patrols";
+        public String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
         public DataAccess DAL = new DataAccess();
 
         [HttpPost("addpatrolcar")]
