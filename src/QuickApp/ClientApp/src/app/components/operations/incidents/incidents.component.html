@@ -79,7 +79,9 @@ title=""
                   searchEnabled="true"
                   placeholder=""
                   rtlEnabled="true"
-                  searchExpr= "['incidentid', 'name']">
+                  searchExpr= "['incidentid', 'name']"
+                  (onValueChanged)="incidentsourceValueChange($event)"
+                  >
                   </dx-select-box>
                 </td>
                 </tr>

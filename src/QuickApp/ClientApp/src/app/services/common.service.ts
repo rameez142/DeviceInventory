@@ -341,4 +341,9 @@ export class CommonService extends EndpointFactory {
           {
             return this.http.post(this.api_url + '/api/operations/addincidents',null, { responseType: 'text' });
           }
+
+          public GetIncidentById(rqhdr:object)
+          {
+            return this.http.post(this.api_url + '/api/operations/incidentbyid',rqhdr, { responseType: 'json' });
+          }
 }

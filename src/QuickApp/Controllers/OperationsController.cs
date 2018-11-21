@@ -127,7 +127,58 @@ namespace MOI.Patrol.Controllers
 
         }
 
+        [HttpPost("addincidents")]
+        public ActionResult PostAddIncidents([FromBody]JObject RqHdr)
+        {
+            var incidentsourceid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidentsourceid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var incidenttypeid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidenttypeid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var incidentplace = (Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["incidentplace"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var extrainfo1 = (Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["extrainfo1"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var extrainfo2 = (Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["extrainfo1"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var extrainfo3 = (Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["extrainfo1"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var userid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
 
+            var source = _context.Incidentsources.FirstOrDefault<Incidentsources>(a => a.Incidentsourceid == incidentsourceid);
+            if (source == null)
+                return Ok(null);
+            Users user = new Users();
+            if (user == null)
+                return Ok(null);
+
+            var newIncident = new Incidents();
+            newIncident.Incidenttypeid = incidenttypeid;
+            newIncident.Incidentstateid = Core.Handler_Incidents.Incident_State_New;
+            newIncident.Incidentsourceid = source.Incidentsourceid;
+            newIncident.Place = incidentplace;
+            if (source.Requiresextrainfo1 == 1)
+            {
+                newIncident.Incidentsourceextrainfo1 = extrainfo1;
+
+            }
+            if (source.Requiresextrainfo2 == 1)
+            {
+                newIncident.Incidentsourceextrainfo2 = extrainfo2;
+
+            }
+            if (source.Requiresextrainfo3 == 1)
+            {
+                newIncident.Incidentsourceextrainfo3 = extrainfo3;
+            }
+            var result = _inc.Add_Incident(user, newIncident);
+          
+            return Ok(result.Text);
+        }
+
+        [HttpPost("incidentbyid")]
+        public ActionResult PostIncidentById([FromBody]JObject RqHdr)
+        {
+            var userid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int32>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var incidentsourceid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidentsourceid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            var source = _context.Incidentsources.FirstOrDefault<Incidentsources>(a => a.Incidentsourceid == incidentsourceid);
+          
+                return Ok(source);
+        }
 
         //[HttpPost("incidentsformappings")]
         //public ActionResult PostIncidentsForMappings()

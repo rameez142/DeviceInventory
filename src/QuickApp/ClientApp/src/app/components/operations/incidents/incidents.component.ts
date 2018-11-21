@@ -195,5 +195,20 @@ RowAdd(e)
     
 
 }
+
+async incidentsourceValueChange(e)
+{
+  let rqhdr:object;
+  let source:any;
+  rqhdr = {
+    userid:this.userid,
+    incidentsourceid:this.selincidentSourceID
+  };
+
+ await this.svc.GetIncidentById(rqhdr).subscribe(resp =>
+    {
+     source = resp;
+  });
+}
   
 }

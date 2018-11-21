@@ -17,7 +17,64 @@ namespace Core
         private patrolsContext _context = new patrolsContext();
         private Handler_Operations _oper = new Handler_Operations();
 
+        //all functions here require Ahwal Permssion
+        public  Operationlogs Add_Incident(Users u, Incidents i)//this transaction requires User_Role_Ahwal Permisson on this AhwalID
+        {
+            try
+            {
+                //first we have to check if this user is authorized to perform this transaction
+                Usersrolesmap permisson_esists = _context.Usersrolesmap.FirstOrDefault(r => r.Userid == u.Userid && r.Userroleid == Core.Handler_User.User_Role_Ops);
 
+                if (permisson_esists == null)
+                {
+                    Operationlogs ol_failed = new Operationlogs();
+                    ol_failed.Userid = u.Userid;
+                    ol_failed.Operationid = Handler_Operations.Opeartion_Incidents_AddNew;
+                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                    _oper.Add_New_Operation_Log(ol_failed);
+                    return ol_failed;
+                }
+                i.Userid = u.Userid;
+                i.Timestamp = DateTime.Now;
+                i.Lastupdate = DateTime.Now;
+                _context.Incidents.Add(i);
+                //by default,we will add new comment for a new incidet,this will help later in the incidents dedicated page, that each incident at least has one comment
+
+                _context.SaveChanges();
+                //still, the incident status will be new, but with this we make sure that each incident at least has one comment
+                var newIncidentComment = new Incidentscomments();
+                newIncidentComment.Incidentid = i.Incidentid;
+                newIncidentComment.Userid = u.Userid;
+                newIncidentComment.Text = "قام باضافة البلاغ";
+                newIncidentComment.Timestamp = DateTime.Now;
+                _context.Incidentscomments.Add(newIncidentComment);
+                _context.SaveChanges();
+                //add it incidentview
+                AddNewIncidentViewForAllExceptOriginalPoster(u, i);
+
+                //create the opeartion log for it
+
+
+            }
+            catch (Exception ex)
+            {
+                Operationlogs ol_failed = new Operationlogs();
+                ol_failed.Userid = u.Userid;
+                ol_failed.Operationid = Handler_Operations.Opeartion_Incidents_AddNew;
+                ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnKnownError;
+                ol_failed.Text = ex.Message;
+                _oper.Add_New_Operation_Log(ol_failed);
+                return ol_failed;
+            }
+            Operationlogs ol = new Operationlogs();
+            ol.Userid = u.Userid;
+            ol.Operationid = Handler_Operations.Opeartion_Incidents_AddNew;
+            ol.Statusid = Handler_Operations.Opeartion_Status_Success;
+            ol.Text = "تم اضافة البلاغ رقم: " + i.Incidentid.ToString();
+            _oper.Add_New_Operation_Log(ol);
+            return ol;
+        }
 
         public Operationlogs HandOver_Incident_To_Person(Users u, Ahwalmapping m, Incidents i)
         {
