@@ -381,7 +381,7 @@ if(e.rowType ==='data')
 // e.cells[0].cellElement.css("color", "red");
 // e.rowElement.color="red";
  //e.rowElement.Font.Bold = false;
-
+console.log(e.key.patrolpersonstateid);
     if(e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_SunRise ||
          e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Sea ||
       e.key.patrolpersonstateid === handler_ahwalMapping.PatrolPersonState_Back ||
@@ -510,7 +510,7 @@ if(e.rowType ==='data')
 }
 }
 show_States_PopUp(){
-console.log(this.selahwalmappingid);
+console.log('show_States_PopUp' + this.selahwalmappingid);
 this.statesPopupVisible = true;
 this.svc.GetAhwalPersonStates(this.selahwalmappingid).subscribe(resp =>{ this.state_src = resp;});
 
@@ -578,15 +578,22 @@ this.selectedCity = e.value;
 
 Rwclick(e)
 {
-console.log(e);
+console.log('dblclick');
  var component = e.component,
 prevClickTime = component.lastClickTime;
 component.lastClickTime = new Date();
 if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
+    console.log('dblclick1');
     this.selahwalmappingid = e.key.ahwalmappingid;
+    this.show_States_PopUp();
+}
+else
+{
+    console.log('dblclick2'); 
 }
 
 }
+
 
 bindIncidentGrid()
 {
@@ -680,10 +687,52 @@ AttahcIncidentSubmitButton_Click(e)
 
   this.svc.AttachIncident(rqhdr).toPromise().then(resp =>
     {
-
-      notify( resp, 'success', 600);
-      this.bindAhwalMappingGrid();
+      
+    notify( JSON.parse(resp).text, 'success', 600);
+    this.bindAhwalMappingGrid();   
   });
 }
+
+onIncToolbarPreparing(e) {
+
+    e.toolbarOptions.items.unshift({
+      location: 'before',
+      template: 'الأحوال'
+    }, {
+          location: 'before',
+          widget: 'dxSelectBox',
+          options: {
+              width: 200,
+              dataSource: this.ahwalsrc,
+              displayExpr: 'name',
+              valueExpr: 'ahwalid',
+              value:this.ahwalsrc[0].ahwalid,
+              onValueChanged: this.ahwalChanged.bind(this)
+          }
+      },{
+        location: 'before',
+        template: 'الشفت'
+    },{
+        location: 'before',
+        widget: 'dxSelectBox',
+        options: {
+            width: 200,
+            dataSource: this.shiftssrc,
+            displayExpr: 'name',
+            valueExpr: 'shiftid',
+            value: this.shiftssrc[0].shiftid,
+            onValueChanged: this.shiftChanged.bind(this)
+    
+        }
+    }
+    , {
+          location: 'after',
+          widget: 'dxButton',
+          options: {
+              icon: 'refresh',
+              onClick: this.refreshDataGrid.bind(this)
+          }
+      });
+    }
 
  }

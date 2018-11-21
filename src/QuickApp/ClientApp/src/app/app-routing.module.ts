@@ -24,6 +24,7 @@ import { EmployeesComponent } from './components/dispatcher/employees/employees.
 import { HandheldinventoryComponent } from './components/maintainence/inventory/handheldinventory/handheldinventory.component';
 import { AccessoryinventoryComponent } from './components/maintainence/inventory/accessoryinventory/accessoryinventory.component';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
+import { IncidentsComponent } from './components/operations/incidents/incidents.component';
 
 const routes: Routes = [
 
@@ -68,7 +69,8 @@ const routes: Routes = [
     {
       path: 'operations',
       children: [
-        { path: 'operationsopslive', component: OperationsopsliveComponent}
+        { path: 'operationsopslive', component: OperationsopsliveComponent},
+        { path: 'incidents', component: IncidentsComponent}
       ]
     },
    {

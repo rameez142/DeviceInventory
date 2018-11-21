@@ -16,7 +16,7 @@ export const adminLteConf = {
       ]},
       {label: 'العمليات', iconClasses: 'fa fa-arrows', children: [
         {label: 'الكشف', route: 'operations/operationsopslive',iconClasses:'fa fa-calendar'},
-        {label: 'البلاغات', route: '',iconClasses:'fa fa-user-secret'},
+        {label: 'البلاغات', route: 'operations/incidents',iconClasses:'fa fa-user-secret'},
         {label: 'اعدادات - نوع البلاغ', route: '',iconClasses:'fa fa-user-secret'}
 
       ]},

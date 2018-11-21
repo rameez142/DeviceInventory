@@ -25,18 +25,18 @@ namespace Core
             {
                 //first we have to check if this Users is authorized to perform this transaction
         
-                Usersrolesmap permisson_esists = _context.Usersrolesmap.FirstOrDefault(r => r.Userid == u.Userid && r.Userroleid == Core.Handler_User.User_Role_Ops);
+                //Usersrolesmap permisson_esists = _context.Usersrolesmap.FirstOrDefault(r => r.Userid == u.Userid && r.Userroleid == Core.Handler_User.User_Role_Ops);
 
-                if (permisson_esists == null)
-                {
-                    Operationlogs ol_failed = new Operationlogs();
-                    ol_failed.Userid = u.Userid;
-                    ol_failed.Operationid = Handler_Operations.Opeartion_Incidents_HandOverIncident;
-                    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
-                    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
-                    _oper.Add_New_Operation_Log(ol_failed);
-                    return ol_failed;
-                }
+                //if (permisson_esists == null)
+                //{
+                //    Operationlogs ol_failed = new Operationlogs();
+                //    ol_failed.Userid = u.Userid;
+                //    ol_failed.Operationid = Handler_Operations.Opeartion_Incidents_HandOverIncident;
+                //    ol_failed.Statusid = Handler_Operations.Opeartion_Status_UnAuthorized;
+                //    ol_failed.Text = "المستخدم لايملك صلاحية هذه العمليه";
+                //    _oper.Add_New_Operation_Log(ol_failed);
+                //    return ol_failed;
+                //}
 
                 var personmapping = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(a => a.Ahwalmappingid == m.Ahwalmappingid);
                 if (personmapping == null)
@@ -91,7 +91,13 @@ namespace Core
                 _context.SaveChanges();
                 AddNewIncidentViewForAllExceptOriginalPoster(u, i);
 
-
+                Operationlogs ol_success = new Operationlogs();
+                ol_success.Userid = u.Userid;
+                ol_success.Operationid = Handler_Operations.Opeartion_Incidents_HandOverIncident;
+                ol_success.Statusid = Handler_Operations.Opeartion_Status_Success;
+                ol_success.Text = "ناجح" + i.Incidentsourceid.ToString();
+                _oper.Add_New_Operation_Log(ol_success);
+                return ol_success;
             }
             catch (Exception ex)
             {

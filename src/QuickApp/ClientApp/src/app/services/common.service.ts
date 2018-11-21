@@ -325,7 +325,20 @@ export class CommonService extends EndpointFactory {
 
           public AttachIncident(rqhr:object)
           {
-            return this.http.post(this.api_url + '/api/operations/attachaaincident',rqhr, { responseType:'text' });
+            return this.http.post(this.api_url + '/api/operations/attachincident',rqhr, { responseType:'text' });
           }
 
+          public GetIncidentPopupSources()
+          {
+            return this.http.post(this.api_url + '/api/operations/incidentpopupsources',null, { responseType: 'json' });
+          }
+
+          public GetIncidentTypes()
+          {
+            return this.http.post(this.api_url + '/api/operations/incidenttypes',null, { responseType: 'json' });
+          }
+          public Addincidents(rqhdr:object)
+          {
+            return this.http.post(this.api_url + '/api/operations/addincidents',null, { responseType: 'text' });
+          }
 }

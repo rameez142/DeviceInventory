@@ -20,7 +20,7 @@ namespace MOI.Patrol.DataAccessLayer
         //    constr = _connectionstring["ConnectionStrings:DefaultConnection"];
         //}
 
-        public String constr = "server=10.2.124.41;Port=5432;User Id=postgres;password=12345;Database=Patrols";
+        public String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
       
 
         // function that creates a list of an object from the given qry

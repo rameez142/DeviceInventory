@@ -86,6 +86,7 @@ import { adminLteConf } from './admin-lte.conf';
 import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
+import { IncidentsComponent } from './components/operations/incidents/incidents.component';
 
 @NgModule({
   imports: [
@@ -149,7 +150,8 @@ import { OperationsopsliveComponent } from './components/operations/operationsop
     SidenavComponent,
     TopnavComponent,
     LayoutComponent,
-    OperationsopsliveComponent
+    OperationsopsliveComponent,
+    IncidentsComponent
   ],
   providers: [
     { provide: 'BASE_URL', useFactory: getBaseUrl },

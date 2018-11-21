@@ -20,7 +20,7 @@ namespace MOI.Patrol.Controllers
         private Handler_AhwalMapping _ahwalmapping = new Handler_AhwalMapping();
         private patrolsContext _context = new patrolsContext();
 
-        private String constr = "server=10.2.124.41;Port=5432;User Id=postgres;password=12345;Database=Patrols";
+        private String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
         private DataAccess DAL = new DataAccess();
         private Handler_Operations _oper = new Handler_Operations();
         private Handler_Incidents _inc = new Handler_Incidents();
@@ -54,6 +54,24 @@ namespace MOI.Patrol.Controllers
 
             return Ok(DAL.PostGre_GetDataTable(Qry));
         }
+
+        [HttpPost("incidentpopupsources")]
+        public ActionResult PostIncidentPopupSourcesList()
+        {
+
+            string Qry = "SELECT IncidentSourceID, Name, MainExtraInfoNumber, ExtraInfo1, ExtraInfo2, ExtraInfo3, RequiresExtraInfo1, RequiresExtraInfo2, RequiresExtraInfo3 FROM IncidentSources";
+
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("incidenttypes")]
+        public ActionResult PostIncidentTypes()
+        {
+
+            string Qry = "SELECT IncidentTypeID, Name, Priority FROM IncidentsTypes";
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
         [HttpPost("attachincident")]
         public ActionResult PostAttachIncident([FromBody]JObject RqHdr)
         {
@@ -96,7 +114,8 @@ namespace MOI.Patrol.Controllers
                         {
                             return Ok(null);
                         }
-                        _inc.HandOver_Incident_To_Person(user, personmapping, incidentObj);
+                        var result = _inc.HandOver_Incident_To_Person(user, personmapping, incidentObj);
+                       return Ok(result);
                       
                     }
 
