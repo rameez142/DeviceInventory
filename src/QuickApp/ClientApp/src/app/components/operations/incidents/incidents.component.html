@@ -111,21 +111,21 @@ title=""
                       </td>
                   </tr>
                    <tr>
-                      <td>  <label [visible]="lblinfo1visibility" name="lblextrainfo1" [(ngModel)]="lblinfo1"></label></td>
-                      <td><input [visible]="txtinfo1visibility" name="txtextrainfo1" [(ngModel)]="txtinfo1"></td>
+                      <td>  <label  name="lblextrainfo1" [(ngModel)]="lblinfo1"></label></td>
+                      <td><input  name="txtextrainfo1" [(ngModel)]="txtinfo1"></td>
                     </tr>
                   <tr>
-                    <td>  <label [visible]="lblinfo2visibility" name="lblextrainfo2" [(ngModel)]="lblinfo2"></label></td>
-                    <td><input [visible]="txtinfo2visibility" name="txtextrainfo2" [(ngModel)]="txtinfo2"></td>
+                    <td>  <label name="lblextrainfo2" [(ngModel)]="lblinfo2"></label></td>
+                    <td><input name="txtextrainfo2" [(ngModel)]="txtinfo2"></td>
                 </tr>
                 <tr>
-                    <td>  <label [visible]="lblinfo3visibility" name="lblextrainfo3" [(ngModel)]="lblinfo3"></label></td>
-                    <td><input [visible]="txtinfo3visibility" name="txtextrainfo3" [(ngModel)]="txtinfo3"></td>
+                    <td>  <label  name="lblextrainfo3" [(ngModel)]="lblinfo3"></label></td>
+                    <td><input  name="txtextrainfo3" [(ngModel)]="txtinfo3"></td>
                 </tr>
                   <tr>
                     <td>
 
-            <button (click)="hdntrans === 'ADD' ? RowAdd($event) :  RowUpdate($event)" data-dismiss="modal" class="btn btn-primary">حفظ</button>
+            <button (click)= RowAdd($event)  data-dismiss="modal" class="btn btn-primary">حفظ</button>
             </td>
             <td>
             <button (click)="ClosePopup()" data-dismiss="modal" class="btn btn-default">إلغاء</button>
