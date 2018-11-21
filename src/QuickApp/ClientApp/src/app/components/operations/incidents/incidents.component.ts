@@ -37,6 +37,18 @@ export class IncidentsComponent implements OnInit {
   extrainfo1:string;
   extrainfo2:string;
   extrainfo3:string;
+  lblinfo1visibility:boolean=false;
+  lblinfo2visibility:boolean=false;
+  lblinfo3visibility:boolean=false;
+  txtinfo1visibility:boolean=false;
+  txtinfo2visibility:boolean=false;
+  txtinfo3visibility:boolean=false;
+  lblinfo1:string="";
+  lblinfo2:string="";
+  lblinfo3:string="";
+  txtinfo1:string="";
+  txtinfo2:string="";
+  txtinfo3:string="";
 
   constructor(private svc:CommonService, private modalService: ModalService,private alertService: AlertService) 
     { 
@@ -165,6 +177,7 @@ if(e.rowType ==='data')
   }
   cleardefaultvalues()
   {
+    this.txtinfo1="";
 
   }
 

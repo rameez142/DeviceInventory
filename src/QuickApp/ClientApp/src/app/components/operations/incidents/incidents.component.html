@@ -111,16 +111,16 @@ title=""
                       </td>
                   </tr>
                    <tr>
-                      <td>  <label name=""></label></td>
-                      <td><input name="txtextrainfo1" [(ngModel)]="extrainfo1"></td>
+                      <td>  <label [visible]="lblinfo1visibility" name="lblextrainfo1" [(ngModel)]="lblinfo1"></label></td>
+                      <td><input [visible]="txtinfo1visibility" name="txtextrainfo1" [(ngModel)]="txtinfo1"></td>
                     </tr>
                   <tr>
-                    <td>  <label name=""></label></td>
-                    <td><input name="txtextrainfo2" [(ngModel)]="extrainfo2"></td>
+                    <td>  <label [visible]="lblinfo2visibility" name="lblextrainfo2" [(ngModel)]="lblinfo2"></label></td>
+                    <td><input [visible]="txtinfo2visibility" name="txtextrainfo2" [(ngModel)]="txtinfo2"></td>
                 </tr>
                 <tr>
-                    <td>  <label name=""></label></td>
-                    <td><input name="txtextrainfo3" [(ngModel)]="extrainfo3"></td>
+                    <td>  <label [visible]="lblinfo3visibility" name="lblextrainfo3" [(ngModel)]="lblinfo3"></label></td>
+                    <td><input [visible]="txtinfo3visibility" name="txtextrainfo3" [(ngModel)]="txtinfo3"></td>
                 </tr>
                   <tr>
                     <td>
