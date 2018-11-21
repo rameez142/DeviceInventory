@@ -141,26 +141,31 @@
 
                       <td>
                           <dx-select-box
+                          width="300"
                           [dataSource]="incidentsources"
                           showClearButton="true"
-                          valueExpr="incidentsourceid"
-                          displayExpr="name"
+                          valueExpr="incidentid"
+                          displayExpr="IncidentSourceName"
                           [value]="selIncidentId"
                           searchEnabled="true"
                           placeholder="Select an Incident"
                           rtlEnabled="true"
-                          searchExpr= "['incidentsourceid', 'name']"
+                          searchExpr= "['incidentid', 'incidentsourcename']"
                           >
                           <div *dxTemplate="let item of 'content'">
-                              <dx-data-grid width="300" height="400"
+                              <dx-data-grid width="600" height="400"
                                       [dataSource]="incidentsources"
-                                      [columns]="[{caption:'الرقم ',dataField:'incidentsourceid'},{caption:'الاسم',dataField:'name'}]"
+                                      [columns]="[{caption:'رقم البلاغ ',dataField:'incidentid'},
+                                      {caption:'كاتب البلاغ',dataField:'username'},
+                                      {caption:'جهة البلاغ',dataField:'incidentsourcename'},
+                                      {caption:'البلاغ',dataField:'incidentstypename'},
+                                      {caption:'المكان',dataField:'place'},
+                                      {caption:'تاريخ البلاغ',dataField:'timestamp'}]"
                                       [selection]="{ mode: 'single' }"
                                       [hoverStateEnabled]="true"
                                       [paging]="{ enabled: true, pageSize: 10 }"
                                       [filterRow]="{ visible: false }"
                                       [rtlEnabled]= "true"
-                                      [focusStateEnabled]="true"
                                       (onRowClick)="IncidentRwclick($event)"
                                       >
 
@@ -169,10 +174,16 @@
                       </dx-select-box>
                       </td>
                     </tr>
+                    <tr>
+                      <td>
+                        <button type="submit" (click)="AttahcIncidentSubmitButton_Click($event)" data-dismiss="modal" class="btn btn-primary">تسليم</button>
+
+                      </td>
+                    </tr>
                     </table>
           </div>
-              <!-- <dx-autocomplete [dataSource]="incidentsources"   [valueExpr]="person_displayExpr" itemTemplate="item" openOnFieldClick="true" 
-                         rtlEnabled="true" dropDownButtonTemplate="item" showDropDownButton="true" 
+              <!-- <dx-autocomplete [dataSource]="incidentsources"   [valueExpr]="person_displayExpr" itemTemplate="item" openOnFieldClick="true"
+                         rtlEnabled="true" dropDownButtonTemplate="item" showDropDownButton="true"
                          showClearButton="true"  placeholder="Select an Incident" maxItemCount="1" width="300">
                             <div *dxTemplate="let item of 'item'">
                                 <dx-data-grid width="300" height="400"
@@ -191,11 +202,11 @@
                          </dx-autocomplete>
                                    -->
           <!-- <td>
-                        
-              <dx-lookup [dataSource]="incidentsources" 
+
+              <dx-lookup [dataSource]="incidentsources"
               displayExpr = "name" width="200"
               ></dx-lookup>
-          
+
       </td>
     </tr>
     <tr> -->

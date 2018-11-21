@@ -20,9 +20,10 @@ namespace MOI.Patrol.Controllers
         private Handler_AhwalMapping _ahwalmapping = new Handler_AhwalMapping();
         private patrolsContext _context = new patrolsContext();
 
-        private String constr = "server=localhost;Port=5432;User Id=postgres;password=12345;Database=Patrols";
+        private String constr = "server=10.2.124.41;Port=5432;User Id=postgres;password=12345;Database=Patrols";
         private DataAccess DAL = new DataAccess();
         private Handler_Operations _oper = new Handler_Operations();
+        private Handler_Incidents _inc = new Handler_Incidents();
 
         [HttpPost("operationslist")]
         public ActionResult PostOperationsList()
@@ -49,10 +50,74 @@ namespace MOI.Patrol.Controllers
         public ActionResult PostIncidentSourcesList()
         {
 
-            string Qry = "SELECT IncidentSourceID, Name, MainExtraInfoNumber, ExtraInfo1, ExtraInfo2, ExtraInfo3, RequiresExtraInfo1, RequiresExtraInfo2, RequiresExtraInfo3 FROM IncidentSources";
+            string Qry = "SELECT        Incidents.IncidentID, Incidents.IncidentStateID,Users.Name as UserName, Incidents.Place, Incidents.IncidentSourceExtraInfo1 as ExtraInfo1, Incidents.IncidentSourceExtraInfo2 as ExtraInfo2, Incidents.IncidentSourceExtraInfo3  as ExtraInfo3, Incidents.TimeStamp, Incidents.LastUpdate, Incidents.IncidentSourceID, IncidentsTypes.Name AS IncidentsTypeName, IncidentSources.Name AS IncidentSourceName, IncidentSources.ExtraInfo1 as IncidentSourceExtraInfo1, IncidentSources.ExtraInfo2 as IncidentSourceExtraInfo2, IncidentSources.ExtraInfo3 as IncidentSourceExtraInfo3 FROM   Incidents INNER JOIN IncidentSources ON Incidents.IncidentSourceID = IncidentSources.IncidentSourceID INNER JOIN IncidentStates ON Incidents.IncidentStateID = IncidentStates.IncidentStateID INNER JOIN IncidentsTypes ON Incidents.IncidentTypeID = IncidentsTypes.IncidentTypeID  INNER JOIN Users ON Incidents.UserID = Users.UserID where Incidents.IncidentStateID!=30 Order by TimeStamp desc LIMIT 50 OFFSET 1";
 
             return Ok(DAL.PostGre_GetDataTable(Qry));
         }
+        [HttpPost("attachincident")]
+        public ActionResult PostAttachIncident([FromBody]JObject RqHdr)
+        {
+            var selectedIncidentID = (RqHdr["incidentid"]);
+            var mappingID = (Newtonsoft.Json.JsonConvert.DeserializeObject<string>(RqHdr["ahwalmappingid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+        
+            if (selectedIncidentID == null)
+            {
+                return Ok(null);
+            }
+
+            if (mappingID != null)
+            {
+                if (mappingID.ToString().Equals(DBNull.Value) ||
+                 mappingID.ToString() == "")
+                {
+                    return Ok(null);
+                }
+           
+                // var mappingID = OpsLiveGrid.GetRowValues(rowIndex, "AhwalMappingID");
+                var personmapping = _context.Ahwalmapping.FirstOrDefault<Ahwalmapping>(em => em.Ahwalmappingid == Convert.ToInt64(mappingID));
+
+                if (personmapping != null)
+                {
+                    //we have to check the current state of the person, if he is not in one of the allowed statees, we cannot handover the incident to him
+
+                   
+                    if (selectedIncidentID != null)
+                    {
+                        var incidentObj = _context.Incidents.FirstOrDefault<Incidents>(a => a.Incidentid == Convert.ToInt64(selectedIncidentID));
+                        if (incidentObj == null)
+                        {
+                            return Ok(null);
+                        }
+                        Users user = new Users();
+                        user.Userid = Convert.ToInt32(RqHdr["userid"]);
+
+                        if (RqHdr["userid"] == null)
+                        {
+                            return Ok(null);
+                        }
+                        _inc.HandOver_Incident_To_Person(user, personmapping, incidentObj);
+                      
+                    }
+
+                }
+            }
+
+            return Ok(null);
+
+
+        }
+
+
+
+        //[HttpPost("incidentsformappings")]
+        //public ActionResult PostIncidentsForMappings()
+        //{
+
+        //    string Qry = "SELECT        Incidents.IncidentID, Incidents.IncidentStateID,Users.Name as UserName, Incidents.Place, Incidents.IncidentSourceExtraInfo1 as ExtraInfo1, Incidents.IncidentSourceExtraInfo2 as ExtraInfo2, Incidents.IncidentSourceExtraInfo3  as ExtraInfo3, Incidents.TimeStamp, Incidents.LastUpdate, Incidents.IncidentSourceID, IncidentsTypes.Name AS IncidentsTypeName, IncidentSources.Name AS IncidentSourceName, IncidentSources.ExtraInfo1 as IncidentSourceExtraInfo1, IncidentSources.ExtraInfo2 as IncidentSourceExtraInfo2, IncidentSources.ExtraInfo3 as IncidentSourceExtraInfo3 FROM   Incidents INNER JOIN IncidentSources ON Incidents.IncidentSourceID = IncidentSources.IncidentSourceID INNER JOIN IncidentStates ON Incidents.IncidentStateID = IncidentStates.IncidentStateID INNER JOIN IncidentsTypes ON Incidents.IncidentTypeID = IncidentsTypes.IncidentTypeID  INNER JOIN Users ON Incidents.UserID = Users.UserID where Incidents.IncidentStateID!=30 Order by TimeStamp desc LIMIT 50 OFFSET 1";
+
+        //    return Ok(DAL.PostGre_GetDataTable(Qry));
+        //}
 
         [HttpPost("opslivelist")]
         public IActionResult Postdispatchlist([FromBody]JObject RqHdr)

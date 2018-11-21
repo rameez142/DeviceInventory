@@ -34,7 +34,7 @@ export class OperationsopsliveComponent implements OnInit {
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
   @ViewChild('gridIncidents') incidentGrid: DxDataGridComponent;
 
- 
+
   namet:any;
 loadingVisible:boolean = false;
 incidentloadingVisible:boolean = false;
@@ -83,6 +83,7 @@ selRowIndex:number;
 handHeldsrc:handhelds[];
 incidentsrc:any;
 incidentsources:any;
+incidentdatasources:any;
 contextPopupVisible:any = false;
 mappopupVisible:any = false;
 myGroup = new FormGroup({
@@ -221,9 +222,11 @@ bindAhwalMappingGridSources()
                  });
 this.svc.GetIncidentSourceList().toPromise().then(resp =>
     {
-console.log(resp);
+console.log(JSON.stringify(resp));
      this.incidentsources =  resp;
      });
+
+
 }
 
 
@@ -634,26 +637,22 @@ if(e.rowType ==='data')
   }
 
   onContextMenuprepare(e) {
-    //this.menuOpen = true;
-    console.log(e);
-    this.clearIncidentPopupValues();
     this.selahwalmappingid = e.row.key.ahwalmappingid;
-  
+
       if (e.row.rowType === 'data') {
       e.items = [{
         text: 'تسليم بلاغ',
         value:e.row.rowIndex,
         onItemClick: this.ContextMenuClick.bind(this)
-  
+
     }
   ];
-  
+
     }
   }
 
   ContextMenuClick(e)
   {
-    //console.log(e);
     if (e.itemData.text === 'تسليم بلاغ')
     {
       this.contextPopupVisible = true
@@ -662,62 +661,29 @@ if(e.rowType ==='data')
 selIncidentId:any;
 IncidentRwclick(e)
 {
-    console.log(e);
-     var component = e.component,
-    prevClickTime = component.lastClickTime;
-    component.lastClickTime = new Date();
-       
-        this.selIncidentId = e.key.incidentsourceid;
-       
+
+        this.selIncidentId = e.key.incidentid;
+
         console.log(e + 'click');
         console.log( this.selIncidentId);
         console.log(  e.key.incidentsourceid);
-
-    
-console.log( this.selIncidentId);
 }
 
-  clearIncidentPopupValues()
-  {
+AttahcIncidentSubmitButton_Click(e)
+{
+  let rqhdr:object = {
 
-  }
-  person_displayExpr(item){
-     console.log('item' + JSON.stringify(item));
- if(item !== undefined && item !==null)
-     { return  item.name ;
-     } 
- }
+    ahwalmappingid:this.selahwalmappingid,
+    userid:this.userid,
+    incidentid:this.selIncidentId
+  };
 
- person_displayExpr2(item){
-    console.log('item' + JSON.stringify(item));
-if(item !== undefined && item !==null)
-    { return  item.incidentsourceid ;
-    } 
-}
-_gridBoxValue: number[] = [3];
-getSelectedItemsKeys(items) {
-    var result = [],
-        that = this;
+  this.svc.AttachIncident(rqhdr).toPromise().then(resp =>
+    {
 
-    items.forEach(function(item) {
-        if(item.selected) {
-            result.push(item.key);
-        }
-        if(item.items.length) {
-            result = result.concat(that.getSelectedItemsKeys(item.items));
-        }
-    });
-    return result;
-}
-
-
-
-get gridBoxValue(): number[] {
-    return this._gridBoxValue;
-}
-
-set gridBoxValue(value: number[]) {
-    this._gridBoxValue = value || [];
+      notify( resp, 'success', 600);
+      this.bindAhwalMappingGrid();
+  });
 }
 
  }

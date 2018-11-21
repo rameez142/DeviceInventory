@@ -323,4 +323,9 @@ export class CommonService extends EndpointFactory {
             return this.http.post(this.api_url + '/api/operations/changeopspersonstate',rqhr, { responseType:'text' });
           }
 
+          public AttachIncident(rqhr:object)
+          {
+            return this.http.post(this.api_url + '/api/operations/attachaaincident',rqhr, { responseType:'text' });
+          }
+
 }
