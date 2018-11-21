@@ -64,6 +64,7 @@ namespace AssetManagement.Controllers
         {
             if (request.IsPasswordGrantType())
             {
+                string userName = HttpContext.User.Identity.Name;
                 IdentityUser user = new IdentityUser();
                 user.Email = "mimran";
                 user.UserName = "mimran";

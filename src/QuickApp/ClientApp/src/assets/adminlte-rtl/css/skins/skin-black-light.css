@@ -20,16 +20,16 @@
 .skin-black-light .main-header .navbar .nav > li > a {
   color: #333333;
 }
-.skin-black-light .main-header .navbar .nav > li > a:hover,
-.skin-black-light .main-header .navbar .nav > li > a:active,
-.skin-black-light .main-header .navbar .nav > li > a:focus,
-.skin-black-light .main-header .navbar .nav .open > a,
-.skin-black-light .main-header .navbar .nav .open > a:hover,
-.skin-black-light .main-header .navbar .nav .open > a:focus,
-.skin-black-light .main-header .navbar .nav > .active > a {
-  background: #ffffff;
-  color: #999999;
-}
+  .skin-black-light .main-header .navbar .nav > li > a:hover,
+  .skin-black-light .main-header .navbar .nav > li > a:active,
+  .skin-black-light .main-header .navbar .nav > li > a:focus,
+  .skin-black-light .main-header .navbar .nav .open > a,
+  .skin-black-light .main-header .navbar .nav .open > a:hover,
+  .skin-black-light .main-header .navbar .nav .open > a:focus,
+  .skin-black-light .main-header .navbar .nav > .active > a, dx-header-row {
+    background: #ffffff;
+    color: #999999;
+  }
 .skin-black-light .main-header .navbar .sidebar-toggle {
   color: #333333;
 }

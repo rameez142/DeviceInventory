@@ -23,6 +23,7 @@ using System;
 using AppPermissions = DAL.Core.ApplicationPermissions;
 using MOI.Patrol;
 using System.Threading.Tasks;
+using MOI.Patrol.Core;
 
 namespace AssetManagement
 {
@@ -46,7 +47,7 @@ namespace AssetManagement
                 options.UseOpenIddict();
             });
 
-
+            services.AddSignalR();
 
             // add identity
             //services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -198,6 +199,10 @@ namespace AssetManagement
             app.UseSpaStaticFiles();
             app.UseAuthentication();
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotifyHub>("/notify");
+            });
 
             app.UseMvc(routes =>
             {

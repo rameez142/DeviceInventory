@@ -147,7 +147,7 @@ namespace MOI.Patrol.Controllers
 
             var newIncident = new Incidents();
             newIncident.Incidenttypeid = incidenttypeid;
-            newIncident.Incidentstateid = Core.Handler_Incidents.Incident_State_New;
+            newIncident.Incidentstateid = Handler_Incidents.Incident_State_New;
             newIncident.Incidentsourceid = source.Incidentsourceid;
             newIncident.Place = incidentplace;
             if (source.Requiresextrainfo1 == 1)
@@ -233,38 +233,38 @@ namespace MOI.Patrol.Controllers
             var personState = new Patrolpersonstates();
             if (personstate == "Away")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Away;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Away;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
                 return Ok(result);
             }
             else if (personstate == "Land")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Land;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Land;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId ,personState);
                 return Ok(result);
 
             }
             else if (personstate == "BackFromAway")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Back;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Back;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
                 return Ok(result);
             }
             else if (personstate == "BackFromLand")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Sea;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Sea;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
                 return Ok(result);
             }
             else if (personstate == "WalkingPatrol")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_WalkingPatrol;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_WalkingPatrol;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
                 return Ok(result);
             }
             else if (personstate == "BackFromWalking")
             {
-                personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_BackFromWalking;
+                personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_BackFromWalking;
                 var result = _ahwalmapping.Ops_ChangePersonState(user, ahwalmappingId, personState);
                 return Ok(result);
             }

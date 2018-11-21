@@ -28,6 +28,7 @@
     "@angular/platform-browser": "^6.0.9",
     "@angular/platform-browser-dynamic": "^6.0.9",
     "@angular/router": "^6.0.9",
+    "@aspnet/signalr": "^1.0.4",
     "@ng-bootstrap/ng-bootstrap": "^3.3.0",
     "@ngx-translate/core": "^10.0.2",
     "@swimlane/ngx-datatable": "^13.0.1",

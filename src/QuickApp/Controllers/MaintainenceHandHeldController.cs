@@ -60,7 +60,7 @@ namespace MOI.Patrol.Controllers
               
             }
 
-            if (result.Statusid == Core.Handler_Operations.Opeartion_Status_Success)
+            if (result.Statusid == Handler_Operations.Opeartion_Status_Success)
             {
               
                 return Ok(result.Text);

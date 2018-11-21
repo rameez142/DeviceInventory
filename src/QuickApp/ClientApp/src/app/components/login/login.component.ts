@@ -35,19 +35,19 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.login();
+    //this.userLogin.rememberMe = this.authService.rememberMe;
 
-    this.userLogin.rememberMe = this.authService.rememberMe;
-
-    if (this.getShouldRedirect()) {
-      this.authService.redirectLoginUser();
-    }
-    else {
-      this.loginStatusSubscription = this.authService.getLoginStatusEvent().subscribe(isLoggedIn => {
-        if (this.getShouldRedirect()) {
-          this.authService.redirectLoginUser();
-        }
-      });
-    }
+    //if (this.getShouldRedirect()) {
+    //  this.authService.redirectLoginUser();
+    //}
+    //else {
+    //  this.loginStatusSubscription = this.authService.getLoginStatusEvent().subscribe(isLoggedIn => {
+    //    if (this.getShouldRedirect()) {
+    //      this.authService.redirectLoginUser();
+    //    }
+    //  });
+    //}
   }
 
 

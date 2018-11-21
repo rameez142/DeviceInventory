@@ -1,8 +1,8 @@
 // Flow Of Tabs
-//1. Show Content
-//2. Directive SHow
-//3. ShowBSTab
-//4. OnShowTab
+// 1. Show Content
+// 2. Directive SHow
+// 3. ShowBSTab
+// 4. OnShowTab
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { fadeInOut } from '../../services/animations';
@@ -27,14 +27,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isProgramSettingActivated = false;
   fragmentSubscription: any;
 
-  readonly profileTab = "profile";
-  readonly preferencesTab = "preferences";
-  readonly usersTab = "users";
-  readonly rolesTab = "roles";
-  readonly viewdefinitionTab = "viewdefinition";
-  readonly programsettingTab = "programsetting";
+  readonly profileTab = 'profile';
+  readonly preferencesTab = 'preferences';
+  readonly usersTab = 'users';
+  readonly rolesTab = 'roles';
+  readonly viewdefinitionTab = 'viewdefinition';
+  readonly programsettingTab = 'programsetting';
 
-  @ViewChild("tab")
+  @ViewChild('tab')
   tab: BootstrapTabDirective;
 
 
@@ -63,17 +63,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isFragmentEquals(fragment1: string, fragment2: string) {
 
     if (fragment1 == null)
-      fragment1 = "";
+      fragment1 = '';
 
     if (fragment2 == null)
-      fragment2 = "";
+      fragment2 = '';
 
     return fragment1.toLowerCase() == fragment2.toLowerCase();
   }
 
 
   onShowTab(event) {    
-    let activeTab = event.target.hash.split("#", 2).pop();
+    let activeTab = event.target.hash.split('#', 2).pop();
 
     this.isProfileActivated = activeTab == this.profileTab;
     this.isPreferencesActivated = activeTab == this.preferencesTab;

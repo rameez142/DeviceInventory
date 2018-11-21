@@ -46,7 +46,7 @@ namespace MOI.Patrol.Controllers
                 responsemsg = "يرجى اختيار الفرد";
                 return Ok(responsemsg);
             }
-            var person = _person.GetPersonForUserForRole(user, Convert.ToInt64(selectedPerson), Core.Handler_User.User_Role_Ahwal);
+            var person = _person.GetPersonForUserForRole(user, Convert.ToInt64(selectedPerson), Handler_User.User_Role_Ahwal);
             if (person == null)
             {
                 responsemsg = "لم يتم العثور على الفرد";
@@ -58,7 +58,7 @@ namespace MOI.Patrol.Controllers
                 responsemsg = "يرجى اختيار الدورية";
                 return Ok(responsemsg);
             }
-            var patrol = _patrol.GetPatrolCarByPlateNumberForUserForRole(user, selectedPatrol.ToString().Trim(), Core.Handler_User.User_Role_Ahwal);
+            var patrol = _patrol.GetPatrolCarByPlateNumberForUserForRole(user, selectedPatrol.ToString().Trim(), Handler_User.User_Role_Ahwal);
             if (patrol == null)
             {
                 responsemsg = "لم يتم العثور على الدورية";
@@ -71,7 +71,7 @@ namespace MOI.Patrol.Controllers
                 responsemsg = "يرجى اختيار الجهاز";
                 return Ok(responsemsg);
             }
-            var handheld = _handheld.GetHandHeldBySerialForUserForRole(user, selectedHandHeld.ToString().Trim(), Core.Handler_User.User_Role_Ahwal);
+            var handheld = _handheld.GetHandHeldBySerialForUserForRole(user, selectedHandHeld.ToString().Trim(), Handler_User.User_Role_Ahwal);
 
             var personMapping = _ahwalmapping.GetMappingByPersonID(user, person);
             if (personMapping == null)
@@ -199,7 +199,7 @@ namespace MOI.Patrol.Controllers
                 }
                 var personID = person.Personid;
                 m.Ahwalid = person.Ahwalid;
-                m.Sectorid = Core.Handler_AhwalMapping.Sector_Public;
+                m.Sectorid = Handler_AhwalMapping.Sector_Public;
                 //the first result of an ahwal will alway be the generic public sector
                 var cityID = _context.Citygroups.FirstOrDefault<Citygroups>(ec => ec.Ahwalid == person.Ahwalid);
                 m.Citygroupid = cityID.Citygroupid;// Core.Handler_AhwalMapping.CityGroup_Sector_Public_CityGroupNone;
@@ -261,7 +261,7 @@ namespace MOI.Patrol.Controllers
 
                
             }
-            else if (Convert.ToInt64(selectedRole) == Core.Handler_AhwalMapping.PatrolRole_Associate)
+            else if (Convert.ToInt64(selectedRole) == Handler_AhwalMapping.PatrolRole_Associate)
             {
 
                 var associateSelectionmappingID = uiSelAssociateAhwalMappingID;
@@ -271,7 +271,7 @@ namespace MOI.Patrol.Controllers
                     return Ok(responsemsg);
                 }
 
-                var ahwalMappingForAssociate = _ahwalmapping.GetMappingByID(user, Convert.ToInt64(associateSelectionmappingID.ToString()), Core.Handler_User.User_Role_Ahwal);
+                var ahwalMappingForAssociate = _ahwalmapping.GetMappingByID(user, Convert.ToInt64(associateSelectionmappingID.ToString()), Handler_User.User_Role_Ahwal);
                 if (ahwalMappingForAssociate != null)
                 {
                     var personID = person.Personid;
@@ -364,15 +364,15 @@ namespace MOI.Patrol.Controllers
             var personState = new Patrolpersonstates();
                 if (selmenu == "غياب")
                 {
-                    personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Absent;
+                    personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Absent;
                 }
                 else if (selmenu == "مرضيه")
                 {
-                    personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Sick;
+                    personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Sick;
                 }
                 else if (selmenu == "اجازه")
                 {
-                    personState.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_Off;
+                    personState.Patrolpersonstateid = Handler_AhwalMapping.PatrolPersonState_Off;
                 }
                 var result = _ahwalmapping.Ahwal_ChangePersonState(user, mappingid, personState);
               
