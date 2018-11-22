@@ -116,7 +116,8 @@ export class DispatchComponent implements OnInit {
   ngOnInit() {
     this.loadSources();
     setInterval(() => {
-      this.loadSources();
+      //Added by imran to retain the state prior to refresh of the grid
+      this.dataGrid.instance.refresh();
     }, 10000);
 
   }

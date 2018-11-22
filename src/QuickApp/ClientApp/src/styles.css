@@ -5,6 +5,10 @@
 @import 'app/assets/styles/ngx-datatable.css';
 @import 'app/assets/styles/themes.css';
 
+.sidebar-mini.sidebar-collapse .main-header .logo {
+  width: 230px !important;
+}
+
 body {
   font-family: 'Times New Roman' !important;
 }
@@ -18,7 +22,7 @@ body {
 }
 
 .container {
-  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .content {

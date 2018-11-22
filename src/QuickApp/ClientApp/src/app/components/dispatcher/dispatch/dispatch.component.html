@@ -3,6 +3,7 @@
 
 
     <dx-data-grid id="gridContainer"
+                  width="100%"
                   [dataSource]="dataSource"
                   [showBorders]="true"
                   [rtlEnabled]="true"
@@ -19,6 +20,7 @@
                  [allowedPageSizes]="[80, 50, 10]"
                  [showInfo]="true">
       </dxo-pager>
+      <dxo-state-storing [enabled]="true" type="localStorage" storageKey="storage"></dxo-state-storing>
       <!-- onContextMenuPreparing)= "onContextMenuprepare($event)"  -->
 
       <dxo-export [enabled]="true" fileName="Vehicle"></dxo-export>
@@ -61,9 +63,9 @@
 
       <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="100" [selectedFilterOperation]="'contains'"></dxi-column>
       <!--  <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
-       <div *dxTemplate="let data of 'maptemplate'">
-            <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
-           </div> -->
+   <div *dxTemplate="let data of 'maptemplate'">
+        <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
+       </div> -->
 
     </dx-data-grid>
 

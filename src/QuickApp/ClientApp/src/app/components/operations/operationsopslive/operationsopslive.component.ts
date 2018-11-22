@@ -36,7 +36,7 @@ export class OperationsopsliveComponent implements OnInit {
   @ViewChild('gridIncidents') incidentGrid: DxDataGridComponent;
   @ViewChild('gridIncidentPopup') gridIncidentPopup: DxDataGridComponent;
 
-  
+
 
   namet: any;
   loadingVisible: boolean = false;
@@ -132,8 +132,9 @@ export class OperationsopsliveComponent implements OnInit {
     this.bindIncidentGrid();
 
     setInterval(() => {
-      this.bindAhwalMappingGrid();
-      this.bindIncidentGrid();
+      //Added by imran to retain the state prior to refresh of the gridS
+      this.dataGrid.instance.refresh();
+      this.incidentGrid.instance.refresh();
     }, 10000);
   }
 
@@ -584,12 +585,12 @@ export class OperationsopsliveComponent implements OnInit {
   selIncidentId: any;
   //gridIncPopupVisible:any;
   IncidentRwclick(e) {
-console.log(CircularJSON.stringify(e));
+    console.log(CircularJSON.stringify(e));
     this.selIncidentId = e.key.incidentid;
     //this.gridIncPopupVisible = false;
     console.log('hrd' + this.gridIncidentPopup);
-   // this.gridIncidentPopup.nativeElement.instance.option('visible','false') ;
-   // console.log(util.inspect(e) + 'click');
+    // this.gridIncidentPopup.nativeElement.instance.option('visible','false') ;
+    // console.log(util.inspect(e) + 'click');
     console.log(this.selIncidentId);
     console.log(e.key.incidentsourceid);
   }

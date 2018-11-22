@@ -57,9 +57,11 @@ import { ProgramSettingComponent } from './components/controls/program-setting.c
 import { RoleEditorComponent } from './components/controls/role-editor.component';
 import { DxTreeViewModule } from '../../node_modules/devextreme-angular';
 
-import {DxLookupModule, DxMenuModule,DxContextMenuModule,DxSelectBoxModule,DxPopupModule,DxDataGridModule,
-  DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule, DxTabPanelModule,
-  DxCheckBoxModule,DxDropDownBoxModule,DxAutocompleteModule } from 'devextreme-angular';
+import {
+  DxLookupModule, DxMenuModule, DxContextMenuModule, DxSelectBoxModule, DxPopupModule, DxDataGridModule,
+  DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule, DxTabPanelModule,
+  DxCheckBoxModule, DxDropDownBoxModule, DxAutocompleteModule
+} from 'devextreme-angular';
 
 
 import { DispatchComponent } from './components/dispatcher/dispatch/dispatch.component';
@@ -70,17 +72,17 @@ import { HandheldinventoryComponent } from './components/maintainence/inventory/
 import { AccessoryinventoryComponent } from './components/maintainence/inventory/accessoryinventory/accessoryinventory.component';
 import { EmployeesComponent } from './components/dispatcher/employees/employees.component';
 import { PatrolCarsinventoryComponent } from './components/maintainence/inventory/patrolcarsinventory/patrolcarsinventory.component';
-import {MainComponent} from './components/maps/main/main.component';
-import {MapLeftNavDemoComponent} from './components/maps/map-left-nav.component';
-import {TopnavComponent} from './components/maps/topnav/topnav.component';
-import {SidenavComponent} from './components/maps/sidenav/sidenav.component';
-import {LayoutComponent} from './components/maps/layout/layout.component';
-import {MapComponent} from './components/maps/map.component'
+import { MainComponent } from './components/maps/main/main.component';
+import { MapLeftNavDemoComponent } from './components/maps/map-left-nav.component';
+import { TopnavComponent } from './components/maps/topnav/topnav.component';
+import { SidenavComponent } from './components/maps/sidenav/sidenav.component';
+import { LayoutComponent } from './components/maps/layout/layout.component';
+import { MapComponent } from './components/maps/map.component'
 import { CommonService } from './services/common.service';
 import { SharedMapServiceService } from './services/shared-map-service.service';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingPageModule } from 'angular-loading-page';
-import { LayoutModule,BoxModule  } from '../../node_modules/angular-admin-lte';
+
 import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -88,6 +90,7 @@ import { OperationsopsliveComponent } from './components/operations/operationsop
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
 import { SignalRModule } from 'ng2-signalr';
 import { SignalRConfiguration } from 'ng2-signalr';
+import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
 
 @NgModule({
   imports: [
@@ -109,13 +112,12 @@ import { SignalRConfiguration } from 'ng2-signalr';
     BsDropdownModule.forRoot(),
     CarouselModule.forRoot(),
     ModalModule.forRoot(),
-   DxTreeViewModule,
-    FormsModule,DxSelectBoxModule,DxContextMenuModule,DxMenuModule,DxDropDownBoxModule,
-    DxPopupModule,DxDataGridModule,DxButtonModule ,DxTemplateModule,DxLoadIndicatorModule,DxLoadPanelModule,
-     DxTabPanelModule,DxCheckBoxModule,DxAutocompleteModule,
-    LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
-    LayoutModule.forRoot(adminLteConf)
-   ,  ReactiveFormsModule
+    DxTreeViewModule,
+    FormsModule, DxSelectBoxModule, DxContextMenuModule, DxMenuModule, DxDropDownBoxModule,
+    DxPopupModule, DxDataGridModule, DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule,
+    DxTabPanelModule, DxCheckBoxModule, DxAutocompleteModule,
+    LayoutModule, LoadingPageModule, NgbModule, CoreModule, BoxModule, DxLookupModule,
+    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf)
   ],
   declarations: [
     AppComponent,
@@ -173,7 +175,7 @@ import { SignalRConfiguration } from 'ng2-signalr';
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
-],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

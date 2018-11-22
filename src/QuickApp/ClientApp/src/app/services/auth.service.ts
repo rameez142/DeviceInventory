@@ -17,6 +17,8 @@ import { Utilities } from './utilities';
 import { LoginResponse, IdToken } from '../models/login-response.model';
 import { User } from '../models/user.model';
 import { Permission, PermissionNames, PermissionValues } from '../models/permission.model';
+import { LayoutStore } from '../../../node_modules/angular-admin-lte';
+
 
 @Injectable()
 export class AuthService {
@@ -33,7 +35,7 @@ export class AuthService {
   private _loginStatus = new Subject<boolean>();
 
 
-  constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager) {
+  constructor(public layoutStore: LayoutStore, private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager) {
     this.initializeLoginStatus();
   }
 
@@ -118,7 +120,7 @@ export class AuthService {
 
 
   private processLoginResponse(response: LoginResponse, rememberMe: boolean) {
-   
+
     let accessToken = response.access_token;
 
     if (accessToken == null)
@@ -135,8 +137,8 @@ export class AuthService {
 
     let jwtHelper = new JwtHelper();
     let decodedIdToken = <IdToken>jwtHelper.decodeToken(response.id_token);
-    
- 
+
+
     console.log(decodedIdToken)
     let permissions: PermissionValues[] = Array.isArray(decodedIdToken.permission) ? decodedIdToken.permission : [decodedIdToken.permission];
 
@@ -154,13 +156,41 @@ export class AuthService {
     user.isEnabled = true;
 
     this.saveUserDetails(user, permissions, accessToken, idToken, refreshToken, accessTokenExpiry, rememberMe);
-
+    this.loadLeftNavigation();
     this.reevaluateLoginStatus(user);
 
     return user;
   }
 
+  private loadLeftNavigation() {
+    let sidebarLeftMenu = [
+      { label: 'Home', route: 'Home', iconClasses: 'fa fa-road' },
+      {
+        label: 'الصيانه', route: 'maintainence/patrolcars', iconClasses: 'fa fa-th-list', children: [
+          { label: 'الدوريات', route: 'maintainence/patrolcars', iconClasses: 'fa fa-automobile' },
+          { label: 'تقارير الاستلام والتسليم الأجهزة', route: 'maintainence/patrolcarsinventory', iconClasses: 'fa fa-calendar' },
+          { label: 'الأجهزة', route: 'maintainence/handhelds', iconClasses: 'fa fa-fax' },
+          { label: 'تقارير الاستلام والتسليم الدوريات', route: 'maintainence/handheldsinventory', iconClasses: 'fa fa-calendar' }
+        ]
+      },
+      {
+        label: 'الأحوال', route: 'dispatcher/dispatcher', iconClasses: 'fa fa-eye', children: [
+          { label: 'كشف التوزيع', route: 'dispatcher/dispatcher', iconClasses: 'fa fa-calendar' }
+        ]
+      },
+      {
+        label: 'العمليات', route: 'operations/operationsopslive', iconClasses: 'fa fa-arrows', children: [
+          { label: 'الكشف', route: 'operations/operationsopslive', iconClasses: 'fa fa-calendar' },
+          { label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret' }
 
+        ]
+      }
+    ];
+    //setTimeout(() => {
+    //  this.layoutStore.setSidebarLeftMenu(sidebarLeftMenu);
+    //}, 1);
+    this.layoutStore.setSidebarLeftMenu(sidebarLeftMenu);
+  }
   private saveUserDetails(user: User, permissions: PermissionValues[], accessToken: string, idToken: string, refreshToken: string, expiresIn: Date, rememberMe: boolean) {
 
     if (rememberMe) {
