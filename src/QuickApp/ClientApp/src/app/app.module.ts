@@ -87,6 +87,8 @@ import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
+import { SignalRModule } from 'ng2-signalr';
+import { SignalRConfiguration } from 'ng2-signalr';
 
 @NgModule({
   imports: [
@@ -114,7 +116,7 @@ import { IncidentsComponent } from './components/operations/incidents/incidents.
      DxTabPanelModule,DxCheckBoxModule,DxAutocompleteModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
-   ,FanMenuModule,  ReactiveFormsModule
+    , FanMenuModule, ReactiveFormsModule, SignalRModule.forRoot(createConfig)
   ],
   declarations: [
     AppComponent,
@@ -182,4 +184,11 @@ export class AppModule {
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
+}
+export function createConfig(): SignalRConfiguration {
+  const c = new SignalRConfiguration();
+  c.hubName = 'NotifyHub';
+  c.qs = { user: 'imran' };
+  c.url = 'http://localhost:2018/';
+  return c;
 }

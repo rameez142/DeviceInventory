@@ -50,7 +50,9 @@
               "node_modules/bootstrap-select/dist/js/bootstrap-select.js",
               "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
               "node_modules/prismjs/prism.js",
-              "node_modules/prismjs/components/prism-typescript.js"
+              "node_modules/prismjs/components/prism-typescript.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/signalr/jquery.signalR.js"
             ]
           },
           "configurations": {
