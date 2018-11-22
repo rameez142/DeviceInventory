@@ -218,7 +218,7 @@
         <dx-popup
           class="popup"
           [width]="400"
-          [height]="600"
+          [height]="400"
           [showTitle]="true"
           title=""
           [showCloseButton]= "true"
@@ -234,7 +234,7 @@
                 [selection]="{ mode: 'single' }"
                 [hoverStateEnabled]="false"
                 [paging]="{ enabled: true, pageSize: 10 }"
-                 [filterRow]="{ visible: true }"
+                 [filterRow]="{ visible: false }"
                  [rtlEnabled]= "true"
                 [focusStateEnabled]="true"
                 (onRowPrepared)="onStatesRowPrepared($event)"

@@ -17,6 +17,7 @@
     <Version>2.6.1</Version>
     <AssemblyName>MOI.Patrol</AssemblyName>
     <UserSecretsId>a48cdb49-034b-4371-81fa-4958e09d3894</UserSecretsId>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
   <ItemGroup>

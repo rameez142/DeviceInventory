@@ -44,12 +44,13 @@ export class DispatchComponent implements OnInit {
   ahwalsrc: any;
   responsibilitysrc: patrolroles[];
   shiftssrc: any;
-  sectorssrc: sectors[];
-  citysrc: citygroups[];
-  associatesrc: associates[];
+  sectorssrc: any;
+  citysrc: any;
+  associatesrc: any;
   state_src: any;
   sectorid: number;
-  personsrc: persons[];
+  personsrc: any;
+  handHeldsrc:any;
   shiftvisibile: boolean = false;
   sectorvisibile: boolean = false;
   cityvisibile: boolean = false;
@@ -80,51 +81,8 @@ export class DispatchComponent implements OnInit {
   selStatePersonid: number;
   patrolCarsrc: patrolcars[];
   selRowIndex: number;
-  public options = {
-    spinable: true,
-    buttonWidth: 40,
-    defaultOpen: true
-  };
-  handHeldsrc: handhelds[];
-  public wings = [{
-    'title': 'غياب',
-    'color': '#f16729',
-    'icon': { 'name': '' }
-  }, {
-    'title': 'مرضيه',
-    'color': '#f89322',
-    'icon': { 'name': '' }
-  }, {
-    'title': 'اجازه',
-    'color': '#ffcf14',
-    'icon': { 'name': '' }
-  },
-  {
-    'title': 'حذف',
-    'color': '#ffcf20',
-    'icon': { 'name': '' }
-  },
-  {
-    'title': 'آخر كمن حاله',
-    'color': '#ffcf16',
-    'icon': { 'name': '' }
-  }
-    , {
-    'title': 'CheckIn/Out',
-    'color': '#ffcf16',
-    'icon': { 'name': '' }
-  }
-  ];
-
-  public gutter = {
-    top: 400,
-    left: 600
-  };
-
-  public startAngles = {
-    topLeft: -20
-  };
-
+Heldsrc: handhelds[];
+  
 
   constructor(private svc: CommonService, private modalService: ModalService, private alertService: AlertService) {
     this.userid = parseInt(window.localStorage.getItem('UserID'), 10);
@@ -197,67 +155,90 @@ export class DispatchComponent implements OnInit {
 
   }
 
-  bindAhwalMappingGridSources() {
+  bindAhwalMappingGridSources()
+  {
 
-    /*  this.svc.GetShiftsList().toPromise().then(resp =>
+
+         this.svc.GetResponsibiltyList().toPromise().then(resp =>
         {
-           this.shiftssrc = resp;
-      },
-        error => {
-        }); */
+            console.log(resp);
+               this.responsibilitysrc = <patrolroles[]>resp;
+               console.log(this.responsibilitysrc);
+        });
 
-    this.svc.GetResponsibiltyList().toPromise().then(resp => {
-      console.log(resp);
-      this.responsibilitysrc = <patrolroles[]>resp;
-      console.log(this.responsibilitysrc);
-    },
-      error => {
-      });
+        let rqhdrsector: object = {
+          userid:this.userid,
+          ahwalid:this.selhdrAhwalId
+        };
 
-    this.svc.GetSectorsList(this.userid).toPromise().then(resp => {
-      console.log(resp);
-      this.sectorssrc = <sectors[]>resp;
-      console.log(this.sectorssrc);
-    });
+         this.svc.GetSectorsList(rqhdrsector).toPromise().then(resp =>
+        {
+                   this.sectorssrc = resp;
+         });
 
 
+         let rqhdrassociate: object = {
+          userid:this.userid,
+          ahwalid:this.selhdrAhwalId
+        };
 
-    this.svc.GetAssociateList(this.userid).toPromise().then(resp => {
-      this.associatesrc = <associates[]>resp;
-    });
+          this.svc.GetAssociateList(rqhdrassociate).toPromise().then(resp =>
+         {
+         this.associatesrc = resp;
+          });
 
-    this.svc.GetPersonList(this.userid).toPromise().then(resp => {
+          let rqhdrperson: object = {
+            userid:this.userid,
+            ahwalid:this.selhdrAhwalId
+          };
 
-      this.personsrc = <persons[]>resp;
-    });
 
-    this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId, this.userid).toPromise().then(resp => {
+           this.svc.GetPersonList(rqhdrperson).toPromise().then(resp =>
+           {
 
-      this.patrolCarsrc = <patrolcars[]>resp;
-    });
+            this.personsrc =  resp;
+            });
 
-    this.svc.GetCheckinHandHeldList(this.selhdrAhwalId, this.userid).toPromise().then(resp => {
+            this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
+                {
 
-      this.handHeldsrc = <handhelds[]>resp;
-    });
+                 this.patrolCarsrc = <patrolcars[]> resp;
+                 });
+
+                 this.svc.GetCheckinHandHeldList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
+                    {
+
+                     this.handHeldsrc = <handhelds[]> resp;
+                     });
 
   }
 
 
 
-  sectorSelection(e) {
 
-    if (e.value !== null) {
-      this.selectedSector = e.value;
-      this.svc.GetCityList(this.userid, parseInt(this.selectedSector, 10)).subscribe(resp => {
-        this.citysrc = <citygroups[]>resp;
-      });
-    }
-    else {
-      this.citysrc = [];
-    }
-  }
+  
+sectorSelection(e)
+{
 
+   if(e.value !== null)
+   {
+    this.selectedSector = e.value;
+    let rqhdr: object = {
+      userid:this.userid,
+      sectorid:this.selectedSector,
+      ahwalid:this.selhdrAhwalId
+    };
+
+    this.svc.GetCityList(rqhdr).subscribe(resp =>
+        {
+                   this.citysrc = resp;
+         });
+   }
+    else
+    {
+        this.citysrc = null;
+    }
+}
 
   person_displayExpr(item) {
     // console.log(item);
@@ -280,22 +261,24 @@ export class DispatchComponent implements OnInit {
     }
   }
 
-  bindAhwalMappingGrid() {
-    let rqhr: object = {
-      AhwalId: this.selhdrAhwalId,
-      ShiftId: this.selhdrShiftId
-    };
-
-    this.svc.GetDispatchList(rqhr).subscribe(resp => {
-
-      this.dataSource = resp;
-      // console.log('resp' + resp);
-      this.dataGrid.dataSource = this.dataSource;
-      this.dataGrid.instance.refresh();
-
+  bindAhwalMappingGrid()
+  {
+      let rqhr:object ={
+          AhwalId:this.selhdrAhwalId,
+          ShiftId:this.selhdrShiftId
+      };
+  
+    this.svc.GetDispatchList(rqhr).subscribe(resp =>
+      {
+  
+         this.dataSource = resp;
+       // console.log('resp' + resp);
+        this.dataGrid.dataSource = this.dataSource;
+        this.dataGrid.instance.refresh();
+  
     },
       error => {
-
+  
       });
   }
 
@@ -350,16 +333,16 @@ export class DispatchComponent implements OnInit {
 
   ahwalChanged(e) {
     this.selhdrAhwalId = e.value;
+    this.bindAhwalMappingGridSources();
     this.bindAhwalMappingGrid();
 
-  }
+}
 
-  shiftChanged(e) {
+shiftChanged(e) {
     this.selhdrShiftId = e.value;
     this.bindAhwalMappingGrid();
 
-  }
-
+}
   /* onEditorPreparing (e) {
       console.log(e);
       if (e.parentType == 'filterRow' )
@@ -482,51 +465,67 @@ export class DispatchComponent implements OnInit {
     }
   }
 
-  WingSelected(e) {
-    console.log(e);
-    if (e === false) {
-      this.styleExp = 'none';
-    }
-    e = true;
+  ContextMenuClick(e)
+{
+
+  if(e.itemData.text ==='حذف')
+  {
+    this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
   }
-  WingSelected2(e) {
-
-    if (e.title === 'حذف') {
-      this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
-
-
-    }
-    else if (e.title === 'غياب') {
-      this.alertService.showDialog("متأكد تبي تغير الحالة لغياب؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
-      /*  var result = confirm("متأكد تبي تغير الحالة لغياب؟ أكيد؟", "");
-       result.done(function (dialogResult) {
-           if(dialogResult) this.updatePersonState(e.title);
-       }); */
-    }
-    else if (e.title === 'مرضيه') {
-      this.alertService.showDialog("متأكد تبي تغير الحالة مرضيه؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
-
-      /*    var result = confirm("متأكد تبي تغير الحالة مرضيه؟ أكيد؟", "");
-         result.done(function (dialogResult) {
-             if(dialogResult) this.updatePersonState(e.title);
-         });  */
-    }
-    else if (e.title === 'اجازه') {
-      this.alertService.showDialog("متأكد تبي تغير الحالة لاجازه؟ أكيد؟", DialogType.confirm, () => this.updatePersonState(e.title));
-
-      /*    var result = confirm("متأكد تبي تغير الحالة لاجازه؟ أكيد؟", "");
-         result.done(function (dialogResult) {
-             if(dialogResult) this.updatePersonState(e.title);
-         });  */
-    }
-    else if (e.title === 'آخر كمن حاله') {
-      this.show_States_PopUp();
-    }
-    else if (e.title === 'CheckIn/Out') {
-
-      this.ShowCheckInoutPopup();
-    }
+  else if(e.itemData.text ==='غياب')
+  {
+    this.alertService.showDialog('متأكد تبي تغير الحالة لغياب؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
   }
+  else if(e.itemData.text ==='مرضيه')
+  {
+    this.alertService.showDialog('متأكد تبي تغير الحالة مرضيه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
+  }
+  else if(e.itemData.text ==='اجازه')
+  {
+    this.alertService.showDialog('متأكد تبي تغير الحالة لاجازه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
+  }
+  else if(e.itemData.text ==='آخر كمن حاله')
+  {
+    this.show_States_PopUp();
+  }
+
+}
+ onContextMenuprepare(e) {
+
+  this.selahwalmappingid = e.row.key.ahwalmappingid;
+
+    if (e.row.rowType === 'data') {
+    e.items = [{
+      text: 'غياب',
+      value:e.row.rowIndex,
+      onItemClick: this.ContextMenuClick.bind(this)
+  },
+  {
+      text: 'مرضيه',
+      value:e.row.rowIndex,
+      onItemClick: this.ContextMenuClick.bind(this)
+  }
+  ,
+  {
+      text: 'اجازه',
+      value:e.row.rowIndex,
+      onItemClick: this.ContextMenuClick.bind(this)
+  },
+  {
+    text:'حذف',
+    value:e.row.rowIndex,
+    onItemClick: this.ContextMenuClick.bind(this)
+  },
+  {
+    text:'آخر كمن حاله',
+    value:e.row.rowIndex,
+    onItemClick: this.ContextMenuClick.bind(this)
+  }
+];
+
+  }
+}
+
 
   onStatesRowPrepared(e) {
     if (e.rowType === 'data') {
@@ -627,40 +626,7 @@ export class DispatchComponent implements OnInit {
 
     }
   }
-  /* onContextMenuprepare(e) {
-    //this.menuOpen = true;
-    console.log(e);
-    this.clearCheckInPopupValues();
-    this.selahwalmappingid = e.row.key.ahwalmappingid;
-    this.selCheckInOutPersonMno = e.row.key.milnumber;
-    //console.log(this.selahwalmappingid);
-    this.options.defaultOpen = true;
-    this.styleExp = 'inline';
-    if (e.row.rowType === 'data') {
-      e.items = [{text:''}];
-    }
   
-    e.cancel = true;
-  
-      if (e.row.rowType === 'data') {
-      e.items = [{
-        text: 'غياب',
-        value:e.row.rowIndex
-  
-    },
-    {
-        text: 'مرضيه',
-        value:e.row.rowIndex
-    }
-    ,
-    {
-        text: 'اجازه',
-        value:e.row.rowIndex
-    }
-  ];
-  
-    }
-  } */
 
   refreshDataGrid() {
     // this.dataGrid.instance.refresh();
@@ -685,230 +651,53 @@ export class DispatchComponent implements OnInit {
     this.selectedCity = e.value;
   }
 
-  async AhwalMapping_Add_SubmitButton_Click(e) {
-    /*    let rqhdr:object = {
-           PatrolRoleId :this.selectedRole,
-           Milnumber:this.selectPerson_Mno,
-           ShiftId:this.selectedShift,
-           SectorId:this.selectedSector,
-           CityGroupId:this.selectedCity,
-           AssociateAhwalMappingID:this.selectedAssociateMapId,
-           userid:this.userid
-         };
-   
-       this.svc.AddAhwalMapping(rqhdr).subscribe(resp =>
-           {
-   
-   
-                   this.ahwalMapping_Add_status_label = resp;
-              this.bindAhwalMappingGrid();
-   
-         });
-       } */
-
-    if (this.selectedRole === null) {
-      this.ahwalMapping_Add_status_label = 'يرجى اختيار المسؤولية';
-      return;
-    }
-
-    if (this.selectPerson_Mno === null) {
-      this.ahwalMapping_Add_status_label = 'يرجى اختيار الفرد';
-      return;
-    }
-
-    let personobj: persons = null;
-    await this.svc.GetPersonForUserForRole(parseInt(this.selectPerson_Mno, 10),
-      this.userid).toPromise().then(resp => {
-        if (resp !== []) {
-          personobj = <persons>resp;
-          console.log(personobj);
-        }
-        console.log(personobj);
-      });
-
-
-    console.log(personobj);
-
-    if (personobj === null) {
-      console.log(personobj);
-      this.ahwalMapping_Add_status_label = 'لم يتم العثور على الفرد';
-      return;
-    }
-
-
-    console.log(personobj);
-    let ahwalmappingobj: ahwalmapping = new ahwalmapping();
-    if (parseInt(this.selectedRole, 10) === handler_ahwalMapping.PatrolRole_CaptainAllSectors ||
-      parseInt(this.selectedRole, 10) === handler_ahwalMapping.PatrolRole_CaptainShift) {
-
-      /* if(this.selectedShift === null)
-      {
-          this.ahwalMapping_Add_status_label  = 'يرجى اختيار الشفت';
-          return;
-      } */
-
-      ahwalmappingobj.ahwalID = personobj.ahwalID;
-      ahwalmappingobj.personID = personobj.personID;
-      ahwalmappingobj.sectorID = handler_ahwalMapping.Sector_Public;
-      let citygroupsobj: citygroups[];
-      await this.svc.GetCityGroupForAhwal(personobj.ahwalID).toPromise().then(resp => {
-
-        if (resp !== []) {
-          citygroupsobj = <citygroups[]>(resp);
-        }
-
-      },
-        error => {
+  AhwalMapping_Add_SubmitButton_Click(e)
+  {
+      let rqhdr:object = {
+          PatrolRoleId :this.selectedRole,
+          Milnumber:this.selectPerson_Mno,
+          ShiftId:this.selhdrShiftId,
+          SectorId:this.selectedSector,
+          CityGroupId:this.selectedCity,
+          AssociateAhwalMappingID:this.selectedAssociateMapId,
+          userid:this.userid
+        };
+  
+      this.svc.AddAhwalMapping(rqhdr).subscribe(resp =>
+          {
+  
+  
+                  this.ahwalMapping_Add_status_label = resp;
+             this.bindAhwalMappingGrid();
+  
         });
-      ahwalmappingobj.cityGroupID = citygroupsobj[0].cityGroupID;
-      ahwalmappingobj.shiftID = this.selhdrShiftId;
-      ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole, 10);
-
-      this.svc.AddAhwalMapping(ahwalmappingobj, this.userobj).subscribe(resp => {
-        this.clearpersonpopupvalues();
-        let olog: operationLog = new operationLog();
-        olog = <operationLog>resp;
-        this.ahwalMapping_Add_status_label = olog.text;
-        this.bindAhwalMappingGrid();
-      });
-
-    }
-    else if (parseInt(this.selectedRole, 10) === handler_ahwalMapping.PatrolRole_CaptainSector ||
-      parseInt(this.selectedRole, 10) === handler_ahwalMapping.PatrolRole_SubCaptainSector) {
-      /* if(this.selectedShift === null)
-      {
-          this.ahwalMapping_Add_status_label  = 'يرجى اختيار الشفت';
-          return;
-      } */
-
-      if (this.selectedSector === null) {
-        this.ahwalMapping_Add_status_label = 'يرجى اختيار القطاع';
-        return;
-      }
-      ahwalmappingobj.ahwalID = personobj.ahwalID;
-      ahwalmappingobj.personID = personobj.personID;
-      ahwalmappingobj.sectorID = parseInt(this.selectedSector, 10);
-      let citygroupsobj: citygroups[];
-      await this.svc.GetCityGroupForAhwal(personobj.ahwalID, ahwalmappingobj.sectorID).toPromise().then(resp => {
-
-        if (resp !== []) {
-          citygroupsobj = <citygroups[]>(resp);
-        }
-
-      });
-      ahwalmappingobj.cityGroupID = citygroupsobj[0].cityGroupID;
-      //ahwalmappingobj.shiftID = parseInt(this.selectedShift,10);
-      ahwalmappingobj.shiftID = this.selhdrShiftId;
-      ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole, 10);
-
-      this.svc.AddAhwalMapping(ahwalmappingobj, this.userobj).subscribe(resp => {
-        this.clearpersonpopupvalues();
-        let ol: operationLog = new operationLog();
-        ol = <operationLog>resp;
-        this.ahwalMapping_Add_status_label = ol.text;
-        this.bindAhwalMappingGrid();
-      });
-
-    }
-    else if (parseInt(this.selectedRole, 10) === handler_ahwalMapping.PatrolRole_Associate) {
-
-      if (this.selectedAssociateMapId === null) {
-        this.ahwalMapping_Add_status_label = 'يرجى اختيار الشفت';
-        return;
-      }
-      let ahwalMappingForAssociateobj: ahwalmapping;
-      this.svc.GetMappingByID(parseInt(this.selectedAssociateMapId, 10), this.userid).subscribe(resp => {
-
-        if (resp !== null) {
-          ahwalMappingForAssociateobj = <ahwalmapping>resp;
-        }
-
-      });
-
-      if (ahwalMappingForAssociateobj !== null) {
-        if (personobj.personID === ahwalMappingForAssociateobj.personID) {
-          this.ahwalMapping_Add_status_label = 'المرافق نفس الفرد، ماهذا ؟؟؟؟';
-          return;
-        }
-        ahwalmappingobj.ahwalID = ahwalMappingForAssociateobj.ahwalID;
-        ahwalmappingobj.personID = ahwalMappingForAssociateobj.personID;
-        ahwalmappingobj.sectorID = ahwalMappingForAssociateobj.sectorID;
-        ahwalmappingobj.cityGroupID = ahwalMappingForAssociateobj.cityGroupID;
-        ahwalmappingobj.shiftID = ahwalMappingForAssociateobj.shiftID;
-        ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole, 10);
-
-        this.svc.AddAhwalMapping(ahwalmappingobj, this.userobj).subscribe(resp => {
-          this.clearpersonpopupvalues();
-          let ol: operationLog = new operationLog();
-          ol = <operationLog>resp;
-          this.ahwalMapping_Add_status_label = ol.text;
-          this.bindAhwalMappingGrid();
-        });
-
-
-      }
-    }
-    else {
-      console.log('else');
-      /*   if(this.selectedShift === null)
-        {
-            this.ahwalMapping_Add_status_label = 'يرجى اختيار الشفت';
-            return;
-        } */
-      ahwalmappingobj.ahwalID = personobj.ahwalID;
-      if (this.selectedSector === null) {
-        this.ahwalMapping_Add_status_label = 'يرجى اختيار القطاع';
-        return;
-      }
-
-      if (this.selectedCity === null) {
-        this.ahwalMapping_Add_status_label = 'يرجى اختيار المنطقة';
-        return;
-      }
-      ahwalmappingobj.sectorID = parseInt(this.selectedSector, 10);
-      // ahwalmappingobj.shiftID = parseInt(this.selectedShift , 10);
-      ahwalmappingobj.shiftID = this.selhdrShiftId;
-      ahwalmappingobj.cityGroupID = parseInt(this.selectedCity, 10);
-      ahwalmappingobj.patrolRoleID = parseInt(this.selectedRole, 10);
-      ahwalmappingobj.personID = personobj.personID;
-      console.log(this.ahwalMappingAddMethod);
-
-      console.log('insert');
-      console.log(ahwalmappingobj);
-      this.svc.AddAhwalMapping(ahwalmappingobj, this.userobj).subscribe(resp => {
-        this.clearpersonpopupvalues();
-        let ol: operationLog = new operationLog();
-        ol = <operationLog>resp;
-        this.ahwalMapping_Add_status_label = ol.text;
-        this.bindAhwalMappingGrid();
-      });
-
-    }
-
+  
   }
-
-  clearpersonpopupvalues() {
-
-    this.selectPerson_Mno = null;
-    this.selectedShift = null;
-
-    this.associatePersonMno = null;
-    this.selectedCity = null;
-    this.selectedAssociateMapId = null;
-    /*  */
-    this.ahwalMapping_Add_status_label = '';
-
-    this.shiftvisibile = false;
-    this.sectorvisibile = false;
-    this.cityvisibile = false;
-    this.associatevisibile = false;
-
-    this.selectedSector = null;
-    this.selectedRole = null;
-
+  
+  clearpersonpopupvalues()
+  {
+  
+      this.selectPerson_Mno = null;
+      this.selectedShift = null;
+  
+     this.associatePersonMno = null;
+      this.selectedCity = null;
+      this.selectedAssociateMapId = null;
+     /*  */
+      this.ahwalMapping_Add_status_label = '';
+  
+      this.shiftvisibile = false;
+      this.sectorvisibile = false;
+     this.cityvisibile = false;
+      this.associatevisibile = false;
+  
+      this.selectedSector = null;
+     this.selectedRole = null;
+  
   }
-
-
+  
+  
+  
 
   RwPopupClick(e) {
     var component = e.component,
@@ -926,20 +715,21 @@ export class DispatchComponent implements OnInit {
 
 
 
-  Rwclick(e) {
-    console.log(e);
-    var component = e.component,
+  Rwclick(e)
+  {
+      console.log(e);
+       var component = e.component,
       prevClickTime = component.lastClickTime;
-    component.lastClickTime = new Date();
-    if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-      this.clearCheckInPopupValues();
-      this.selahwalmappingid = e.key.ahwalmappingid;
-      this.selCheckInOutPersonMno = e.key.milnumber;
-      //this.selStatePersonid = e.key.personid;
-      this.options.defaultOpen = true;
-      this.styleExp = 'inline';
-    }
-
+      component.lastClickTime = new Date();
+      if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
+          this.clearCheckInPopupValues();
+          this.selahwalmappingid = e.key.ahwalmappingid;
+          this.selCheckInOutPersonMno = e.key.milnumber;
+          this.ShowCheckInoutPopup();
+       /*    this.options.defaultOpen = true;
+          this.styleExp = 'inline'; */
+      }
+  
   }
 
   RwAssociatePopupClick(e) {
@@ -986,22 +776,24 @@ export class DispatchComponent implements OnInit {
     this.checkInOutPopupVisible = false;
 
   }
-  AhwalMapping_CheckInButton_Click(e) {
-
-    let rqhdr: object = {
-      personMno: this.selCheckInOutPersonMno,
-      plateNumber: this.selCheckInOutPatrolPltNo,
-      serial: this.selCheckInOutHHeldSerialNo,
-      userid: this.userid
-    };
-
-    this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp => {
+  AhwalMapping_CheckInButton_Click(e)
+  {
+  
+      let rqhdr:object = {
+          personMno :this.selCheckInOutPersonMno,
+          plateNumber:this.selCheckInOutPatrolPltNo,
+          serial:this.selCheckInOutHHeldSerialNo,
+          userid:this.userid
+        };
+  
+      this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
+          {
       this.ahwalMapping_CheckInOut_StatusLabel = resp;
       this.bindAhwalMappingGrid();
-
-    });
-
-
+  
+        });
+  
+  
   }
 
   checkhandheldexpr(item) {

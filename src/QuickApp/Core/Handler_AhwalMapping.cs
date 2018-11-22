@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MOI.Patrol;
+using MOI.Patrol.DataAccessLayer;
 
 namespace Core
 {
@@ -11,6 +12,7 @@ namespace Core
         private patrolsContext _context = new patrolsContext();
         private Handler_User _user = new Handler_User();
         private Handler_Operations _oper = new Handler_Operations();
+        private DataAccess DAL = new DataAccess();
 
         public const int PatrolPersonState_None = 10;
 
@@ -394,8 +396,8 @@ namespace Core
                 }
                
                 m.Sortingindex = 10000;
-                m.Patrolid = null;
-                m.Handheldid = null;
+                //m.Patrolid = null;
+                //m.Handheldid = null;
                 ////force Sector to Public and CityGroup to None for PatrolRole_CaptainAllSectors and PatrolRole_CaptainShift
                 //if (m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_CaptainAllSectors ||
                 //m.Patrolroleid == Core.Handler_AhwalMapping.PatrolRole_CaptainShift)
@@ -434,18 +436,59 @@ namespace Core
                         return ol_failed;
                     }
                 }
-                m.Sunrisetimestamp = null;
-                m.Sunsettimestamp = null;
-                m.Lastlandtimestamp = null;
-                m.Incidentid = null;
+               // m.Sector = _context.Sectors.f;
+                //m.Sunrisetimestamp = null;
+                //m.Sunsettimestamp = null;
+                //m.Lastlandtimestamp = null;
+                //m.Incidentid = null;
                 m.Hasdevices = 0;
-                m.Lastawaytimestamp = null;
-                m.Lastcomebacktimestamp = null;
+                //m.Lastawaytimestamp = null;
+                //m.Lastcomebacktimestamp = null;
                 m.Patrolpersonstateid = Core.Handler_AhwalMapping.PatrolPersonState_None;
-                _context.Ahwalmapping.Add(m);
-                _context.SaveChanges();
+                //if (m.Sectorid !=null)
+                //{
+                //   m.Sector = _context.Sectors.FirstOrDefault<Sectors>(ec => ec.Sectorid == m.Sectorid);
+
+                //}
+
+
+                //if (m.Citygroupid != null)
+                //{
+                //    m.Citygroup = _context.Citygroups.FirstOrDefault<Citygroups>(ec => ec.Citygroupid == m.Citygroupid);
+
+                //}
+
+
+                //if (m.Shiftid != null)
+                //{
+                //    m.Shift = _context.Shifts.FirstOrDefault<Shifts>(ec => ec.Shiftid == m.Shiftid);
+
+                //}
+
+
+                //if (m.Patrolroleid != null)
+                //{
+
+                //    m.Patrolrole = _context.Patrolroles.FirstOrDefault<Patrolroles>(ec => ec.Patrolroleid == m.Patrolroleid);
+
+                //}
+
+
+                //  m.Patrolpersonstate = _context.Patrolpersonstates.FirstOrDefault<Patrolpersonstates>(ec => ec.Patrolpersonstateid == m.Patrolpersonstateid);
+                /// m.Person = _context.Persons.FirstOrDefault<Persons>(ec => ec.Personid == m.Personid);
+                string InsQry = "";
+                InsQry = "insert into AhwalMapping(ahwalid,sectorid,citygroupid,shiftid,patrolroleid,personid,hasDevices," +
+                              "patrolPersonStateID,sortingIndex,hasFixedCallerID,callerID) values (" +
+                              m.Ahwalid + "," + m.Sectorid + "," + m.Citygroupid + "," + m.Shiftid + "," + m.Patrolid +
+                               "," + m.Personid + "," + m.Hasdevices + "," + m.Patrolpersonstateid + "," + m.Sortingindex + "," + m.Hasfixedcallerid +
+                              ",'" + m.Callerid + "')";
+                int ret = DAL.PostGre_ExNonQry(InsQry);
+
+              //  _context.Ahwalmapping.Add(m);
+             //   _context.SaveChanges();
+
                 //time to resort sortingindex
-               // Core.Handler_AhwalMapping.ReSortMappings();
+                // Core.Handler_AhwalMapping.ReSortMappings();
                 //log it
                 Operationlogs ol = new Operationlogs();
                 ol.Userid = u.Userid;

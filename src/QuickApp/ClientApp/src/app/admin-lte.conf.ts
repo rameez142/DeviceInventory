@@ -6,19 +6,15 @@ export const adminLteConf = {
         {label: 'الدوريات', route: 'maintainence/patrolcars', iconClasses: 'fa fa-automobile'},
         {label: 'تقارير الاستلام والتسليم الأجهزة', route: 'maintainence/patrolcarsinventory', iconClasses: 'fa fa-calendar'},
         {label: 'الأجهزة', route: 'maintainence/handhelds', iconClasses: 'fa fa-fax'},
-        {label: 'تقارير الاستلام والتسليم الدوريات', route: 'maintainence/handheldsinventory', iconClasses: 'fa fa-calendar'},
-        {label: 'Accessories', route: 'maintainence/accessories'},
-        {label: 'Accessory Inventory', route: 'maintainence/accessoriesinventory', iconClasses: 'fa fa-calendar'}
+        {label: 'تقارير الاستلام والتسليم الدوريات', route: 'maintainence/handheldsinventory', iconClasses: 'fa fa-calendar'}
       ]},
       {label: 'الأحوال', route: 'dispatcher/dispatcher',iconClasses: 'fa fa-eye', children: [
-        {label: 'كشف التوزيع', route: 'dispatcher/dispatcher', iconClasses: 'fa fa-calendar'},
-        {label: 'الأفراد', route: 'dispatcher/persons', iconClasses: 'fa fa-user-secret'}
+        {label: 'كشف التوزيع', route: 'dispatcher/dispatcher', iconClasses: 'fa fa-calendar'}
       ]},
     {
       label: 'العمليات', route: 'operations/operationsopslive',iconClasses: 'fa fa-arrows', children: [
         {label: 'الكشف', route: 'operations/operationsopslive', iconClasses: 'fa fa-calendar'},
-        {label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret'},
-        {label: 'اعدادات - نوع البلاغ', route: '', iconClasses: 'fa fa-user-secret'}
+        {label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret'}
 
       ]}
   ]

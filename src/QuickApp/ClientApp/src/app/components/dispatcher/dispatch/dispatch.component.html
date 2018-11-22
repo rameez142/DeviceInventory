@@ -13,6 +13,7 @@
                 (onRowPrepared)="onRowPrepared($event)"
                 (onEditorPreparing)="onEditorPreparing($event)"
                 (onRowClick)="Rwclick($event)"
+                (onContextMenuPreparing)= "onContextMenuprepare($event)"
                 wordWrapEnabled ="true"
               >
                 <dxo-paging [pageSize]="80"></dxo-paging>
@@ -364,11 +365,7 @@
 </table>
             </div>
             </dx-popup>
-            <div [ngStyle]="{'display': styleExp}">
-            <app-menu-container (onMenuBtnClicked)="WingSelected($event)"  (onWingSelected)="WingSelected2($event)" [options]="options" [gutter]="gutter" [startAngles]="startAngles" [wings]="wings">
-
-            </app-menu-container>
-          </div>
+          
 
           <dx-popup
           class="popup"
@@ -389,7 +386,7 @@
                 [selection]="{ mode: 'single' }"
                 [hoverStateEnabled]="false"
                 [paging]="{ enabled: true, pageSize: 10 }"
-                 [filterRow]="{ visible: true }"
+                 [filterRow]="{ visible: false }"
                  [rtlEnabled]= "true"
                 [focusStateEnabled]="true"
                 (onRowPrepared)="onStatesRowPrepared($event)"
