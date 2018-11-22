@@ -127,9 +127,10 @@ export class CommonService extends EndpointFactory {
 
 
 
-  public GetPersonList(userid: number) {
-    return this.http.get(this.api_url + '/api/dispatch/personsList?userid=' + userid,
-     { responseType: 'json' });
+  public GetPersonList(rqhdr:object) {
+
+     return this.http.post(this.api_url + '/api/dispatcher/personsList' ,rqhdr, { responseType: 'json' });
+
 
   }
 
@@ -142,21 +143,19 @@ export class CommonService extends EndpointFactory {
   }
 
 
-  public GetSectorsList(userid: number) {
-    return this.http.get(this.api_url + '/api/dispatch/sectorsList?userid=' + userid,
+  public GetSectorsList(rqhdr:object) {
+    return this.http.post(this.api_url + '/api/dispatcher/sectorsList',rqhdr,
     { responseType: 'json' });
 
   }
 
-  public GetCityList(userid: number, sectorid: number) {
-    return this.http.get(this.api_url + '/api/dispatch/cityList?userid=' + userid +
-     '&sectorid=' + sectorid, { responseType: 'json' });
+  public GetCityList(rqhdr:object) {
+    return this.http.post(this.api_url + '/api/dispatcher/cityList' ,rqhdr, { responseType: 'json' });
 
   }
 
-  public GetAssociateList(userid: number) {
-    return this.http.get(this.api_url + '/api/dispatch/associateList?userid=' +
-     userid, { responseType: 'json' });
+  public GetAssociateList(rqhdr:object) {
+    return this.http.post(this.api_url + '/api/dispatcher/associateList' ,rqhdr, { responseType: 'json' });
 
   }
 
@@ -174,7 +173,7 @@ export class CommonService extends EndpointFactory {
 
   }
 
-        public AddAhwalMapping(ahwalmappingobj:ahwalmapping,userobj:user)
+    /*     public AddAhwalMapping2(ahwalmappingobj:ahwalmapping,userobj:user)
         {
           console.log('ahwalmappingobj' + ahwalmappingobj);
           let myData = {
@@ -185,7 +184,7 @@ export class CommonService extends EndpointFactory {
           return this.http.post(this.api_url + '/api/dispatch/addAhwalMapping' ,
           myData,{ responseType: 'json' });
 
-  }
+  } */
 
       /*   public UpDateAhwalMapping(ahwalmappingobj:ahwalmapping)
         {
@@ -257,9 +256,9 @@ export class CommonService extends EndpointFactory {
               return this.http.post(this.api_url + '/api/dispatcher/checkInAhwalMapping',rqhdr  , { responseType: 'text' });
               }
 
-              /* public AddAhwalMapping(rqhdr:object ){
+              public AddAhwalMapping(rqhdr:object ){
                 return this.http.post(this.api_url + '/api/dispatcher/addAhwalMapping',rqhdr  , { responseType: 'text' });
-                } */
+                }
 
         public updatePersonState(rqhdr:object)
         {

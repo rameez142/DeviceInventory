@@ -45,7 +45,7 @@ ahwalsrc:any;
 responsibilitysrc:patrolroles[];
 shiftssrc:any;
 sectorssrc:sectors[];
-citysrc:citygroups[];
+citysrc:any;
 associatesrc:associates[];
 state_src:any;
 sectorid:number;
@@ -179,47 +179,6 @@ this.associatevisibile = false;
 bindAhwalMappingGridSources()
 {
 
-
-     this.svc.GetResponsibiltyList().toPromise().then(resp =>
-    {
-        console.log(resp);
-           this.responsibilitysrc = <patrolroles[]>resp;
-           console.log(this.responsibilitysrc);
-    },
-    error => {
-    });
-
-     this.svc.GetSectorsList(this.userid).toPromise().then(resp =>
-    {
-        console.log(resp);
-               this.sectorssrc = <sectors[]>resp;
-               console.log(this.sectorssrc);
-     });
-
-
-
-      this.svc.GetAssociateList(this.userid).toPromise().then(resp =>
-     {
-     this.associatesrc = <associates[]>resp;
-      });
-
-       this.svc.GetPersonList(this.userid).toPromise().then(resp =>
-       {
-
-        this.personsrc = <persons[]> resp;
-        });
-
-        this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
-            {
-
-             this.patrolCarsrc = <patrolcars[]> resp;
-             });
-
-             this.svc.GetCheckinHandHeldList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
-                {
-
-                 this.handHeldsrc = <handhelds[]> resp;
-                 });
 this.svc.GetIncidentSourceList().toPromise().then(resp =>
     {
 console.log(JSON.stringify(resp));
@@ -233,18 +192,24 @@ console.log(JSON.stringify(resp));
 sectorSelection(e)
 {
 
-if(e.value !== null)
-{
-this.selectedSector = e.value;
-this.svc.GetCityList(this.userid,parseInt(this.selectedSector , 10)).subscribe(resp =>
+    if(e.value !== null)
     {
-               this.citysrc = <citygroups[]>resp;
-     });
-}
-else
-{
-    this.citysrc = [];
-}
+     this.selectedSector = e.value;
+     let rqhdr: object = {
+       userid:this.userid,
+       sectorid:this.selectedSector,
+       ahwalid:this.selhdrAhwalId
+     };
+ 
+     this.svc.GetCityList(rqhdr).subscribe(resp =>
+         {
+                    this.citysrc = resp;
+          });
+    }
+     else
+     {
+         this.citysrc = null;
+     }
 }
 
 
@@ -589,7 +554,7 @@ if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
 }
 else
 {
-    console.log('dblclick2'); 
+    console.log('dblclick2');
 }
 
 }
@@ -687,9 +652,9 @@ AttahcIncidentSubmitButton_Click(e)
 
   this.svc.AttachIncident(rqhdr).toPromise().then(resp =>
     {
-      
+
     notify( JSON.parse(resp).text, 'success', 600);
-    this.bindAhwalMappingGrid();   
+    this.bindAhwalMappingGrid();
   });
 }
 
@@ -722,7 +687,7 @@ onIncToolbarPreparing(e) {
             valueExpr: 'shiftid',
             value: this.shiftssrc[0].shiftid,
             onValueChanged: this.shiftChanged.bind(this)
-    
+
         }
     }
     , {

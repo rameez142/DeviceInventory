@@ -40,29 +40,29 @@ namespace Controllers
         }
 
      
-        [HttpGet("sectorsList")]
-        public List<Sectors> GetSectorsList(int userid)
-        {
-            String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where SectorID<>1 and Disabled<>1";
-            //String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where Disabled<>1  and (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
-            return DAL.PostGre_GetData<Sectors>(Qry);
-        }
+        //[HttpGet("sectorsList")]
+        //public List<Sectors> GetSectorsList(int userid)
+        //{
+        //    String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where SectorID<>1 and Disabled<>1";
+        //    //String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where Disabled<>1  and (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+        //    return DAL.PostGre_GetData<Sectors>(Qry);
+        //}
 
-        [HttpGet("cityList")]
-        public List<CityGroups> GetCityList(int userid, int sectorid)
-        {
-            // String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
-            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid;
-            return DAL.PostGre_GetData<CityGroups>(Qry);
-        }
+        //[HttpGet("cityList")]
+        //public List<CityGroups> GetCityList(int userid, int sectorid)
+        //{
+        //    // String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
+        //    String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid;
+        //    return DAL.PostGre_GetData<CityGroups>(Qry);
+        //}
 
-        [HttpGet("associateList")]
-        public List<Associates> GetAssociateList(int userid)
-        {
-            // String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE (AhwalMapping.PatrolRoleID <> 70) AND(AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
-            String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE AhwalMapping.PatrolRoleID <> 70 ";
-            return DAL.PostGre_GetData<Associates>(Qry);
-        }
+        //[HttpGet("associateList")]
+        //public List<Associates> GetAssociateList(int userid)
+        //{
+        //    // String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE (AhwalMapping.PatrolRoleID <> 70) AND(AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+        //    String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE AhwalMapping.PatrolRoleID <> 70 ";
+        //    return DAL.PostGre_GetData<Associates>(Qry);
+        //}
 
         
 

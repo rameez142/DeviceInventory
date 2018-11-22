@@ -83,7 +83,6 @@ import { LoadingPageModule } from 'angular-loading-page';
 import { LayoutModule,BoxModule  } from '../../node_modules/angular-admin-lte';
 import { CoreModule } from './components/core/core.module';
 import { adminLteConf } from './admin-lte.conf';
-import { FanMenuModule } from '../../node_modules/ng2-fan-menu';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
@@ -116,7 +115,7 @@ import { SignalRConfiguration } from 'ng2-signalr';
      DxTabPanelModule,DxCheckBoxModule,DxAutocompleteModule,
     LayoutModule,LoadingPageModule,NgbModule,CoreModule,BoxModule ,DxLookupModule,
     LayoutModule.forRoot(adminLteConf)
-    , FanMenuModule, ReactiveFormsModule, SignalRModule.forRoot(createConfig)
+   ,  ReactiveFormsModule
   ],
   declarations: [
     AppComponent,

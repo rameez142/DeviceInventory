@@ -425,6 +425,49 @@ namespace MOI.Patrol.Controllers
 
 
 
+        [HttpPost("sectorsList")]
+        public IActionResult PostSectorsList([FromBody]JObject RqHdr)
+        {
+            var userid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<Int32>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var ahwalid = Convert.ToInt16(Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["ahwalid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where SectorID<>1 and Disabled<>1 and ahwalid = " + ahwalid;
+            //String Qry = "SELECT SectorID, ShortName, CallerPrefix, Disabled,AhwalId FROM Sectors where Disabled<>1  and (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("personsList")]
+        public IActionResult PostPersonsList([FromBody]JObject RqHdr)
+        {
+            var userid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<Int32>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var ahwalid = Convert.ToInt16(Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["ahwalid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            String Qry = "SELECT PersonID, AhwalID, Name, MilNumber,RankId,Mobile,FixedCallerId FROM Persons where ahwalid = " + ahwalid;
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("cityList")]
+        public IActionResult PostCityList([FromBody]JObject RqHdr)
+        {
+            var userid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<Int32>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var ahwalid = Convert.ToInt16(Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["ahwalid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var sectorid = Convert.ToInt16(Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["sectorid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            // String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and  (AhwalID IN (SELECT AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ")))";
+            String Qry = "SELECT CityGroupID ,  ShortName ,  CallerPrefix ,  Disabled ,AhwalID,SectorID,Text FROM  CityGroups  where Disabled<>1 and CallerPreFix<>'0' and SectorID=" + sectorid + " and ahwalid = " + ahwalid;
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("associateList")]
+        public IActionResult PostAssociateList([FromBody]JObject RqHdr)
+        {
+            var userid = Convert.ToInt32(Newtonsoft.Json.JsonConvert.DeserializeObject<Int32>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var ahwalid = Convert.ToInt16(Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["ahwalid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            // String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE (AhwalMapping.PatrolRoleID <> 70) AND(AhwalMapping.AhwalID IN (SELECT AhwalMapping.AhwalID FROM UsersRolesMap WHERE (UserID = " + userid + ") ))";
+            String Qry = "SELECT AhwalMapping.AhwalMappingID, Persons.PersonID, Persons.MilNumber, Persons.Name FROM AhwalMapping INNER JOIN Persons ON AhwalMapping.PersonID = Persons.PersonID WHERE AhwalMapping.PatrolRoleID <> 70  and Persons.ahwalid = " + ahwalid;
+            return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+
         [HttpPost("dispatchList")]
         public IActionResult Postdispatchlist([FromBody]JObject RqHdr)
         {
@@ -444,7 +487,7 @@ namespace MOI.Patrol.Controllers
 
             //JObject parameters[] = new JObject()[];
             List<List<JObject>> parameters = new List<List<JObject>>();
-           // List<JObject> parameters1 = new List<JObject>{new JObject(new JProperty("name", "ahwalid")), new JObject(new JProperty("value", ahwalid)) };
+            // List<JObject> parameters1 = new List<JObject>{new JObject(new JProperty("name", "ahwalid")), new JObject(new JProperty("value", ahwalid)) };
             parameters.Add(new List<JObject> { new JObject(new JProperty("name", "ahwalid")), new JObject(new JProperty("value", ahwalid)) });
             parameters.Add(new List<JObject> { new JObject(new JProperty("name", "shiftid")), new JObject(new JProperty("value", shiftid)) });
 
