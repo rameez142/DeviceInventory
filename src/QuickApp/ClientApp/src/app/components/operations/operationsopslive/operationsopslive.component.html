@@ -39,6 +39,7 @@
                 [showPane]="true"
                 [shading]="true"
                 [closeOnOutsideClick]="false"
+                [showBorders]="true"
                 (onShown)="onShown()">
             </dx-load-panel>
 
@@ -156,7 +157,7 @@
                           searchExpr= "['incidentid', 'incidentsourcename']"
                           >
                           <div *dxTemplate="let item of 'content'">
-                              <dx-data-grid width="600" height="400"
+                              <dx-data-grid width="600" height="400" id="gridIncidentPopup" #gridIncidentPopupt
                                       [dataSource]="incidentsources"
                                       [columns]="[{caption:'رقم البلاغ ',dataField:'incidentid'},
                                       {caption:'كاتب البلاغ',dataField:'username'},

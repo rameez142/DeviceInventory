@@ -50,7 +50,7 @@ export class DispatchComponent implements OnInit {
   state_src: any;
   sectorid: number;
   personsrc: any;
-  handHeldsrc:any;
+  handHeldsrc: any;
   shiftvisibile: boolean = false;
   sectorvisibile: boolean = false;
   cityvisibile: boolean = false;
@@ -81,8 +81,8 @@ export class DispatchComponent implements OnInit {
   selStatePersonid: number;
   patrolCarsrc: patrolcars[];
   selRowIndex: number;
-Heldsrc: handhelds[];
-  
+  Heldsrc: handhelds[];
+
 
   constructor(private svc: CommonService, private modalService: ModalService, private alertService: AlertService) {
     this.userid = parseInt(window.localStorage.getItem('UserID'), 10);
@@ -103,17 +103,22 @@ Heldsrc: handhelds[];
 
 
   showLoadPanel() {
-    this.loadingVisible = true;
+    this.loadingVisible = false;
   }
 
 
 
-
-
-  ngOnInit() {
-
+  loadSources() {
     this.bindAhwalMappingGridSources();
     this.bindAhwalMappingGrid();
+  }
+
+  ngOnInit() {
+    this.loadSources();
+    setInterval(() => {
+      this.loadSources();
+    }, 10000);
+
   }
 
   roleSelection(e) {
@@ -155,90 +160,79 @@ Heldsrc: handhelds[];
 
   }
 
-  bindAhwalMappingGridSources()
-  {
+  bindAhwalMappingGridSources() {
 
 
-         this.svc.GetResponsibiltyList().toPromise().then(resp =>
-        {
-            console.log(resp);
-               this.responsibilitysrc = <patrolroles[]>resp;
-               console.log(this.responsibilitysrc);
-        });
+    this.svc.GetResponsibiltyList().toPromise().then(resp => {
+      console.log(resp);
+      this.responsibilitysrc = <patrolroles[]>resp;
+      console.log(this.responsibilitysrc);
+    });
 
-        let rqhdrsector: object = {
-          userid:this.userid,
-          ahwalid:this.selhdrAhwalId
-        };
+    let rqhdrsector: object = {
+      userid: this.userid,
+      ahwalid: this.selhdrAhwalId
+    };
 
-         this.svc.GetSectorsList(rqhdrsector).toPromise().then(resp =>
-        {
-                   this.sectorssrc = resp;
-         });
+    this.svc.GetSectorsList(rqhdrsector).toPromise().then(resp => {
+      this.sectorssrc = resp;
+    });
 
 
-         let rqhdrassociate: object = {
-          userid:this.userid,
-          ahwalid:this.selhdrAhwalId
-        };
+    let rqhdrassociate: object = {
+      userid: this.userid,
+      ahwalid: this.selhdrAhwalId
+    };
 
-          this.svc.GetAssociateList(rqhdrassociate).toPromise().then(resp =>
-         {
-         this.associatesrc = resp;
-          });
+    this.svc.GetAssociateList(rqhdrassociate).toPromise().then(resp => {
+      this.associatesrc = resp;
+    });
 
-          let rqhdrperson: object = {
-            userid:this.userid,
-            ahwalid:this.selhdrAhwalId
-          };
+    let rqhdrperson: object = {
+      userid: this.userid,
+      ahwalid: this.selhdrAhwalId
+    };
 
 
-           this.svc.GetPersonList(rqhdrperson).toPromise().then(resp =>
-           {
+    this.svc.GetPersonList(rqhdrperson).toPromise().then(resp => {
 
-            this.personsrc =  resp;
-            });
+      this.personsrc = resp;
+    });
 
-            this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
-                {
+    this.svc.GetCheckinPatrolCarList(this.selhdrAhwalId, this.userid).toPromise().then(resp => {
 
-                 this.patrolCarsrc = <patrolcars[]> resp;
-                 });
+      this.patrolCarsrc = <patrolcars[]>resp;
+    });
 
-                 this.svc.GetCheckinHandHeldList(this.selhdrAhwalId,this.userid).toPromise().then(resp =>
-                    {
+    this.svc.GetCheckinHandHeldList(this.selhdrAhwalId, this.userid).toPromise().then(resp => {
 
-                     this.handHeldsrc = <handhelds[]> resp;
-                     });
+      this.handHeldsrc = <handhelds[]>resp;
+    });
 
   }
 
 
 
 
-  
-sectorSelection(e)
-{
 
-   if(e.value !== null)
-   {
-    this.selectedSector = e.value;
-    let rqhdr: object = {
-      userid:this.userid,
-      sectorid:this.selectedSector,
-      ahwalid:this.selhdrAhwalId
-    };
+  sectorSelection(e) {
 
-    this.svc.GetCityList(rqhdr).subscribe(resp =>
-        {
-                   this.citysrc = resp;
-         });
-   }
-    else
-    {
-        this.citysrc = null;
+    if (e.value !== null) {
+      this.selectedSector = e.value;
+      let rqhdr: object = {
+        userid: this.userid,
+        sectorid: this.selectedSector,
+        ahwalid: this.selhdrAhwalId
+      };
+
+      this.svc.GetCityList(rqhdr).subscribe(resp => {
+        this.citysrc = resp;
+      });
     }
-}
+    else {
+      this.citysrc = null;
+    }
+  }
 
   person_displayExpr(item) {
     // console.log(item);
@@ -249,6 +243,7 @@ sectorSelection(e)
 
 
   associateExpr(item) {
+    console.log(JSON.stringify(item));
     if (item !== undefined) {
       return item.name;
     }
@@ -261,24 +256,22 @@ sectorSelection(e)
     }
   }
 
-  bindAhwalMappingGrid()
-  {
-      let rqhr:object ={
-          AhwalId:this.selhdrAhwalId,
-          ShiftId:this.selhdrShiftId
-      };
-  
-    this.svc.GetDispatchList(rqhr).subscribe(resp =>
-      {
-  
-         this.dataSource = resp;
-       // console.log('resp' + resp);
-        this.dataGrid.dataSource = this.dataSource;
-        this.dataGrid.instance.refresh();
-  
+  bindAhwalMappingGrid() {
+    let rqhr: object = {
+      AhwalId: this.selhdrAhwalId,
+      ShiftId: this.selhdrShiftId
+    };
+
+    this.svc.GetDispatchList(rqhr).subscribe(resp => {
+
+      this.dataSource = resp;
+      // console.log('resp' + resp);
+      this.dataGrid.dataSource = this.dataSource;
+      this.dataGrid.instance.refresh();
+
     },
       error => {
-  
+
       });
   }
 
@@ -336,13 +329,13 @@ sectorSelection(e)
     this.bindAhwalMappingGridSources();
     this.bindAhwalMappingGrid();
 
-}
+  }
 
-shiftChanged(e) {
+  shiftChanged(e) {
     this.selhdrShiftId = e.value;
     this.bindAhwalMappingGrid();
 
-}
+  }
   /* onEditorPreparing (e) {
       console.log(e);
       if (e.parentType == 'filterRow' )
@@ -465,66 +458,60 @@ shiftChanged(e) {
     }
   }
 
-  ContextMenuClick(e)
-{
+  ContextMenuClick(e) {
 
-  if(e.itemData.text ==='حذف')
-  {
-    this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
-  }
-  else if(e.itemData.text ==='غياب')
-  {
-    this.alertService.showDialog('متأكد تبي تغير الحالة لغياب؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
-  }
-  else if(e.itemData.text ==='مرضيه')
-  {
-    this.alertService.showDialog('متأكد تبي تغير الحالة مرضيه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
-  }
-  else if(e.itemData.text ==='اجازه')
-  {
-    this.alertService.showDialog('متأكد تبي تغير الحالة لاجازه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
-  }
-  else if(e.itemData.text ==='آخر كمن حاله')
-  {
-    this.show_States_PopUp();
-  }
+    if (e.itemData.text === 'حذف') {
+      this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.deleteMapping());
+    }
+    else if (e.itemData.text === 'غياب') {
+      this.alertService.showDialog('متأكد تبي تغير الحالة لغياب؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
+    }
+    else if (e.itemData.text === 'مرضيه') {
+      this.alertService.showDialog('متأكد تبي تغير الحالة مرضيه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
+    }
+    else if (e.itemData.text === 'اجازه') {
+      this.alertService.showDialog('متأكد تبي تغير الحالة لاجازه؟ أكيد؟', DialogType.confirm, () => this.updatePersonState(e.itemData.text));
+    }
+    else if (e.itemData.text === 'آخر كمن حاله') {
+      this.show_States_PopUp();
+    }
 
-}
- onContextMenuprepare(e) {
+  }
+  onContextMenuprepare(e) {
 
-  this.selahwalmappingid = e.row.key.ahwalmappingid;
+    this.selahwalmappingid = e.row.key.ahwalmappingid;
 
     if (e.row.rowType === 'data') {
-    e.items = [{
-      text: 'غياب',
-      value:e.row.rowIndex,
-      onItemClick: this.ContextMenuClick.bind(this)
-  },
-  {
-      text: 'مرضيه',
-      value:e.row.rowIndex,
-      onItemClick: this.ContextMenuClick.bind(this)
-  }
-  ,
-  {
-      text: 'اجازه',
-      value:e.row.rowIndex,
-      onItemClick: this.ContextMenuClick.bind(this)
-  },
-  {
-    text:'حذف',
-    value:e.row.rowIndex,
-    onItemClick: this.ContextMenuClick.bind(this)
-  },
-  {
-    text:'آخر كمن حاله',
-    value:e.row.rowIndex,
-    onItemClick: this.ContextMenuClick.bind(this)
-  }
-];
+      e.items = [{
+        text: 'غياب',
+        value: e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
+      },
+      {
+        text: 'مرضيه',
+        value: e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
+      }
+        ,
+      {
+        text: 'اجازه',
+        value: e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
+      },
+      {
+        text: 'حذف',
+        value: e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
+      },
+      {
+        text: 'آخر كمن حاله',
+        value: e.row.rowIndex,
+        onItemClick: this.ContextMenuClick.bind(this)
+      }
+      ];
 
+    }
   }
-}
 
 
   onStatesRowPrepared(e) {
@@ -626,7 +613,7 @@ shiftChanged(e) {
 
     }
   }
-  
+
 
   refreshDataGrid() {
     // this.dataGrid.instance.refresh();
@@ -651,53 +638,50 @@ shiftChanged(e) {
     this.selectedCity = e.value;
   }
 
-  AhwalMapping_Add_SubmitButton_Click(e)
-  {
-      let rqhdr:object = {
-          PatrolRoleId :this.selectedRole,
-          Milnumber:this.selectPerson_Mno,
-          ShiftId:this.selhdrShiftId,
-          SectorId:this.selectedSector,
-          CityGroupId:this.selectedCity,
-          AssociateAhwalMappingID:this.selectedAssociateMapId,
-          userid:this.userid
-        };
-  
-      this.svc.AddAhwalMapping(rqhdr).subscribe(resp =>
-          {
-  
-  
-                  this.ahwalMapping_Add_status_label = resp;
-             this.bindAhwalMappingGrid();
-  
-        });
-  
+  AhwalMapping_Add_SubmitButton_Click(e) {
+    let rqhdr: object = {
+      PatrolRoleId: this.selectedRole,
+      Milnumber: this.selectPerson_Mno,
+      ShiftId: this.selhdrShiftId,
+      SectorId: this.selectedSector,
+      CityGroupId: this.selectedCity,
+      AssociateAhwalMappingID: this.selectedAssociateMapId,
+      userid: this.userid
+    };
+
+    this.svc.AddAhwalMapping(rqhdr).subscribe(resp => {
+
+
+      this.ahwalMapping_Add_status_label = resp;
+      this.bindAhwalMappingGrid();
+
+    });
+
   }
-  
-  clearpersonpopupvalues()
-  {
-  
-      this.selectPerson_Mno = null;
-      this.selectedShift = null;
-  
-     this.associatePersonMno = null;
-      this.selectedCity = null;
-      this.selectedAssociateMapId = null;
-     /*  */
-      this.ahwalMapping_Add_status_label = '';
-  
-      this.shiftvisibile = false;
-      this.sectorvisibile = false;
-     this.cityvisibile = false;
-      this.associatevisibile = false;
-  
-      this.selectedSector = null;
-     this.selectedRole = null;
-  
+
+  clearpersonpopupvalues() {
+
+    this.selectPerson_Mno = null;
+    this.selectedShift = null;
+
+    this.associatePersonMno = null;
+    this.selectedCity = null;
+    this.selectedAssociateMapId = null;
+    /*  */
+    this.ahwalMapping_Add_status_label = '';
+
+    this.shiftvisibile = false;
+    this.sectorvisibile = false;
+    this.cityvisibile = false;
+    this.associatevisibile = false;
+
+    this.selectedSector = null;
+    this.selectedRole = null;
+
   }
-  
-  
-  
+
+
+
 
   RwPopupClick(e) {
     var component = e.component,
@@ -708,6 +692,8 @@ shiftChanged(e) {
 
     }
     else {
+      //console.log( e.values[2]);
+
       this.selectPerson_Mno = e.values[0];
     }
 
@@ -715,21 +701,22 @@ shiftChanged(e) {
 
 
 
-  Rwclick(e)
-  {
-      console.log(e);
-       var component = e.component,
+  Rwclick(e) {
+    console.log(e);
+    var component = e.component,
       prevClickTime = component.lastClickTime;
-      component.lastClickTime = new Date();
-      if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
-          this.clearCheckInPopupValues();
-          this.selahwalmappingid = e.key.ahwalmappingid;
-          this.selCheckInOutPersonMno = e.key.milnumber;
-          this.ShowCheckInoutPopup();
-       /*    this.options.defaultOpen = true;
-          this.styleExp = 'inline'; */
+    component.lastClickTime = new Date();
+    if (prevClickTime && (component.lastClickTime - prevClickTime < 300)) {
+      this.clearCheckInPopupValues();
+      this.selahwalmappingid = e.key.ahwalmappingid;
+      if (e.key.patrolroleid !== handler_ahwalMapping.PatrolRole_Associate) {
+        this.selCheckInOutPersonMno = e.key.milnumber;
       }
-  
+      this.ShowCheckInoutPopup();
+      /*    this.options.defaultOpen = true;
+         this.styleExp = 'inline'; */
+    }
+
   }
 
   RwAssociatePopupClick(e) {
@@ -742,7 +729,8 @@ shiftChanged(e) {
     }
     else {
       //  this.associatePersonMno = e.values[0];
-      console.log(e.values[0]);
+      // console.log('ahwalassociate' + e.keyExpr);
+      this.selectedAssociateMapId = e.values[2];
       this.associatePersonMno = e.values[0];
     }
 
@@ -776,24 +764,22 @@ shiftChanged(e) {
     this.checkInOutPopupVisible = false;
 
   }
-  AhwalMapping_CheckInButton_Click(e)
-  {
-  
-      let rqhdr:object = {
-          personMno :this.selCheckInOutPersonMno,
-          plateNumber:this.selCheckInOutPatrolPltNo,
-          serial:this.selCheckInOutHHeldSerialNo,
-          userid:this.userid
-        };
-  
-      this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp =>
-          {
+  AhwalMapping_CheckInButton_Click(e) {
+
+    let rqhdr: object = {
+      personMno: this.selCheckInOutPersonMno,
+      plateNumber: this.selCheckInOutPatrolPltNo,
+      serial: this.selCheckInOutHHeldSerialNo,
+      userid: this.userid
+    };
+
+    this.svc.CheckInAhwalMapping(rqhdr).subscribe(resp => {
       this.ahwalMapping_CheckInOut_StatusLabel = resp;
       this.bindAhwalMappingGrid();
-  
-        });
-  
-  
+
+    });
+
+
   }
 
   checkhandheldexpr(item) {
@@ -804,6 +790,9 @@ shiftChanged(e) {
 
   checkInassociateExpr(item) {
     if (item !== undefined) {
+      console.log(JSON.stringify(item));
+
+      //console.log(this.selectedAssociateMapId);
       return item.milnumber;
     }
   }

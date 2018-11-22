@@ -4,17 +4,23 @@
 @import 'app/assets/styles/vertical-tabs.css';
 @import 'app/assets/styles/ngx-datatable.css';
 @import 'app/assets/styles/themes.css';
-body
-{
+
+body {
   font-family: 'Times New Roman' !important;
 }
-.treeview-menu
-{
-  padding-right:30px !important;
+
+.dx-overlay-shader {
+  background-color: none !important;
 }
+
+.treeview-menu {
+  padding-right: 30px !important;
+}
+
 .container {
   width: 100% !important;
 }
+
 .content {
   padding: 0px;
   /* min-height: 250px; */
@@ -24,6 +30,7 @@ body
   /* padding-left: 15px; */
   /* padding-right: 15px; */
 }
+
 .navbar .nav li a:hover,
 .navbar.nav li.toolbaritem a:hover,
 .nav.nav-tabsNOTUSE li a:hover {
@@ -370,9 +377,11 @@ i.page-caption {
 .dropdown, ::after, ::before {
   box-sizing: border-box;
 }
+
 .nav-item:hover > .dropdown-menu {
   display: block;
 }
+
 .dropdown-toggle::after {
   display: inline-block;
   width: 0;
@@ -397,6 +406,3 @@ i.page-caption {
 .table-bordered > tfoot > tr > td {
   border-color: #eae3e3;
 }
-
-
-  

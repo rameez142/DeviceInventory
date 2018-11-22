@@ -142,7 +142,7 @@ namespace Core
                 var newIncidentComment = new Incidentscomments();
                 newIncidentComment.Incidentid = Incidents.Incidentid;
                 newIncidentComment.Userid = u.Userid;
-                newIncidentComment.Text = "قام بتسليم البلاغ للدورية صاحبة النداء: " + m.Callerid.ToString();
+                newIncidentComment.Text = "قام بتسليم البلاغ للدورية صاحبة النداء: " + m.Callerid;
                 newIncidentComment.Timestamp = DateTime.Now;
                 _context.Incidentscomments.Add(newIncidentComment);
                 _context.SaveChanges();

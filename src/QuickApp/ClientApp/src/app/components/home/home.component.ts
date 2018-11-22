@@ -9,7 +9,6 @@ import { ConfigurationService } from '../../services/configuration.service';
 
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { ModalService } from '../../services/modalservice';
-import { CommonService } from '../../services/common.service'
 import * as Prism from 'prismjs';
 
 @Component({
@@ -21,32 +20,7 @@ import * as Prism from 'prismjs';
 export class HomeComponent implements AfterViewInit {
 
   constructor(public configurations: ConfigurationService, private alertService: AlertService,
-    private modalService: ModalService, private svc: CommonService) {
-
-
-        window.localStorage.setItem('UserID', '6');
-
-  this.svc.GetOrganizationList(parseInt(window.localStorage.getItem('UserID'))).subscribe(resp =>{
-
-        window.localStorage.setItem('Orgs',resp );
-    },
-      error => {
-      });
-
-      this.svc.GetShiftsList().toPromise().then(resp =>
-        { 
-           window.localStorage.setItem('Shifts',JSON.stringify(resp) );
-           console.log(window.localStorage.getItem('Shifts'));
-      });
-
-      this.svc.GetAhwalList(parseInt(window.localStorage.getItem('UserID'))).subscribe(resp =>{
-
-        window.localStorage.setItem('Ahwals',resp );
-        console.log(window.localStorage.getItem('Ahwals'));
-    },
-      error => {
-      });
-
+    private modalService: ModalService) {
   }
 
   Bootstrappopup() {

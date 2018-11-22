@@ -18,7 +18,7 @@ import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
 import { Permission, PermissionNames, PermissionValues } from '../models/permission.model';
 import { UserEdit } from '../models/user-edit.model';
-
+import { CommonService } from './../services/common.service';
 
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -37,8 +37,20 @@ export class AccountService {
 
 
   constructor(private router: Router, private http: HttpClient, private authService: AuthService,
-    private accountEndpoint: AccountEndpoint) {
+    private accountEndpoint: AccountEndpoint, private svc: CommonService) {
+      window.localStorage.setItem('UserID', '6');
+      this.svc.GetShiftsList().toPromise().then(resp => { 
+           window.localStorage.setItem('Shifts',JSON.stringify(resp) );
+           console.log(window.localStorage.getItem('Shifts'));
+      });
 
+      this.svc.GetAhwalList(parseInt(window.localStorage.getItem('UserID'), 10)).subscribe(resp => {
+
+        window.localStorage.setItem('Ahwals',resp );
+        console.log(window.localStorage.getItem('Ahwals'));
+    },
+      error => {
+      });
   }
 
 
