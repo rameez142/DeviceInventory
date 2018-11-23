@@ -38,16 +38,16 @@ export class AccountService {
 
   constructor(private router: Router, private http: HttpClient, private authService: AuthService,
     private accountEndpoint: AccountEndpoint, private svc: CommonService) {
-      window.localStorage.setItem('UserID', '6');
-      this.svc.GetShiftsList().toPromise().then(resp => { 
-           window.localStorage.setItem('Shifts',JSON.stringify(resp) );
-           console.log(window.localStorage.getItem('Shifts'));
-      });
+    window.localStorage.setItem('UserID', '6');
+    this.svc.GetShiftsList().toPromise().then(resp => {
+      window.localStorage.setItem('Shifts', JSON.stringify(resp));
+      //console.log(window.localStorage.getItem('Shifts'));
+    });
 
-      this.svc.GetAhwalList(parseInt(window.localStorage.getItem('UserID'), 10)).subscribe(resp => {
+    this.svc.GetAhwalList(parseInt(window.localStorage.getItem('UserID'), 10)).subscribe(resp => {
 
-        window.localStorage.setItem('Ahwals',resp );
-        console.log(window.localStorage.getItem('Ahwals'));
+      window.localStorage.setItem('Ahwals', resp);
+      //console.log(window.localStorage.getItem('Ahwals'));
     },
       error => {
       });

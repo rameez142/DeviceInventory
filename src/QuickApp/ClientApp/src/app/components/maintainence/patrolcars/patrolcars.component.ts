@@ -48,7 +48,7 @@ export class PatrolcarsComponent implements OnInit {
 
 
   constructor(private svc: CommonService, private modalService: ModalService, private cd: ChangeDetectorRef, private alertService: AlertService) {
-    console.log('constructor');
+    
     this.userid = parseInt(window.localStorage.getItem('UserID'), 10);
     this.ahwalsrc = JSON.parse(window.localStorage.getItem('Ahwals'));
     this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
@@ -60,8 +60,7 @@ export class PatrolcarsComponent implements OnInit {
 
 
   populatetypelist() {
-    this.svc.GetPatrolCarTypes().subscribe(resp => {
-      console.log('types  ' + resp)
+    this.svc.GetPatrolCarTypes().subscribe(resp => {      
       this.typelist = JSON.parse(resp);
     },
       error => {
@@ -107,7 +106,6 @@ export class PatrolcarsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Initialized');
     this.populatetypelist();
     this.LoadData();
   }

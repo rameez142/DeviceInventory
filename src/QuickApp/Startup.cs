@@ -24,6 +24,7 @@ using AppPermissions = DAL.Core.ApplicationPermissions;
 using MOI.Patrol;
 using System.Threading.Tasks;
 using MOI.Patrol.Core;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AssetManagement
 {
@@ -47,7 +48,10 @@ namespace AssetManagement
                 options.UseOpenIddict();
             });
 
-            services.AddSignalR();
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
 
             // add identity
             //services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -153,6 +157,7 @@ namespace AssetManagement
             // Repositories
             services.AddScoped<IUnitOfWork, HttpUnitOfWork>();
             services.AddScoped<IAccountManager, AccountManager>();
+            services.AddScoped<CallerHub, CallerHub>();
             services.AddHttpContextAccessor();
             // Auth Handlers
             services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
@@ -201,7 +206,7 @@ namespace AssetManagement
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<NotifyHub>("/notify");
+                routes.MapHub<CallerHub>("/CallerHub");
             });
 
             app.UseMvc(routes =>

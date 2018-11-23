@@ -139,7 +139,7 @@ export class AuthService {
     let decodedIdToken = <IdToken>jwtHelper.decodeToken(response.id_token);
 
 
-    console.log(decodedIdToken)
+    //console.log(decodedIdToken)
     let permissions: PermissionValues[] = Array.isArray(decodedIdToken.permission) ? decodedIdToken.permission : [decodedIdToken.permission];
 
     if (!this.isLoggedIn)
