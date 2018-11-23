@@ -91,6 +91,9 @@ import { OperationsopsliveComponent } from './components/operations/operationsop
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
 import { SignalRModule, SignalRConfiguration,SignalR } from 'ng2-signalr';
 import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
+import { ChartsModule } from 'ng2-charts';
+import { IncidentChartComponentComponent } from './components/charts/incident.chart.component/incident.chart.component.component';
+import { EmployeeChartComponentComponent } from './components/charts/employee.chart.component/employee.chart.component.component';
 
 @NgModule({
   imports: [
@@ -117,7 +120,7 @@ import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
     DxPopupModule, DxDataGridModule, DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule,
     DxTabPanelModule, DxCheckBoxModule, DxAutocompleteModule,
     LayoutModule, LoadingPageModule, NgbModule, CoreModule, BoxModule, DxLookupModule,
-    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf)
+    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf), ChartsModule
   ],
   declarations: [
     AppComponent,
@@ -154,7 +157,9 @@ import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
     TopnavComponent,
     LayoutComponent,
     OperationsopsliveComponent,
-    IncidentsComponent
+    IncidentsComponent,
+    IncidentChartComponentComponent,
+    EmployeeChartComponentComponent
   ],
   providers: [
     { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -185,11 +190,4 @@ export class AppModule {
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
-}
-export function createConfig(): SignalRConfiguration {
-  const c = new SignalRConfiguration();
-  c.hubName = 'NotifyHub';
-  c.qs = { user: 'imran' };
-  c.url = 'http://localhost:2018/';
-  return c;
 }

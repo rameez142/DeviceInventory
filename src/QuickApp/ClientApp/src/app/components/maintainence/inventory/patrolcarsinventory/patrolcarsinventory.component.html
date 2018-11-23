@@ -21,7 +21,7 @@
       <dxo-export [enabled]="true" fileName="تقارير الاستلام والتسليم الأجهزة"></dxo-export>
 
       <!-- <dxo-header-filter
-      [visible]="true"></dxo-header-filter> -->
+  [visible]="true"></dxo-header-filter> -->
       <!-- <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser> -->
 
       <dxo-filter-row [visible]="true"></dxo-filter-row>
@@ -36,13 +36,16 @@
                      [closeOnOutsideClick]="false"
                      (onShown)="onShown()">
       </dx-load-panel>
-      <dxi-column dataField="timestamp" caption="الوقت والتاريخ" dataType="date" width="200" [allowFiltering]="false" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
-      <dxi-column dataField="statename" caption="الحالة" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'" width="200"></dxi-column>
-      <dxi-column dataField="platenumber" caption="رقم الدورية" width="150" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
-      <dxi-column dataField="model" caption="موديل" width="100" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
-      <dxi-column dataField="milnumber" class="tdcenter" caption="الرقم العسكري" width="100" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
-      <dxi-column dataField="personrank" caption="الرتبه" width="200" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
-      <dxi-column dataField="personname" caption="الاسم" width="300" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+
+
+
+      <dxi-column dataField="personname" caption="الاسم" width="20%" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="statename" caption="الحالة" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'" width="10%"></dxi-column>
+      <dxi-column dataField="platenumber" caption="رقم الدورية" width="10%" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="model" caption="موديل" width="5%" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="milnumber" class="tdcenter" caption="الرقم العسكري" width="5%" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="personrank" caption="الرتبه" width="20%" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="timestamp" caption="الوقت والتاريخ" dataType="date" width="20%" [allowFiltering]="false" [format]="{ type: 'dd/MM/yyyy hh:mm:ss a' }"></dxi-column>
     </dx-data-grid>
   </form>
 </div>

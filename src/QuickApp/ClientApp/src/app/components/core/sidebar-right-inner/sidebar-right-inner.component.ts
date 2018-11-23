@@ -39,6 +39,7 @@ export class SidebarRightInnerComponent implements OnInit, OnDestroy {
       this.isSidebarLeftMini = value;
       this.changeDetectorRef.detectChanges();
     }));
+    this.layoutStore.setSidebarRightSkin('light');
   }
 
   /**
