@@ -117,7 +117,7 @@ import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
     DxPopupModule, DxDataGridModule, DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule,
     DxTabPanelModule, DxCheckBoxModule, DxAutocompleteModule,
     LayoutModule, LoadingPageModule, NgbModule, CoreModule, BoxModule, DxLookupModule,
-    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf)
+    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf), SignalRModule.forRoot(createConfig)
   ],
   declarations: [
     AppComponent,

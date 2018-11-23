@@ -162,7 +162,7 @@ export class AuthService {
     return user;
   }
 
-  private loadLeftNavigation() {
+  public loadLeftNavigation() {
     let sidebarLeftMenu = [
       { label: 'Home', route: 'Home', iconClasses: 'fa fa-road' },
       {
