@@ -23,9 +23,10 @@ export class SignalRService {
   }
 
   private createConnection() {
-    var url = 'http://localhost:2021/CallerHub';
+    //console.log(window.location.protocol +"//"+ window.location.host + '/CallerHub');
+    //  var url = 'http://localhost:2021/CallerHub';
     this._hubConnection = new HubConnectionBuilder()
-      .withUrl(url)
+      .withUrl(window.location.protocol + "//" + window.location.host + '/CallerHub')
       .build();
   }
 
@@ -39,12 +40,12 @@ export class SignalRService {
       })
       .catch(err => {
         console.log('Error while establishing connection, retrying...');
-        //setTimeout(this.startConnection(), 5000);
+        setTimeout(this.startConnection(), 5000);
       });
   }
 
   private registerOnServerEvents(): void {
-    
+
     this._hubConnection.on('startcallevent', (data: any) => {
       this.startCallEventReceived.emit(data);
     });
