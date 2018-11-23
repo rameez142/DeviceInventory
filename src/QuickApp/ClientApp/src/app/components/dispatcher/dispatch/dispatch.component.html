@@ -3,7 +3,7 @@
 
 
     <dx-data-grid id="gridContainer"
-                  width="100%"
+                  [width]="auto"
                   [dataSource]="dataSource"
                   [showBorders]="true"
                   [rtlEnabled]="true"
@@ -63,9 +63,9 @@
 
       <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="100" [selectedFilterOperation]="'contains'"></dxi-column>
       <!--  <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
-   <div *dxTemplate="let data of 'maptemplate'">
-        <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
-       </div> -->
+      <div *dxTemplate="let data of 'maptemplate'">
+           <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
+          </div> -->
 
     </dx-data-grid>
 
@@ -89,8 +89,8 @@
          valueExpr="sectorid"
          displayExpr="name">  -->
     <dx-popup class="popup"
-              [width]="600"
-              [height]="350"
+              [width]="auto"
+              [height]="auto"
               [showTitle]="true"
               title=""
               [showCloseButton]="true"
@@ -229,8 +229,8 @@
     </dx-popup>
 
     <dx-popup class="popup"
-              [width]="600"
-              [height]="500"
+              [width]="auto"
+              [height]="auto"
               [showTitle]="true"
               title=""
               [showCloseButton]="true"

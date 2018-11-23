@@ -1,120 +1,114 @@
 
-        <div class="container">
+<div class="container">
 
-            <form #f="ngForm"  method="post" enctype="multipart/form-data">
+  <form #f="ngForm" method="post" enctype="multipart/form-data">
 
 
 
-                  <dx-data-grid
-                  id="gridContainer"
+    <dx-data-grid id="gridContainer"
+                  [width]="auto"
                   [dataSource]="dataSource"
                   [showBorders]="true"
                   [rtlEnabled]="true"
                   [hoverStateEnabled]="true"
                   [selectedRowKeys]="[]"
                   (onToolbarPreparing)="onToolbarPreparing($event)"
-                 keyexpr="handheldid"
-                >
-                  <dxo-paging [pageSize]="80"></dxo-paging>
-                  <dxo-pager
-                  [showPageSizeSelector]="true"
-                  [allowedPageSizes]="[80, 50, 100]"
-                  [showInfo]="true">
-              </dxo-pager>
+                  keyexpr="handheldid">
+      <dxo-paging [pageSize]="80"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true"
+                 [allowedPageSizes]="[80, 50, 100]"
+                 [showInfo]="true">
+      </dxo-pager>
 
-              <dxo-editing
-              mode="row"
-              [allowUpdating]="false"
-              [allowDeleting]="false"
-              [allowAdding]="false"
-             >
-           
-              </dxo-editing>
+      <dxo-editing mode="row"
+                   [allowUpdating]="false"
+                   [allowDeleting]="false"
+                   [allowAdding]="false">
 
-              <dxo-selection mode="single"></dxo-selection>
-              <dxo-export [enabled]="true" fileName="HandHelds"></dxo-export>
-              <!-- <dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser> -->
-              <dxo-filter-row [visible]="true"></dxo-filter-row>
-              <dxo-header-filter [visible]="true"></dxo-header-filter>
-              <dx-load-panel
-                  #loadPanel
-                  shadingColor="rgba(0,0,0,0.4)"
-                  [position]="{ of: '#gridContainer' }"
-                  [(visible)]="loadingVisible"
-                  [showIndicator]="true"
-                  [showPane]="true"
-                  [shading]="true"
-                  [closeOnOutsideClick]="false"
-                  (onShown)="onShown()">
-              </dx-load-panel>
+      </dxo-editing>
 
-              <dxi-column dataField="serial" caption="رقم الجهاز" [filterOperations]="['contains', '=']" [selectedFilterOperation] ="'contains'"  ></dxi-column>
-              <dxi-column dataField="barcode" caption="رقم الباركود" [allowFiltering]="false"></dxi-column>
-              <dxi-column dataField="defective" caption="غير صالحة؟"  [allowFiltering]="false" cellTemplate="defchecktemplate"></dxi-column>
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-export [enabled]="true" fileName="HandHelds"></dxo-export>
+      <!-- <dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser> -->
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dx-load-panel #loadPanel
+                     shadingColor="rgba(0,0,0,0.4)"
+                     [position]="{ of: '#gridContainer' }"
+                     [(visible)]="loadingVisible"
+                     [showIndicator]="true"
+                     [showPane]="true"
+                     [shading]="true"
+                     [closeOnOutsideClick]="false"
+                     (onShown)="onShown()">
+      </dx-load-panel>
 
-              <div *dxTemplate="let data of 'defchecktemplate'">
-                  <dx-check-box name='chkrwdef' id='chkrwdef'
-                  [value]="data.value"
-                  ></dx-check-box>
-                  </div>
-                    <dxi-column cellTemplate="btncelltemplate"> </dxi-column>
-    <div *dxTemplate="let data of 'btncelltemplate'">
+      <dxi-column dataField="serial" caption="رقم الجهاز" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'"></dxi-column>
+      <dxi-column dataField="barcode" caption="رقم الباركود" [allowFiltering]="false"></dxi-column>
+      <dxi-column dataField="defective" caption="غير صالحة؟" [allowFiltering]="false" cellTemplate="defchecktemplate"></dxi-column>
 
-<i class="fa fa-edit"   (click) = 'ShowUpdatePopup($event,data.data)'></i>
-<i class="fa fa-trash" (click)='DelRecord($event,data.data)'></i>
+      <div *dxTemplate="let data of 'defchecktemplate'">
+        <dx-check-box name='chkrwdef' id='chkrwdef'
+                      [value]="data.value"></dx-check-box>
+      </div>
+      <dxi-column cellTemplate="btncelltemplate"> </dxi-column>
+      <div *dxTemplate="let data of 'btncelltemplate'">
 
-        </div>
-                </dx-data-grid>
+        <i class="fa fa-edit" (click)='ShowUpdatePopup($event,data.data)'></i>
+        &nbsp; &nbsp;
+        <i class="fa fa-trash" (click)='DelRecord($event,data.data)' style="color:red"></i>
 
-                <dx-popup
-                class="popup"
-                [width]="500"
-                [height]="400"
-                [showTitle]="false"
-                title=""
-                [showCloseButton]= "true"
-                [dragEnabled]="false"
-                [closeOnOutsideClick]="true"
-                [(visible)]="popupVisible">
-                <div *dxTemplate="let data of 'content'">
+      </div>
+    </dx-data-grid>
 
-                        <table>
-                            <tr>
-                                <td>  <label>رقم الجهاز</label>
-                                </td>
-                                <td>
-                                    <input name="txtserial" [(ngModel)]="serial">
-                                    </td>
-                                    <td>  <label>رقم الجهاز</label>
-                                    </td>
-                                    <td>  <label>غير صالحة؟</label>
-                                      </td>
-                                      <td>
-                        <input type="checkbox" id="chkdefective" name="chkdefective"
-                        [ngModel]="defectchk" (ngModelChange)="chkdeftoggle($event)">
-                                          </td>
-                                        </tr>
-                                  <tr>
-                                    <td>
+    <dx-popup class="popup"
+              [width]="auto"
+              [height]="auto"
+              [showTitle]="true"
+              title=""
+              [showCloseButton]="true"
+              [dragEnabled]="false"
+              [closeOnOutsideClick]="true"
+              [(visible)]="popupVisible">
+      <div *dxTemplate="let data of 'content'">
+        <table>
+          <tr>
+            <td>
+              <label>رقم الجهاز</label>
+            </td>
+            <td>
+              <input name="txtserial" [(ngModel)]="serial">
+            </td>
+            <td>
+              <label>رقم الجهاز</label>
+            </td>
+            <td>
+              <label>غير صالحة؟</label>
+            </td>
+            <td>
+              <input type="checkbox" id="chkdefective" name="chkdefective"
+                     [ngModel]="defectchk" (ngModelChange)="chkdeftoggle($event)">
+            </td>
+          </tr>
+          <tr>
+            <td>
 
-                            <button (click)="hdntrans === 'ADD' ? RowAdd($event) :  RowUpdate($event)" data-dismiss="modal" class="btn btn-primary">حفظ</button>
-                            </td>
-                            <td>
-                            <button (click)="ClosePopup()" data-dismiss="modal" class="btn btn-default">إلغاء</button>
+              <button (click)="hdntrans === 'ADD' ? RowAdd($event) :  RowUpdate($event)" data-dismiss="modal" class="btn btn-primary">حفظ</button>
+            </td>
+            <td>
+              <button (click)="ClosePopup()" data-dismiss="modal" class="btn btn-default">إلغاء</button>
 
-                                    </td>
-                                  </tr>
-                                  <tr>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="errormsg"> {{handhelds_StatusLabel}} </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </dx-popup>
+  </form>
 
-                                        <td colspan="2">
-                                          <div class="errormsg"> {{handhelds_StatusLabel}} </div>
-                                     </td>
-                                      </tr>
-               </table>
-
-              </div>
-            </dx-popup>
-                    </form>
-
-          </div>
+</div>
 
