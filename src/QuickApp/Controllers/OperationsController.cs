@@ -24,7 +24,7 @@ namespace MOI.Patrol.Controllers
         private DataAccess DAL = new DataAccess();
         private Handler_Operations _oper = new Handler_Operations();
         private Handler_Incidents _inc = new Handler_Incidents();
-
+        private Handler_IncidentTypes _incTypes = new Handler_IncidentTypes();
         [HttpPost("operationslist")]
         public ActionResult PostOperationsList()
         {
@@ -70,6 +70,40 @@ namespace MOI.Patrol.Controllers
 
             string Qry = "SELECT IncidentTypeID, Name, Priority FROM IncidentsTypes";
             return Ok(DAL.PostGre_GetDataTable(Qry));
+        }
+
+        [HttpPost("addupdateincidenttypes")]
+        public ActionResult AddUpdateIncidentTypes([FromBody]JObject RqHdr)
+        {
+
+            //var incidenttypename = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidenttypename"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            //var incidenttypeid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidenttypeid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            //var userid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var incidenttypename = RqHdr["incidenttypename"].ToString();
+            var incidenttypeid = Convert.ToInt32(RqHdr["incidenttypeid"].ToString());
+            var userid = Convert.ToInt32(RqHdr["userid"].ToString());
+
+            Users user = new Users();
+            user.Userid = userid;
+            if (user == null)
+                return Ok(null);
+
+           
+            return Ok(_incTypes.AddUpdate_IncidentType(incidenttypeid, incidenttypename.ToString(), user));
+        }
+        [HttpPost("deleteincidenttypes")]
+        public ActionResult DeleteIncidentTypes([FromBody]JObject RqHdr)
+        {
+
+            var incidenttypeid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["incidenttypeid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+            var userid = (Newtonsoft.Json.JsonConvert.DeserializeObject<Int16>(RqHdr["userid"].ToString(), new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }));
+
+            Users user = new Users();
+            user.Userid = userid;
+            if (user == null)
+                return Ok(null);
+
+            return Ok(_incTypes.Delete_IncidentType(incidenttypeid,  user));
         }
 
         [HttpPost("attachincident")]

@@ -94,6 +94,7 @@ import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
 import { ChartsModule } from 'ng2-charts';
 import { IncidentChartComponentComponent } from './components/charts/incident.chart.component/incident.chart.component.component';
 import { EmployeeChartComponentComponent } from './components/charts/employee.chart.component/employee.chart.component.component';
+import { CommunicationComponent } from './components/operations/communication/communication.component';
 
 @NgModule({
   imports: [
@@ -159,7 +160,8 @@ import { EmployeeChartComponentComponent } from './components/charts/employee.ch
     OperationsopsliveComponent,
     IncidentsComponent,
     IncidentChartComponentComponent,
-    EmployeeChartComponentComponent
+    EmployeeChartComponentComponent,
+    CommunicationComponent
   ],
   providers: [
     { provide: 'BASE_URL', useFactory: getBaseUrl },

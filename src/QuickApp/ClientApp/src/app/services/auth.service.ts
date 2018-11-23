@@ -181,7 +181,8 @@ export class AuthService {
       {
         label: 'العمليات', route: 'operations/operationsopslive', iconClasses: 'fa fa-arrows', children: [
           { label: 'الكشف', route: 'operations/operationsopslive', iconClasses: 'fa fa-calendar' },
-          { label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret' }
+          { label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret' },
+          { label: 'Incident Type', route: 'operations/incidenttype', iconClasses: 'fa fa-user-secret' }
 
         ]
       }

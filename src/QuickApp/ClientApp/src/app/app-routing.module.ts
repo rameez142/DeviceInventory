@@ -25,7 +25,7 @@ import { HandheldinventoryComponent } from './components/maintainence/inventory/
 import { AccessoryinventoryComponent } from './components/maintainence/inventory/accessoryinventory/accessoryinventory.component';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
-
+import { CommunicationComponent } from './components/operations/communication/communication.component';
 const routes: Routes = [
 
   { path: 'login', component: LoginComponent, data: { title: '' } },
@@ -74,7 +74,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'operationsopslive', component: OperationsopsliveComponent },
-      { path: 'incidents', component: IncidentsComponent }
+      { path: 'incidents', component: IncidentsComponent },
+      { path: 'incidenttype', component: CommunicationComponent }
     ]
   },
   {
