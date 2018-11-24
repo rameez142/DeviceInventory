@@ -43,18 +43,14 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Compile Remove="ClientApp\src\app\components\operations\communications\**" />
     <Compile Remove="Logs\**" />
     <Content Remove="$(SpaRoot)**" />
-    <Content Remove="ClientApp\src\app\components\operations\communications\**" />
     <Content Remove="Logs\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="ClientApp\src\app\components\operations\communications\**" />
     <EmbeddedResource Remove="Logs\**" />
-    <None Remove="ClientApp\src\app\components\operations\communications\**" />
     <None Remove="Logs\**" />
   </ItemGroup>
 
@@ -70,7 +66,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\app\components\charts\" />
     <Folder Include="Content\" />
   </ItemGroup>
 

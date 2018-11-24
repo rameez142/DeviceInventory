@@ -139,7 +139,7 @@ export class AuthService {
     let decodedIdToken = <IdToken>jwtHelper.decodeToken(response.id_token);
 
 
-    //console.log(decodedIdToken)
+    console.log(decodedIdToken)
     let permissions: PermissionValues[] = Array.isArray(decodedIdToken.permission) ? decodedIdToken.permission : [decodedIdToken.permission];
 
     if (!this.isLoggedIn)
@@ -162,7 +162,7 @@ export class AuthService {
     return user;
   }
 
-  public loadLeftNavigation() {
+  private loadLeftNavigation() {
     let sidebarLeftMenu = [
       { label: 'Home', route: 'Home', iconClasses: 'fa fa-road' },
       {
@@ -181,8 +181,7 @@ export class AuthService {
       {
         label: 'العمليات', route: 'operations/operationsopslive', iconClasses: 'fa fa-arrows', children: [
           { label: 'الكشف', route: 'operations/operationsopslive', iconClasses: 'fa fa-calendar' },
-          { label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret' },
-          { label: 'Incident Type', route: 'operations/incidenttype', iconClasses: 'fa fa-user-secret' }
+          { label: 'البلاغات', route: 'operations/incidents', iconClasses: 'fa fa-user-secret' }
 
         ]
       }

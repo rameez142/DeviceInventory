@@ -40,17 +40,17 @@ export class PatrolcarsComponent implements OnInit {
   modaltitle: string = '';
   hdntrans: string = '';
   patrolid: number = 0;
-  userid: number;
-  ahwalsrc: any;
-  selhdrAhwalId: number;
+  userid:number;
+  ahwalsrc:any;
+  selhdrAhwalId:number;
 
   public patrolcarobj: patrolcars = new patrolcars();
 
 
-  constructor(private svc: CommonService, private modalService: ModalService, private cd: ChangeDetectorRef, private alertService: AlertService) {
-    
-    this.userid = parseInt(window.localStorage.getItem('UserID'), 10);
-    this.ahwalsrc = JSON.parse(window.localStorage.getItem('Ahwals'));
+  constructor(private svc: CommonService, private modalService: ModalService, private cd: ChangeDetectorRef,private alertService: AlertService) {
+    console.log('constructor');
+    this.userid = parseInt(window.localStorage.getItem('UserID'),10);
+    this.ahwalsrc= JSON.parse(window.localStorage.getItem('Ahwals'));
     this.selhdrAhwalId = this.ahwalsrc[0].ahwalid;
 
     this.populatetypelist();
@@ -60,7 +60,8 @@ export class PatrolcarsComponent implements OnInit {
 
 
   populatetypelist() {
-    this.svc.GetPatrolCarTypes().subscribe(resp => {      
+    this.svc.GetPatrolCarTypes().subscribe(resp => {
+      console.log('types  ' + resp)
       this.typelist = JSON.parse(resp);
     },
       error => {
@@ -68,7 +69,7 @@ export class PatrolcarsComponent implements OnInit {
       });
   }
 
-
+  
 
   onValueChangeOfSelectbox(e) {
 
@@ -91,7 +92,7 @@ export class PatrolcarsComponent implements OnInit {
     this.selhdrAhwalId = e.value;
     this.LoadData();
 
-  }
+}
 
   onShown() {
     setTimeout(() => {
@@ -106,6 +107,7 @@ export class PatrolcarsComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('Initialized');
     this.populatetypelist();
     this.LoadData();
   }
@@ -115,7 +117,7 @@ export class PatrolcarsComponent implements OnInit {
     this.svc.GetPatrolCarList(this.selhdrAhwalId, parseInt(userid)).subscribe(resp => {
 
       this.dataSource = JSON.parse(resp);
-
+     
     },
       error => {
 
@@ -124,7 +126,7 @@ export class PatrolcarsComponent implements OnInit {
   }
 
   onToolbarPreparing(e) {
-
+   
     e.toolbarOptions.items.unshift({
       location: 'before',
       template: 'الأحوال'
@@ -136,7 +138,7 @@ export class PatrolcarsComponent implements OnInit {
           dataSource: this.ahwalsrc,
           displayExpr: 'name',
           valueExpr: 'ahwalid',
-          value: this.ahwalsrc[0].ahwalid,
+          value:this.ahwalsrc[0].ahwalid,
           onValueChanged: this.ahwalChanged.bind(this)
         }
       }, {
@@ -326,11 +328,11 @@ export class PatrolcarsComponent implements OnInit {
 
 
   DelRecord(e, data) {
-    // this.dataGrid.instance.deleteRow(rindex);
-    this.cleardata();
-    this.patrolid = data.patrolid;
-    this.pltnumber = data.pltnumber;
-    this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.RowDelete());
+   // this.dataGrid.instance.deleteRow(rindex);
+   this.cleardata();
+  this.patrolid = data.patrolid;
+  this.pltnumber = data.pltnumber;
+  this.alertService.showDialog('متأكد تبي تمسح؟ أكيد؟', DialogType.confirm, () => this.RowDelete());
 
   }
 

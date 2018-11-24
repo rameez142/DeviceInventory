@@ -9,7 +9,6 @@
   width: 230px !important;
 }
 
-
 body {
   font-family: 'Times New Roman' !important;
 }
@@ -411,3 +410,8 @@ i.page-caption {
 .table-bordered > tfoot > tr > td {
   border-color: #eae3e3;
 }
+
+.errormsg {
+  color:red;
+  font-weight: bold;
+  }

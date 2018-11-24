@@ -13,7 +13,7 @@
     "Logout": "Logout"
   },
   "pageHeader": {
-    "Dashboard": "Patrol Statistics",
+    "Dashboard": "Dashboard",
     "Customers": "Car Detail",
     "Products": "Driver Detail",
     "Orders": "Route History",
