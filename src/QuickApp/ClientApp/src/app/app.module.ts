@@ -19,7 +19,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { AppRoutingModule } from './app-routing.module';
 import { AppErrorHandler } from './app-error.handler';
-
 import { AppTitleService } from './services/app-title.service';
 import { AppTranslationService, TranslateLanguageLoader } from './services/app-translation.service';
 import { ConfigurationService } from './services/configuration.service';
@@ -31,7 +30,6 @@ import { NotificationEndpoint } from './services/notification-endpoint.service';
 import { AccountService } from './services/account.service';
 import { AccountEndpoint } from './services/account-endpoint.service';
 import { ModalService } from './services/modalservice';
-import { SignalRService } from './services/caller-signalr.service';
 
 import { EqualValidator } from './directives/equal-validator.directive';
 import { LastElementDirective } from './directives/last-element.directive';
@@ -58,6 +56,7 @@ import { ViewDefinitionComponent } from './components/controls/view-definition.c
 import { ProgramSettingComponent } from './components/controls/program-setting.component';
 import { RoleEditorComponent } from './components/controls/role-editor.component';
 import { DxTreeViewModule } from '../../node_modules/devextreme-angular';
+
 import {
   DxLookupModule, DxMenuModule, DxContextMenuModule, DxSelectBoxModule, DxPopupModule, DxDataGridModule,
   DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule, DxTabPanelModule,
@@ -89,12 +88,9 @@ import { adminLteConf } from './admin-lte.conf';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OperationsopsliveComponent } from './components/operations/operationsopslive/operationsopslive.component';
 import { IncidentsComponent } from './components/operations/incidents/incidents.component';
-import { SignalRModule, SignalRConfiguration,SignalR } from 'ng2-signalr';
+import { SignalRModule } from 'ng2-signalr';
+import { SignalRConfiguration } from 'ng2-signalr';
 import { LayoutModule, BoxModule } from '../../node_modules/angular-admin-lte';
-import { ChartsModule } from 'ng2-charts';
-import { IncidentChartComponentComponent } from './components/charts/incident.chart.component/incident.chart.component.component';
-import { EmployeeChartComponentComponent } from './components/charts/employee.chart.component/employee.chart.component.component';
-import { CommunicationComponent } from './components/operations/communication/communication.component';
 
 @NgModule({
   imports: [
@@ -121,7 +117,7 @@ import { CommunicationComponent } from './components/operations/communication/co
     DxPopupModule, DxDataGridModule, DxButtonModule, DxTemplateModule, DxLoadIndicatorModule, DxLoadPanelModule,
     DxTabPanelModule, DxCheckBoxModule, DxAutocompleteModule,
     LayoutModule, LoadingPageModule, NgbModule, CoreModule, BoxModule, DxLookupModule,
-    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf), ChartsModule
+    ReactiveFormsModule, LayoutModule.forRoot(adminLteConf)
   ],
   declarations: [
     AppComponent,
@@ -158,10 +154,7 @@ import { CommunicationComponent } from './components/operations/communication/co
     TopnavComponent,
     LayoutComponent,
     OperationsopsliveComponent,
-    IncidentsComponent,
-    IncidentChartComponentComponent,
-    EmployeeChartComponentComponent,
-    CommunicationComponent
+    IncidentsComponent
   ],
   providers: [
     { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -178,18 +171,25 @@ import { CommunicationComponent } from './components/operations/communication/co
     EndpointFactory,
     ModalService,
     CommonService,
-    SharedMapServiceService, SignalRService
+    SharedMapServiceService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }
 
 
+
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
+}
+export function createConfig(): SignalRConfiguration {
+  const c = new SignalRConfiguration();
+  c.hubName = 'NotifyHub';
+  c.qs = { user: 'imran' };
+  c.url = 'http://localhost:2018/';
+  return c;
 }

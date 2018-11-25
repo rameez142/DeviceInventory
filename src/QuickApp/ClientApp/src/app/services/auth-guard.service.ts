@@ -10,34 +10,33 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  constructor(private authService: AuthService, private router: Router) { }
+    constructor(private authService: AuthService, private router: Router) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
-    let url: string = state.url;
-    return this.checkLogin(url);
-  }
-
-  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    return this.canActivate(route, state);
-  }
-
-  canLoad(route: Route): boolean {
-
-    let url = `/${route.path}`;
-    return this.checkLogin(url);
-  }
-
-  checkLogin(url: string): boolean {
-
-    if (this.authService.isLoggedIn) {
-      this.authService.loadLeftNavigation();
-      return true;
+        let url: string = state.url;
+        return this.checkLogin(url);
     }
 
-    this.authService.loginRedirectUrl = url;
-    this.router.navigate(['/login']);
+    canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        return this.canActivate(route, state);
+    }
 
-    return false;
-  }
+    canLoad(route: Route): boolean {
+
+        let url = `/${route.path}`;
+        return this.checkLogin(url);
+    }
+
+    checkLogin(url: string): boolean {
+
+        if (this.authService.isLoggedIn) {
+            return true;
+        }
+
+        this.authService.loginRedirectUrl = url;
+        this.router.navigate(['/login']);
+
+        return false;
+    }
 }

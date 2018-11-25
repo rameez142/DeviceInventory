@@ -3,7 +3,7 @@
 
 
     <dx-data-grid id="gridContainer"
-                  [width]="auto"
+                  width="100%"
                   [dataSource]="dataSource"
                   [showBorders]="true"
                   [rtlEnabled]="true"
@@ -42,6 +42,7 @@
                      [closeOnOutsideClick]="false"
                      (onShown)="onShown()">
       </dx-load-panel>
+
       <dxi-column dataField="sectordesc" [groupIndex]="0" caption="القطاع"></dxi-column>
       <dxi-column dataField="milnumber" caption="الرقم العسكري" [filterOperations]="['contains', '=']" [selectedFilterOperation]="'contains'" width="80"></dxi-column>
       <dxi-column dataField="rankdesc" caption="الرتبه" width="50" [allowFiltering]="false"></dxi-column>
@@ -62,9 +63,9 @@
 
       <dxi-column dataField="personmobile" caption="الجوال" [filterOperations]="['contains', '=']" width="100" [selectedFilterOperation]="'contains'"></dxi-column>
       <!--  <dxi-column  caption=""  [allowFiltering]="false" [width]="50" cellTemplate="maptemplate" ></dxi-column>
-      <div *dxTemplate="let data of 'maptemplate'">
-           <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
-          </div> -->
+   <div *dxTemplate="let data of 'maptemplate'">
+        <img (click)="showmapInfo()" src="../../../../assets/images/haritayikaydir_r_glow.png"   />
+       </div> -->
 
     </dx-data-grid>
 
@@ -88,8 +89,8 @@
          valueExpr="sectorid"
          displayExpr="name">  -->
     <dx-popup class="popup"
-              [width]="auto"
-              [height]="auto"
+              [width]="600"
+              [height]="350"
               [showTitle]="true"
               title=""
               [showCloseButton]="true"
@@ -228,8 +229,8 @@
     </dx-popup>
 
     <dx-popup class="popup"
-              [width]="auto"
-              [height]="auto"
+              [width]="600"
+              [height]="500"
               [showTitle]="true"
               title=""
               [showCloseButton]="true"

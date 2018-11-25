@@ -3,8 +3,8 @@
 // Email: support@ebenmonney.com
 // ====================================================
 
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChildren, AfterViewInit, QueryList, ElementRef } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, ViewEncapsulation,OnInit, OnDestroy, ViewChildren, AfterViewInit, QueryList, ElementRef } from '@angular/core';
+import { trigger, state, style, transition, animate} from '@angular/animations';
 
 import { Router, NavigationStart } from '@angular/router';
 import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
@@ -21,9 +21,7 @@ import { ConfigurationService } from '../services/configuration.service';
 import { Permission } from '../models/permission.model';
 import { LoginComponent } from '../components/login/login.component';
 import { LayoutService } from 'angular-admin-lte';
-import { SignalRService } from '../services/caller-signalr.service';
-import { CallerInfo } from '../Models/caller.model';
-import { ModalService } from '../services/modalservice';
+
 const alertify: any = require('../assets/scripts/alertify.js');
 
 
@@ -47,14 +45,10 @@ const alertify: any = require('../assets/scripts/alertify.js');
 })
 export class AppComponent implements OnInit, AfterViewInit {
   //private _hubConnection: HubConnection;
-  chatMessage: CallerInfo;
-  caller_details: string;
-  callerid: string;
   isAppLoaded: boolean;
   isUserLoggedIn: boolean;
   shouldShowLoginModal: boolean;
   removePrebootScreen: boolean;
-  callerPopupVisible: boolean;
   newNotificationCount = 0;
   appTitle = ' Patrolling';
   appLogo = require('../assets/images/vt2.png');
@@ -91,7 +85,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(private layoutService: LayoutService, storageManager: LocalStoreManager, private toastaService: ToastaService, private toastaConfig: ToastaConfig,
     private accountService: AccountService, private alertService: AlertService, private notificationService: NotificationService, private appTitleService: AppTitleService,
-    private authService: AuthService, private translationService: AppTranslationService, public configurations: ConfigurationService, public router: Router, private signalrService: SignalRService, private modalService: ModalService) {
+    private authService: AuthService, private translationService: AppTranslationService, public configurations: ConfigurationService, public router: Router) {
 
     storageManager.initialiseStorageSyncListener();
 
@@ -105,45 +99,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.toastaConfig.showClose = true;
 
     this.appTitleService.appName = this.appTitle;
-    this.subscribeToEvents();
-    this.caller_details = "";
-    this.callerid = "";
   }
 
-  private subscribeToEvents(): void {
-    this.signalrService.connectionEstablished.subscribe(() => {
-      //alert('Connection Established');
-      //ADDED FOR TESTING OF SENDING MESSAGE TO SERVER
-      //this.chatMessage = new CallerInfo();
-      //this.chatMessage.CallerId = "11";
-      //this.chatMessage.OrgId = "1";
-      //this.chatMessage.Payload = "IMRAN";
-      //this.chatMessage.Type = "Call";      
-      // this.signalrService.invokeUpdateGrids(this.chatMessage);
-    });
-
-    this.signalrService.startCallEventReceived.subscribe((message) => {
-      console.log(message);
-      this.callerid = message.callerId;
-      this.caller_details = message.payload;
-      console.log(this.callerid);
-      this.showCallerPopup('caller-modal-popup');
-    });
-    this.signalrService.endCallEventRecieved.subscribe((message) => {
-      this.closeModal('caller-modal-popup');
-    });
-  }
-  showCallerPopup(id: string) {
-    //this.modalService.open(id);
-    this.callerPopupVisible = true;
-    // this.alertService.showMessage('Operation Cancelled!', '', MessageSeverity.default)
-  }
-   
-  closeModal(id: string) {
-    console.log(this.callerid);
-    this.callerPopupVisible = false;
-    //this.modalService.close(id);
-  }
 
   ngAfterViewInit() {
 
@@ -234,7 +191,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     });
-
+    
     // this._hubConnection = new HubConnection('http://localhost:2021/notify');
     // this._hubConnection
     //   .start()
